@@ -1,9 +1,12 @@
 package critters;
 
+import critters.Critter.type;
+
 public class TankCritter extends Critter {
 	public TankCritter(int[][] Locations) {
 		
 		super(Locations, health, armor, speed, reward, name);
+		this.critterType = type.TANK;
 	
 
 	}

@@ -38,7 +38,7 @@ public class MenuScreen extends BasicGameState{
 	@Override
 	public void update(GameContainer container, StateBasedGame sbg, int delta) throws SlickException {
 
-		
+		//check start game button
 		if( Mouse.getX() > container.getWidth()/2 -StartGameButton.getWidth()/2 && Mouse.getX() < container.getWidth()/2 +StartGameButton.getWidth()/2)
 		{
 
@@ -50,7 +50,7 @@ public class MenuScreen extends BasicGameState{
 				}
 			}
 		}
-
+		//check edit map button
 		if( Mouse.getX() > container.getWidth()/2 -EditMapButton.getWidth()/2 && Mouse.getX() < container.getWidth()/2 +EditMapButton.getWidth()/2)
 		{
 
@@ -62,13 +62,13 @@ public class MenuScreen extends BasicGameState{
 				}
 			}
 		}
-
-		if( Mouse.getX() < container.getWidth() -ExitButton.getWidth() && Mouse.getX() > container.getWidth())
+		
+		//check exit button
+		if( (Mouse.getX() > container.getWidth() -ExitButton.getWidth()) &&( Mouse.getX() < container.getWidth()))
 		{
 
-			if( Mouse.getY() > container.getHeight()-ExitButton.getHeight()-2 && Mouse.getY() < container.getHeight() )
+			if( Mouse.getY() > 0 && Mouse.getY() <ExitButton.getHeight()  )
 			{
-	
 				if(Mouse.isButtonDown(0)){
 					System.exit(0);
 					

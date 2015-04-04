@@ -125,12 +125,12 @@ public class MapSelectScreen extends BasicGameState {
 			//compare if the click occurred inside one of the rectangle buttons, 
 			//if it did, load that map, change the frame size to match the map size, and switch states to the PlayScreen state
 			if(mapButtonList.get(count).contains(x, y)){
-				PlayScreen s = (PlayScreen) sbg.getState(1);
+				PlayScreen s = (PlayScreen) sbg.getState(Game.playScreen);
 				s.setMap(mapList.get(count));
 				AppGameContainer gameContainer = (AppGameContainer) container;
 				gameContainer.setDisplayMode(mapList.get(count).getWidthOfMap()*32 +sideMenuWidth, mapList.get(count).getHeightOfMap()*32 +bottomMenuWidth, false);
 				s.createRectangleButtons(gameContainer);
-				sbg.enterState(1);
+				sbg.enterState(Game.playScreen);
 			}
 		}
 	}

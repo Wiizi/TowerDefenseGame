@@ -1,11 +1,13 @@
 package critters;
 
+import critters.Critter.type;
+
 public class BossCritter extends Critter {
 
 	public BossCritter(int[][] Locations) {
 		
 		super(Locations, health, armor, speed, reward, name);
-
+		this.critterType = type.BOSS;
 
 	}
 

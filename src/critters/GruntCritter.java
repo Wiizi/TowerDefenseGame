@@ -1,10 +1,13 @@
 package critters;
 
+import critters.Critter.type;
+
 public class GruntCritter extends Critter{
 
 	public GruntCritter(int[][] Locations) {
 		
 		super(Locations, health, armor, speed, reward, name);
+		this.critterType = type.GRUNT;
 
 	}
 
@@ -13,7 +16,6 @@ public class GruntCritter extends Critter{
 	private static double 		speed		= 1.5;
 	private static int			reward		= 5;
 	private static double		armor		= 1;
-
 
 }
 

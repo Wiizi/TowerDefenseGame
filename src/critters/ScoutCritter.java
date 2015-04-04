@@ -1,11 +1,13 @@
 package critters;
 
+import critters.Critter.type;
+
 public class ScoutCritter extends Critter {
 
 	public ScoutCritter(int[][] Locations) {
 	
 		super(Locations, health, armor, speed, reward, name);
-
+		this.critterType = type.SCOUT;
 
 
 	}
@@ -15,6 +17,7 @@ public class ScoutCritter extends Critter {
 	private static double 		speed		= 3;
 	private static int			reward		= 3;
 	private static double		armor		= 0.5;
+	
 
 
 }

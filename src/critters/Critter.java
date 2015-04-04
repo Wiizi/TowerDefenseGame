@@ -7,6 +7,8 @@ import java.util.Observable;
 
 abstract public class Critter{
 
+	public enum type{GRUNT, SCOUT, ARMORED, TANK, BOSS};
+	
 	private double 		health;
 	private double 		speed;
 	private double 		modifier	= 0;
@@ -22,8 +24,10 @@ abstract public class Critter{
 	private int[][] 	locations;
 	private int 		locationIncrementer = 0;
 	private boolean 	visible = false;
+	protected type		critterType;
 	private List<CrObserver> critterObservers;
 	public enum direction {LEFT, RIGHT, UP, DOWN};
+
 	direction critterDirection;
 
 	//initialize critter at the start 
@@ -38,6 +42,7 @@ abstract public class Critter{
 		alive = true;
 		locations = pLocations;
 		critterObservers = new ArrayList<CrObserver>();
+		critterType = type.GRUNT;
 
 	}
 
@@ -260,7 +265,9 @@ abstract public class Critter{
 	}
 	
 
-
+	public type getType(){
+		return critterType;
+	}
 
 
 

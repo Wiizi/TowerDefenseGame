@@ -69,7 +69,6 @@ public class PlayScreen extends BasicGameState {
 	Font font ;
 	TrueTypeFont ttf;
 
-
 	public PlayScreen (int state){
 		
 	}
@@ -148,6 +147,8 @@ public class PlayScreen extends BasicGameState {
 			if(s.isVisible())
 			{
 				//which critter
+				drawCritter(s);
+			/*
 				if(!(s instanceof ScoutCritter)){
 					drawGrunt(s);
 				}
@@ -155,7 +156,9 @@ public class PlayScreen extends BasicGameState {
 				if(s instanceof ScoutCritter){
 					drawScout(s);
 				}
+				*/
 			}
+			
 	}
 
 	public void drawGrunt(Critter s){
@@ -179,6 +182,50 @@ public class PlayScreen extends BasicGameState {
 			}
 		}
 
+	}
+	
+	public void drawCritter(Critter s){
+		Animation a;
+		switch(s.getType()){
+			case GRUNT:
+				a = blackBeetleAnimation;
+				break;
+			case SCOUT:
+				a = batAnimation;
+				break;
+			case ARMORED:
+				a = null;
+				break;
+			case TANK:
+				a = null;
+				break;
+			case BOSS:
+				a = null;
+				break;
+			default:
+				a= blackBeetleAnimation;
+				break;
+			
+		
+		}
+		
+		if(s.getCritterDirection()==direction.RIGHT){
+			a.getCurrentFrame().setRotation(90*(1));
+			a.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
+		}
+		if(s.getCritterDirection()==direction.LEFT){
+			a.getCurrentFrame().setRotation(90*(3));
+			a.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
+		}
+		if(s.getCritterDirection()==direction.DOWN){
+			a.getCurrentFrame().setRotation(90*(2));
+			a.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
+		}
+		if(s.getCritterDirection()==direction.UP){
+			a.getCurrentFrame().setRotation(90*(0));
+			a.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
+		}
+		
 	}
 
 	public void drawScout(Critter s){
@@ -331,7 +378,7 @@ public class PlayScreen extends BasicGameState {
 
 	@Override
 	public int getID() {
-		return 1;
+		return Game.playScreen;
 	}
 
 }
