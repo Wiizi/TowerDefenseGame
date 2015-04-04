@@ -14,52 +14,63 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class EditMapScreen extends BasicGameState {
-//test test
+	//test test
 	Image SandTile;
 	Image ExitButtonGraphic;
-	Rectangle ExitButton;
+	Rectangle ExitGameButton;
 	ArrayList<Rectangle> buttonList = new ArrayList<Rectangle>();
-	
+
 	public EditMapScreen (int state){
-		
+
 	}
 	@Override
 	public void init(GameContainer container, StateBasedGame arg1)
 			throws SlickException {
 		SandTile = new Image("graphics/SandTile.png");
 		ExitButtonGraphic = new Image ("graphics/ExitButton.png");
-		ExitButton = new Rectangle(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2, ExitButtonGraphic.getWidth(),ExitButtonGraphic.getHeight());
+		ExitGameButton = new Rectangle(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2, ExitButtonGraphic.getWidth(),ExitButtonGraphic.getHeight());
 
-		
-	}
 
-	@Override
-	public void render(GameContainer container, StateBasedGame sbg, Graphics g)
-			throws SlickException {
-		for(int x = 0; x <container.getWidth(); x+=SandTile.getWidth()){
-			for(int y = 0 ; y< container.getHeight(); y+=SandTile.getHeight()){
-				SandTile.draw(x,y);
-			}
-		}
-		
-		ExitButtonGraphic.draw(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2);
-		
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame sbg, int delta)
 			throws SlickException {
 		if(Mouse.isButtonDown(0)){
-			MouseClicked(Mouse.getX(), container.getHeight() - Mouse.getY(), sbg);
+			mouseClicked(Mouse.getX(), container.getHeight() - Mouse.getY(), sbg);
 		}
-		
+
 	}
-	
-	public void MouseClicked(int x, int y, StateBasedGame sbg){
-		if(ExitButton.contains(x, y))
-			sbg.enterState(0);
-			
+
+	@Override
+	public void render(GameContainer container, StateBasedGame sbg, Graphics g) throws SlickException {
+		drawMapAndOverlay(container);
+
 	}
+
+
+
+
+
+	public void drawMapAndOverlay(GameContainer container){
+		for(int x = 0; x <container.getWidth(); x+=SandTile.getWidth()){
+			for(int y = 0 ; y< container.getHeight(); y+=SandTile.getHeight()){
+				SandTile.draw(x,y);
+			}
+		}
+
+		ExitButtonGraphic.draw(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2);
+	}
+
+	public void mouseClicked(int x, int y, StateBasedGame sbg){
+
+		if(ExitGameButton.contains(x, y)){
+			Mouse.getDY();
+			sbg.enterState(Game.menuScreen);
+		}
+
+	}
+
 
 	@Override
 	public int getID() {

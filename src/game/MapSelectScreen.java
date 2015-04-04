@@ -55,7 +55,7 @@ public class MapSelectScreen extends BasicGameState {
 
 	@Override
 	public void render(GameContainer container, StateBasedGame sbg, Graphics g) throws SlickException {
-		drawBackground(container);
+		drawMapBackground(container);
 		drawMapButtons(g);
 
 		//draw the title string
@@ -75,7 +75,7 @@ public class MapSelectScreen extends BasicGameState {
 
 	
 	
-	public void drawBackground(GameContainer container){
+	public void drawMapBackground(GameContainer container){
 		for(int x = 0; x <container.getWidth(); x+=SandTile.getWidth()){
 			for(int y = 0 ; y< container.getHeight(); y+=SandTile.getHeight()){
 				SandTile.draw(x,y);

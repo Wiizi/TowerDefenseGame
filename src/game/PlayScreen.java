@@ -13,8 +13,10 @@ import java.util.Queue;
 
 
 
+
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -155,7 +157,7 @@ public class PlayScreen extends BasicGameState {
 
 
 		if(Mouse.isButtonDown(0)){
-			MouseClicked(Mouse.getX(), container.getHeight() - Mouse.getY(), sbg);
+			MouseClicked(Mouse.getX(), container.getHeight() - Mouse.getY(), sbg, container);
 		}
 
 		blackBeetleAnimation.update(delta);
@@ -177,25 +179,6 @@ public class PlayScreen extends BasicGameState {
 		}		
 	}
 
-	private void attackCritters(){
-		for(Tower t: towerList){
-			if(t.getTimeOfLastAttack() + t.getRateofFire() < System.currentTimeMillis()){
-				for(Critter c: activeCritterList){
-					if(c.isAlive()&&c.isVisible()){
-						//calculate distance
-						int xDist= Math.abs((int)c.getXLoc() - t.getX());
-						int yDist= Math.abs((int)c.getYLoc() -  t.getY());
-						double dist = Math.sqrt((xDist*xDist)+(yDist*yDist));
-						if(dist<t.getRange()){
-							towerAttack(c,t);
-							t.setTimeOfLastAttack(System.currentTimeMillis());
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
 
 	private void drawTowers(){
 		for(Tower t: towerList){
@@ -232,13 +215,13 @@ public class PlayScreen extends BasicGameState {
 				orientationOffset = 2;
 				break;
 			case ARMORED:
-				a = null;
+				a = blackBeetleAnimation;
 				break;
 			case TANK:
-				a = null;
+				a = blackBeetleAnimation;
 				break;
 			case BOSS:
-				a = null;
+				a = blackBeetleAnimation;
 				break;
 			default:
 				a= blackBeetleAnimation;
@@ -338,6 +321,28 @@ public class PlayScreen extends BasicGameState {
 			return false;
 	}
 
+	//for every tower in the towerlist, determine if it should attack critter
+	private void attackCritters(){
+		for(Tower t: towerList){
+			if(t.getTimeOfLastAttack() + t.getRateofFire() < System.currentTimeMillis()){
+				for(Critter c: activeCritterList){
+					if(c.isAlive()&&c.isVisible()){
+						//calculate distance
+						int xDist= Math.abs((int)c.getXLoc() - t.getX());
+						int yDist= Math.abs((int)c.getYLoc() -  t.getY());
+						double dist = Math.sqrt((xDist*xDist)+(yDist*yDist));
+						if(dist<t.getRange()){
+							towerAttack(c,t);
+							t.setTimeOfLastAttack(System.currentTimeMillis());
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	
 	public void loadImages() throws SlickException{
 		//initialize all graphics/images from graphics folder
 		SandTileGraphic = new Image("graphics/SandTile.png");
@@ -431,7 +436,7 @@ public class PlayScreen extends BasicGameState {
 	}
 	
 	
-	private void MouseClicked(int x, int y, StateBasedGame sbg) {
+	private void MouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException {
 		if(lastClick + mouseClickDelay > System.currentTimeMillis())
 			return;
 		lastClick = System.currentTimeMillis();
@@ -440,7 +445,10 @@ public class PlayScreen extends BasicGameState {
 			currentLevel = startingLevel;
 			Player.reset();
 			waveIsInProgress = false;
-			sbg.enterState(0);
+			AppGameContainer gameContainer = (AppGameContainer) container;
+			gameContainer.setDisplayMode(640, 480, false);
+			Mouse.getDX();
+			sbg.enterState(Game.menuScreen);
 		}
 		
 		//no towers selected

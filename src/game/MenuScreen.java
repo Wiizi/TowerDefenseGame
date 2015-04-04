@@ -4,6 +4,7 @@ package game;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -15,6 +16,9 @@ public class MenuScreen extends BasicGameState{
 	Image EditMapButtonGraphic;
 	Image TowerDefenseTitleGraphic;
 	Image ExitButtonGraphic;
+	Rectangle StartGameButton;
+	Rectangle ExitGameButton;
+	Rectangle EditMapButton;
 	private final String authors = "A Java Game by Callum May, Wei Wang,\nCharles Liu and Robert Zhao";
 	
 	
@@ -26,56 +30,19 @@ public class MenuScreen extends BasicGameState{
 	@Override
 	public void init(GameContainer container, StateBasedGame sbg) throws SlickException {
 
-		SandTileGraphic = new Image("graphics/SandTile.png");
-		StartGameButtonGraphic = new Image("graphics/StartGameButton.png");
-		EditMapButtonGraphic = new Image("graphics/EditMapButton.png");
-		TowerDefenseTitleGraphic = new Image("graphics/TowerDefenseTitle.png");
-		ExitButtonGraphic = new Image ("graphics/ExitButton.png");
-		
+		loadImagesAndAnimations();
+		createRectangleButtons(container);
 		
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame sbg, int delta) throws SlickException {
 
-		//check start game button
-		if( Mouse.getX() > container.getWidth()/2 -StartGameButtonGraphic.getWidth()/2 && Mouse.getX() < container.getWidth()/2 +StartGameButtonGraphic.getWidth()/2)
-		{
-
-			if( Mouse.getY() > 2*container.getHeight()/3 -StartGameButtonGraphic.getHeight()/2 && Mouse.getY() < 2*container.getHeight()/3 +StartGameButtonGraphic.getHeight()/2 )
-			{
-	
-				if(Mouse.isButtonDown(0)){
-					sbg.enterState(Game.mapSelectScreen);
-				}
-			}
-		}
-		//check edit map button
-		if( Mouse.getX() > container.getWidth()/2 -EditMapButtonGraphic.getWidth()/2 && Mouse.getX() < container.getWidth()/2 +EditMapButtonGraphic.getWidth()/2)
-		{
-
-			if( Mouse.getY() > container.getHeight() -(2*container.getHeight()/4 +EditMapButtonGraphic.getHeight()/2) && Mouse.getY() < container.getHeight() -(2*container.getHeight()/4 -EditMapButtonGraphic.getHeight()/2) )
-			{
-	
-				if(Mouse.isButtonDown(0)){
-					sbg.enterState(Game.editMapScreen);
-				}
-			}
+		
+		if(Mouse.isButtonDown(0)){
+			mouseClicked(Mouse.getX(), container.getHeight()- Mouse.getY(), sbg);
 		}
 		
-		//check exit button
-		if( (Mouse.getX() > container.getWidth() -ExitButtonGraphic.getWidth()) &&( Mouse.getX() < container.getWidth()))
-		{
-
-			if( Mouse.getY() > 0 && Mouse.getY() <ExitButtonGraphic.getHeight()  )
-			{
-				if(Mouse.isButtonDown(0)){
-					System.out.println("Exiting");
-					System.exit(0);
-					
-				}
-			}
-		}
 	}
 
 	@Override
@@ -97,16 +64,40 @@ public class MenuScreen extends BasicGameState{
 		StartGameButtonGraphic.draw(container.getWidth()/2 -StartGameButtonGraphic.getWidth()/2, container.getHeight()/3 -StartGameButtonGraphic.getHeight()/2);
 		EditMapButtonGraphic.draw(container.getWidth()/2 -EditMapButtonGraphic.getWidth()/2, container.getHeight()/2 -EditMapButtonGraphic.getHeight()/2);
 		TowerDefenseTitleGraphic.draw(container.getWidth()/2 - TowerDefenseTitleGraphic.getWidth()/2, TowerDefenseTitleGraphic.getHeight()/2);
-		ExitButtonGraphic.draw(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2);
+		//ExitButtonGraphic.draw(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2);
 		
 	}
 
+	public void createRectangleButtons(GameContainer container){
+		StartGameButton = new Rectangle(container.getWidth()/2 -StartGameButtonGraphic.getWidth()/2, container.getHeight()/3 -StartGameButtonGraphic.getHeight()/2, StartGameButtonGraphic.getWidth(), StartGameButtonGraphic.getHeight());
+		ExitGameButton = new Rectangle(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2, ExitButtonGraphic.getWidth(), ExitButtonGraphic.getHeight());
+		EditMapButton = new Rectangle(container.getWidth()/2 -EditMapButtonGraphic.getWidth()/2, container.getHeight()/2 -EditMapButtonGraphic.getHeight()/2, EditMapButtonGraphic.getWidth(), EditMapButtonGraphic.getHeight()); 
+		
+	}
 	
+	public void loadImagesAndAnimations() throws SlickException{
+		SandTileGraphic = new Image("graphics/SandTile.png");
+		StartGameButtonGraphic = new Image("graphics/StartGameButton.png");
+		EditMapButtonGraphic = new Image("graphics/EditMapButton.png");
+		TowerDefenseTitleGraphic = new Image("graphics/TowerDefenseTitle.png");
+		ExitButtonGraphic = new Image ("graphics/ExitButton.png");
+	}
+
+	public void mouseClicked( float x, float y, StateBasedGame sbg){
+
+		if(StartGameButton.contains(x, y))
+			sbg.enterState(Game.mapSelectScreen);
+		if(EditMapButton.contains(x, y))
+			sbg.enterState(Game.editMapScreen);
+
+
+	}
+
 	@Override
 	public int getID() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 
 }
