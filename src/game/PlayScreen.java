@@ -362,7 +362,7 @@ public class PlayScreen extends BasicGameState {
 		FreezeTowerProjectileGraphic = new Image("graphics/FreezeTowerProjectileGraphic.png");
 
 		SniperTowerGraphic = new Image ("graphics/SniperTowerGraphic.png");
-		SniperTowerGraphic = new Image ("graphics/SniperTowerProjectileGraphic.png");
+		SniperTowerProjectileGraphic = new Image ("graphics/SniperTowerProjectileGraphic.png");
 	}
 
 	public void loadAnimations() throws SlickException{
