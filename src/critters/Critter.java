@@ -23,6 +23,7 @@ abstract public class Critter{
 	private int[][] 	locations;
 	private int 		locationIncrementer = 0;
 	private boolean 	visible = false;
+	private boolean 	atEndPoint = false;
 	protected type		critterType;
 	private List<CrObserver> critterObservers;
 	private ArrayList<DelayedDamage> damageDue = new ArrayList<DelayedDamage>();
@@ -46,66 +47,7 @@ abstract public class Critter{
 
 	}
 
-/*
-	public int[] move(int[][] map){
-		org.junit.Assert.assertNotNull(map);
-		canMove = true;
-		//find next x position
-		try{
-			//try to move forward
-			if(map[XLoc+1][YLoc]==1 && !previousLocation(XLoc+1,YLoc) ){
-				updateLocation();
-				XLoc = XLoc+1;
-				int[] Location = {XLoc, YLoc};
-				return Location;
-			}
-		}
-		catch(ArrayIndexOutOfBoundsException e){}
-		//try to move backwards
-		try{
-			if(map[XLoc-1][YLoc]==1 && !previousLocation(XLoc-1,YLoc) ){
-				updateLocation();
-				XLoc = XLoc-1;
-				int[] Location = {XLoc, YLoc};
-				return Location;
-			}
-		}
-		catch(ArrayIndexOutOfBoundsException e){}
 
-
-
-		//find next y position
-		try{
-			//try to move up
-			if(map[XLoc][YLoc+1]==1 && !previousLocation(XLoc,YLoc+1) ){
-				updateLocation();
-				YLoc = YLoc+1;
-				int[] Location = {XLoc, YLoc};
-				return Location;
-			}
-		}
-		catch(ArrayIndexOutOfBoundsException e){}
-
-		try{
-			//try to move down
-			if(map[XLoc][YLoc-1]==1 && !previousLocation(XLoc,YLoc-1) ){
-				updateLocation();
-				YLoc = YLoc-1;
-				int[] Location = {XLoc, YLoc};
-				return Location;
-			}
-		}
-		catch(ArrayIndexOutOfBoundsException e){}
-
-
-		
-		//return new updated position so that it can be updated by game 
-
-		canMove = false;
-		int[] Location = {XLoc, YLoc};
-		return Location;
-	}
-*/
 	
 	public void move(){
 
@@ -145,6 +87,7 @@ abstract public class Critter{
 		}
 		catch(IndexOutOfBoundsException e){
 			visible=false;
+			atEndPoint = true;
 		}
 	}
 
@@ -168,7 +111,6 @@ abstract public class Critter{
 		health = health - damage/armor;
 		if(health <= 0){
 			alive = false;
-			
 			visible = false;
 		}
 		
@@ -178,14 +120,8 @@ abstract public class Critter{
 
 	}
 
-	//this method determines if the critter is trying to move into the location it previously occupied
-	private boolean previousLocation(double d, double yLoc2){
-		if( d==PrevXLoc && yLoc2 ==PrevYLoc){
-			return true;
-		}
-
-		return false;
-	}
+	
+	
 	//this method updates the location of both previous location variables each time the critter moves
 	public void updateLocation(){
 		PrevXLoc = XLoc;
@@ -231,6 +167,12 @@ abstract public class Critter{
 	}
 	
 	
+
+	public boolean isAtEndPoint() {
+		return atEndPoint;
+	}
+
+
 
 	public double getSpeed() {
 		return speed;

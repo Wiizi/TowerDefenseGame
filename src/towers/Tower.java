@@ -12,8 +12,8 @@ public class Tower {
 	private int rateofFire;
 	private int level;
 	private int upgradeCost;
-	private int xPos;
-	private int yPos;
+	private double xPos;
+	private double yPos;
 	private boolean freezeTower;
 	private Critter targetCritter;
 	private final int reloadTime = 1;
@@ -21,7 +21,7 @@ public class Tower {
 	//system time of last attack
 	
 	public Tower(int buyingCost, int refundValue, double range, int power, int rateofFire, 
-			int level, int upgradeCost, int xPos, int yPos, boolean isFreezeTower) {
+			int level, int upgradeCost, double xPos, double yPos, boolean isFreezeTower) {
 		// TODO Auto-generated constructor stub
 		this.buyingCost = buyingCost;
 		this.refundValue = refundValue;
@@ -35,7 +35,7 @@ public class Tower {
 		this.freezeTower = isFreezeTower;
 		this.lastAttackTime = 0;
 	}
-	public Tower(int xPos, int yPos){
+	public Tower(double xPos, double yPos){
 		this.buyingCost = 100;
 		this.refundValue = 90;
 		this.range = 100;
@@ -121,11 +121,11 @@ public class Tower {
 		upgradeCost = pUpgradeCost;
 	}
 	
-	public int getX(){
+	public double getX(){
 		return xPos;
 	}
 	
-	public int getY(){
+	public double getY(){
 		return yPos;
 	}
 	

@@ -182,7 +182,7 @@ public class PlayScreen extends BasicGameState {
 
 	private void drawTowers(){
 		for(Tower t: towerList){
-			TowerGraphic.drawCentered(t.getX(), t.getY());
+			TowerGraphic.drawCentered( (float) t.getX(), (float) t.getY());
 		}
 	}
 	private void drawProjectiles(){
@@ -329,8 +329,8 @@ public class PlayScreen extends BasicGameState {
 				for(Critter c: activeCritterQueue){
 					if(c.isAlive()&&c.isVisible()){
 						//calculate distance
-						int xDist= Math.abs((int)c.getXLoc() - t.getX());
-						int yDist= Math.abs((int)c.getYLoc() -  t.getY());
+						double xDist= Math.abs(c.getXLoc() - t.getX());
+						double yDist= Math.abs(c.getYLoc() -  t.getY());
 						double dist = Math.sqrt((xDist*xDist)+(yDist*yDist));
 						if(dist<t.getRange()){
 							towerAttack(c,t);
@@ -409,7 +409,7 @@ public class PlayScreen extends BasicGameState {
 		return (float) (Math.floor(X / currentMap.getPixelSize()) * currentMap.getPixelSize() + currentMap.getPixelSize() / 2);
 	}
 
-	public void createLevelCritterQueue(){
+	public void createCritterQueueforLevel(){
 		int[][] locations = currentMap.getCornersList();
 
 
@@ -452,7 +452,7 @@ public class PlayScreen extends BasicGameState {
 			
 			if(NextWaveButton.contains(x,y)&& !waveIsInProgress){
 				waveIsInProgress = true;
-				createLevelCritterQueue();
+				createCritterQueueforLevel();
 			}
 			
 			for(int i=0;i<maximumNumberTowers;i++){
@@ -465,7 +465,7 @@ public class PlayScreen extends BasicGameState {
 		//tower selected
 		else {
 			if(mouseOnMap(x,y)){
-				Tower newTower = new Tower((int)getClosestTileCenter(x),(int)getClosestTileCenter(y));
+				Tower newTower = new Tower(getClosestTileCenter(x),getClosestTileCenter(y));
 				towerList.add(newTower);
 				Player.addCredits((-1)*newTower.getBuyingCost());
 				
