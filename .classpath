@@ -1,25 +1,13 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry excluding="utilities/" kind="src" path="src"/>
 	<classpathentry kind="lib" path="libraries/jar/lwjgl_util.jar"/>
 	<classpathentry kind="lib" path="libraries/jar/lwjgl.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="ECSE321/libraries/windows"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="TowerDefenseGame/libraries/windows"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libraries/jar/slick.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="libraries/jar/lwjgl_util.jar"/>
-	<classpathentry kind="lib" path="libraries/jar/lwjgl.jar"/>
-	<classpathentry kind="lib" path="libraries/jar/slick.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
->>>>>>> origin/master
