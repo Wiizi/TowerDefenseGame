@@ -420,7 +420,14 @@ public class PlayScreen extends BasicGameState {
 	private void towerAttack(Critter target, Tower source){
 		Projectile attack = new Projectile((double)source.getX(),(double) source.getY(), 
 				(double)target.getXLoc(),(double) target.getYLoc(), source.getPower(), source.isFreezeTower());
+		
 		projectileList.add(attack);
+		double xDist = source.getX() - target.getXLoc();
+		double yDist = source.getY() - target.getYLoc();
+		long dist = (long)Math.sqrt(xDist*xDist + yDist*yDist);
+		//convert to ms
+		long delay = dist/attack.getSpeed()*1000;
+		target.hitCritter(source.getPower(), delay);
 	}
 	private void MouseClicked(int x, int y, StateBasedGame sbg) {
 		if(lastClick + mouseClickDelay > System.currentTimeMillis())

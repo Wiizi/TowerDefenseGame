@@ -8,10 +8,12 @@ public class Projectile {
 	private double yDest;
 	private double xInit;
 	private double yInit;
+	private long totalTime;
+	private long startTime;
 	private double error = 3;
 	private int power;
 	private boolean freeze;
-	private final double speed = 5;
+	private final long speed = 50;
 	private boolean arrivedAtTarget = false;
 	
 	
@@ -25,6 +27,11 @@ public class Projectile {
 		power = pPower;
 		freeze = pFreeze;
 		arrivedAtTarget = false;
+		double yDist = yInit-yDest;
+		double xDist = xInit-xDest;
+		double dist = Math.sqrt(xDist*xDist+yDist*yDist);
+		totalTime = ((long)dist)/speed *1000;
+		startTime = System.currentTimeMillis();
 		System.out.println("Projectile created!");
 	}
 	
@@ -39,8 +46,12 @@ public class Projectile {
 			arrivedAtTarget = true;
 		}
 		else{
-			xLoc += ((xDest - xInit)*speed/100);
-			yLoc += ((yDest - yInit)*speed/100);
+			double xDist = xLoc-xDest;
+			double yDist = yLoc-yDest;
+			double dist = Math.sqrt(xDist*xDist+yDist*yDist);
+			double time = dist/speed;
+			xLoc = xInit + ((xDest - xInit)*(System.currentTimeMillis()-startTime)/totalTime);
+			yLoc = yInit + ((yDest - yInit)*(System.currentTimeMillis()-startTime)/totalTime);
 		}
 	}
 	
@@ -53,6 +64,10 @@ public class Projectile {
 	}
 	public double getY(){
 		return this.yLoc;
+	}
+	
+	public long getSpeed(){
+		return this.speed;
 	}
 	
 }
