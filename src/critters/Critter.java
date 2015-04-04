@@ -2,7 +2,6 @@ package critters;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 
 abstract public class Critter{
@@ -17,8 +16,6 @@ abstract public class Critter{
 	private double 		armor;
 	private float 		XLoc;
 	private float		YLoc;
-	private double		PrevXLoc;
-	private double		PrevYLoc;
 	private String		name;
 	private boolean 	alive;
 	public boolean		canMove = true;
@@ -28,7 +25,7 @@ abstract public class Critter{
 	private boolean 	atEndPoint = false;
 	protected type		critterType;
 	private List<CrObserver> critterObservers;
-	private ArrayList<DelayedDamage> damageDue = new ArrayList<DelayedDamage>();
+
 
 
 	direction critterDirection;
@@ -57,7 +54,7 @@ abstract public class Critter{
 		{
 			visible = true;
 		}
-		takeDueDamage();
+
 		try{
 
 			if(!(XLoc>locations[locationIncrementer+1][0]-speed&&XLoc<locations[locationIncrementer+1][0]+speed) ){
@@ -93,22 +90,6 @@ abstract public class Critter{
 		}
 	}
 
-	private void takeDueDamage(){
-		ArrayList<DelayedDamage> dToRemove = new ArrayList<DelayedDamage>();
-		for(DelayedDamage d: damageDue){
-			if (System.currentTimeMillis()>d.timeOfDamage){
-				takeDamage(d.damage);
-				dToRemove.add(d);
-			}
-		}
-		for(DelayedDamage d: dToRemove){
-			damageDue.remove(d);
-		}
-	}
-	
-	public void hitCritter(double damage, long delay){
-		damageDue.add(new DelayedDamage(System.currentTimeMillis()+delay, damage));
-	}
 
 	public void takeDamage(double damage){
 		health = health - damage/armor;
@@ -216,13 +197,4 @@ abstract public class Critter{
 
 }
 
-class DelayedDamage{
-	long timeOfDamage;
-	double damage;
-	
-	public DelayedDamage(long time, double damage){
-		this.timeOfDamage = time;
-		this.damage = damage;
-	}
-	
-}
+

@@ -14,6 +14,7 @@ import java.util.Queue;
 
 
 
+
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
@@ -28,7 +29,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import towers.Projectile;
-import towers.Tower;
+import towers.*;
 import grid.*;
 import map.*;
 import critters.Critter;
@@ -277,7 +278,7 @@ public class PlayScreen extends BasicGameState {
 		for (int i =0;i<maximumNumberTowers;i++){
 			int xCorner = currentMap.getWidthInPixel() +towerGraphicXStart + ((i)%2)*towerGraphicXOffset;
 			int yCorner = towerGraphicYStart + (i/2)*towerGraphicYOffset;
-			TowerGraphics.get(i).draw(xCorner,yCorner);
+			TowerGraphics.get(i).drawCentered(xCorner +towerButtonWidth/2,yCorner +towerButtonHeight/2);
 
 		}
 
@@ -482,7 +483,7 @@ public class PlayScreen extends BasicGameState {
 		//tower selected
 		else {
 			if(mouseOnMap(x,y)){
-				Tower newTower = new Tower(getClosestTileCenter(x),getClosestTileCenter(y));
+				Tower newTower = new GenericTower(getClosestTileCenter(x),getClosestTileCenter(y));
 				towerList.add(newTower);
 				Player.addCredits((-1)*newTower.getBuyingCost());
 

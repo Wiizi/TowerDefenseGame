@@ -3,48 +3,35 @@ package towers;
 import critters.Critter;
 import game.Player;
 
-public class Tower {	
+public abstract class Tower {	
 	
 	protected enum type{
-		FREEZE, SNIPER, NORMAL
+		FREEZE, SNIPER, GENERIC
 	}
-	protected int buyingCost = 100;
+	protected int buyingCost;
 	protected int refundValue = 90;
 	protected double range = 100;
 	protected int power = 4;
-	protected int rateofFire = 2000;
 	private int level =1;
 	protected int upgradeCost = 200;
 	private double xPos;
 	private double yPos;
 	protected boolean freezeTower = false;
 	private Critter targetCritter;
-	protected int reloadTime = 1;
-	private long lastAttackTime = 0;
-	private double angleOfRotation = 0;
-	protected type towerType = type.NORMAL;
+	protected int reloadTime;
+	private long lastAttackTime;
+	private double angleOfRotation;
+	protected type towerType;
 	//system time of last attack
 
 	
-	public Tower(int buyingCost, int refundValue, double range, int power, int rateofFire, 
-			int level, int upgradeCost, double xPos, double yPos, boolean isFreezeTower) {
-		// TODO Auto-generated constructor stub
-		this.buyingCost = buyingCost;
-		this.refundValue = refundValue;
-		this.range = range;
-		this.power = power;
-		this.rateofFire = rateofFire;
-		this.level = level;
-		this.upgradeCost = upgradeCost;
-		this.xPos = xPos;
-		this.yPos = yPos;
-		this.freezeTower = isFreezeTower;
-		this.lastAttackTime = System.currentTimeMillis();
-	}
+	
 	public Tower(double xPos, double yPos){
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.lastAttackTime = 0;
+		angleOfRotation = 0;
+		lastAttackTime = 0;
 	}
 	
 	
@@ -86,7 +73,6 @@ public class Tower {
 		return targetCritter;
 	}
 	
-
 	public double getRotationAngleInDegrees(){
 		if(targetCritter !=null)
 			angleOfRotation = (180/Math.PI)*Math.atan2(targetCritter.getYLoc()-yPos, targetCritter.getXLoc()-xPos);
@@ -109,20 +95,13 @@ public class Tower {
 		power = pPower;
 	}
 
-	public double getRateofFire() {
-		return rateofFire;
-	}
-
-	public void setRateofFire(int pRateofFire) {
-		rateofFire = pRateofFire;
-	}
-
 	public int getLevel() {
 		return level;
 	}
 
-	public void setLevel(int pLevel) {
-		level = pLevel;
+	public void upgrade() {
+		level++;
+		Player.addCredits(-1*upgradeCost);
 	}
 
 	public double getUpgradeCost() {
@@ -145,9 +124,7 @@ public class Tower {
 		return freezeTower;
 	}
 	
-	public long getTimeOfLastAttack(){
-		return lastAttackTime;
-	}
+
 	public void setTimeOfLastAttack(long time){
 
 		lastAttackTime = time;
