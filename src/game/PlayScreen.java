@@ -11,6 +11,8 @@ import java.util.Queue;
 
 
 
+
+
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
@@ -23,6 +25,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import towers.Projectile;
 import towers.Tower;
 import Grid.*;
 import Map.*;
@@ -38,6 +41,7 @@ public class PlayScreen extends BasicGameState {
 	private static Queue<Critter> critterList = new LinkedList<Critter>();
 	private static Queue<Critter> activeCritterList = new LinkedList<Critter>();
 	private static ArrayList<Tower> towerList = new ArrayList<Tower>();
+	private static ArrayList<Projectile> projectileList = new ArrayList<Projectile>();
 	static long tickCount = 0;
 	
 	private final int mouseClickDelay = 200;
@@ -61,6 +65,7 @@ public class PlayScreen extends BasicGameState {
 	Image HeartGraphic;
 	Image TowerTileGraphic;
 	Image TowerGraphic;
+	Image ProjectileGraphic;
 	Rectangle ExitButton;
 	Rectangle NextWaveButton;
 	//TODO add rectangle buttons for towers and sell tower
@@ -128,7 +133,20 @@ public class PlayScreen extends BasicGameState {
 				if(s.isVisible())
 					crittersAreStillVisible=true;
 			}
-
+			attackCritters();
+			//for each projectile update their locations
+			ArrayList<Projectile> pToRemove = new ArrayList<Projectile>();
+			for(Projectile p: projectileList){
+				if(!p.hasArrived())
+					p.move();
+				else
+					pToRemove.add(p);
+			}
+			
+			for(Projectile p: pToRemove){
+				projectileList.remove(p);
+			}
+			
 			if(!crittersAreStillVisible){
 				waveIsInProgress = false;
 				currentLevel++;
@@ -152,18 +170,42 @@ public class PlayScreen extends BasicGameState {
 
 		drawMapandOverlay(container, g);
 		drawTowers();
-		if(waveIsInProgress)
+
+		if(waveIsInProgress){
 			drawCritters(); 
-		
+			drawProjectiles();
+		}		
 	}
 
+	private void attackCritters(){
+		for(Tower t: towerList){
+			if(t.getTimeOfLastAttack() + t.getRateofFire() < System.currentTimeMillis()){
+				for(Critter c: activeCritterList){
+					if(c.isAlive()&&c.isVisible()){
+						//calculate distance
+						int xDist= Math.abs((int)c.getXLoc() - t.getX());
+						int yDist= Math.abs((int)c.getYLoc() -  t.getY());
+						double dist = Math.sqrt((xDist*xDist)+(yDist*yDist));
+						if(dist<t.getRange()){
+							towerAttack(c,t);
+							t.setTimeOfLastAttack(System.currentTimeMillis());
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
 
-
-	public void drawTowers(){
+	private void drawTowers(){
 		for(Tower t: towerList){
 			TowerGraphic.drawCentered(t.getX(), t.getY());
 		}
-		
+	}
+	private void drawProjectiles(){
+		for(Projectile p: projectileList){
+			ProjectileGraphic.drawCentered((float)p.getX(),(float)p.getY());
+		}
 	}
 	public void drawCritters(){
 		for(Critter s : activeCritterList)
@@ -310,11 +352,12 @@ public class PlayScreen extends BasicGameState {
 		HeartGraphic = new Image("graphics/Heart.png");
 		TowerMenuOverlay = new Image("graphics/TowerMenuGraphic.png");
 		
+		TowerGraphic = new Image("graphics/MockTowerPartial.png");
 		TowerGraphics = new ArrayList<Image>();
 		for(int i =0;i<6;i++){
 			TowerGraphics.add(new Image("graphics/MockTower.png"));
 		}
-		TowerGraphic = new Image("graphics/MockTowerPartial.png");
+		ProjectileGraphic = new Image("graphics/Projectile.png");
 
 
 
@@ -374,6 +417,11 @@ public class PlayScreen extends BasicGameState {
 	}
 
 
+	private void towerAttack(Critter target, Tower source){
+		Projectile attack = new Projectile((double)source.getX(),(double) source.getY(), 
+				(double)target.getXLoc(),(double) target.getYLoc(), source.getPower(), source.isFreezeTower());
+		projectileList.add(attack);
+	}
 	private void MouseClicked(int x, int y, StateBasedGame sbg) {
 		if(lastClick + mouseClickDelay > System.currentTimeMillis())
 			return;

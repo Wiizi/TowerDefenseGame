@@ -7,15 +7,19 @@ public class Tower {
 	private int buyingCost;
 	private int refundValue;
 	private double range;
-	private double power;
-	private double rateofFire;
+	private int power;
+	private int rateofFire;
 	private int level;
 	private int upgradeCost;
 	private int xPos;
 	private int yPos;
+	private boolean freezeTower;
+	
+	//system time of last attack
+	private long lastAttack;
 
-	public Tower(int buyingCost, int refundValue, double range,
-			double power, double rateofFire, int level, int upgradeCost, int xPos, int yPos) {
+	public Tower(int buyingCost, int refundValue, double range, int power, int rateofFire, 
+			int level, int upgradeCost, int xPos, int yPos, boolean isFreezeTower) {
 		// TODO Auto-generated constructor stub
 		this.buyingCost = buyingCost;
 		this.refundValue = refundValue;
@@ -26,17 +30,21 @@ public class Tower {
 		this.upgradeCost = upgradeCost;
 		this.xPos = xPos;
 		this.yPos = yPos;
+		this.freezeTower = isFreezeTower;
+		this.lastAttack = 0;
 	}
 	public Tower(int xPos, int yPos){
 		this.buyingCost = 100;
 		this.refundValue = 90;
-		this.range = 20;
+		this.range = 100;
 		this.power = 20;
-		this.rateofFire = 8;
+		this.rateofFire = 2000;
 		this.level = 1;
 		this.upgradeCost = 200;
 		this.xPos = xPos;
 		this.yPos = yPos;
+		this.freezeTower = false;
+		this.lastAttack = 0;
 	}
 	
 
@@ -70,11 +78,11 @@ public class Tower {
 		this.range = range;
 	}
 
-	public double getPower() {
+	public int getPower() {
 		return this.power;
 	}
 
-	public void setPower(double power) {
+	public void setPower(int power) {
 		this.power = power;
 	}
 
@@ -82,7 +90,7 @@ public class Tower {
 		return this.rateofFire;
 	}
 
-	public void setRateofFire(double rateofFire) {
+	public void setRateofFire(int rateofFire) {
 		this.rateofFire = rateofFire;
 	}
 
@@ -110,4 +118,15 @@ public class Tower {
 		return this.yPos;
 	}
 	
+	public boolean isFreezeTower(){
+		return this.freezeTower;
+	}
+	
+	public long getTimeOfLastAttack(){
+		return this.lastAttack;
+	}
+	public void setTimeOfLastAttack(long time){
+		System.out.println(time);
+		this.lastAttack = time;
+	}
 }
