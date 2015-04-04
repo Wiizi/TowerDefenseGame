@@ -10,7 +10,7 @@ public class Projectile {
 	private double yInit;
 	private long totalTime;
 	private long startTime;
-	private double error = 3;
+	private double error = 1;
 	private int power;
 	private boolean freeze;
 	private final long speed = 50;
@@ -32,7 +32,6 @@ public class Projectile {
 		double dist = Math.sqrt(xDist*xDist+yDist*yDist);
 		totalTime = ((long)dist)/speed *1000;
 		startTime = System.currentTimeMillis();
-		System.out.println("Projectile created!");
 	}
 	
 	public double angleOfProjectileInDegrees(){
@@ -46,10 +45,6 @@ public class Projectile {
 			arrivedAtTarget = true;
 		}
 		else{
-			double xDist = xLoc-xDest;
-			double yDist = yLoc-yDest;
-			double dist = Math.sqrt(xDist*xDist+yDist*yDist);
-			double time = dist/speed;
 			xLoc = xInit + ((xDest - xInit)*(System.currentTimeMillis()-startTime)/totalTime);
 			yLoc = yInit + ((yDest - yInit)*(System.currentTimeMillis()-startTime)/totalTime);
 		}

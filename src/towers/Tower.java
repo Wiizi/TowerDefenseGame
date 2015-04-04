@@ -37,7 +37,7 @@ public class Tower {
 		this.buyingCost = 100;
 		this.refundValue = 90;
 		this.range = 100;
-		this.power = 20;
+		this.power = 5;
 		this.rateofFire = 2000;
 		this.level = 1;
 		this.upgradeCost = 200;
