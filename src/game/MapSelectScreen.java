@@ -102,6 +102,7 @@ public class MapSelectScreen extends BasicGameState {
 		mapList.add(smallMap);
 		mapList.add(mediumMap);
 		mapList.add(largeMap);
+
 	}
 	
 	//create rectangle button for each map

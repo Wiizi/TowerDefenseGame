@@ -21,18 +21,14 @@ public class MapEditor {
 
 	private Map map;
 	private int[][] mapArray;
-	private int[][] cornerArray;
 
 	private int width;
 	private int height;
 	private String userInput = "";
-	private String mapInfo;
 	
 	private static final String folderName = "mapSaves";
-	private static final File directory = new File(folderName);
-	private ArrayList<String> files = new ArrayList<String>();
 
-	public MapEditor(int width, int height, String userInput, String mapName){
+	public MapEditor(int width, int height, String userInput){
 		map = new Map();
 		map.setMapSize(width, height);
 		map.setInputCorner(userInput);
@@ -46,26 +42,6 @@ public class MapEditor {
 		map.cornerArray(corner);
 		
 		mapArray = map.convertToBinaryMap(map);
-		
-		try {
-			writeFile(mapName);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void createMap(){
-		Map loadedMap = new Map();
-		map.setMapSize(getWidthFromFile(), getHeightFromFile());
-		map.setInputCorner(getUserInput());
-		map.initializeMap();
-		
-		Queue<PathTile> path = map.multipleCoordinatesSplit(getUserInput());
-		map.buildPath(path);
-		
-		Queue<PathTile> corner = map.multipleCoordinatesSplit(getUserInput());
-		map.cornerArray(corner);
-		
 	}
 	
 	/**
@@ -120,67 +96,6 @@ public class MapEditor {
 	}
 
 	/**
-	 * Read and create a map from a text file
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
-	public Map loadFile(String name) throws IOException{
-		File file = new File(folderName + "/" + name + ".txt");
-		FileReader fr = new FileReader(file);
-		BufferedReader br =  new BufferedReader(fr);
-		int count = 0;
-		try {
-			StringBuilder sb = new StringBuilder();
-			String line = br.readLine();
-
-			while (line != null) {
-				count++;
-				if (count == 1){
-					width = Integer.valueOf(line);
-				}
-				else if (count == 2){
-					height = Integer.valueOf(line);
-				}
-				else if (count == 3){
-					userInput = line.toString();
-				}				
-				else {
-					sb.append(line);
-					sb.append(System.lineSeparator());
-				}
-
-				line = br.readLine();
-			}
-			mapInfo = sb.toString();
-		} finally {
-			br.close();
-			createMap();
-			System.out.println("File Read Sucessfully!");
-		}	
-		
-		return map;
-	}
-	
-	public void listFilesforFolder(){
-		
-		File[] listOfFiles = directory.listFiles();
-		System.out.println("Entrer Folder");
-		for (int i = 0; i < listOfFiles.length; i++){
-			if (listOfFiles[i].isFile()) {
-				String name = listOfFiles[i].getName();
-				System.out.println("Get the File");
-				final int lastPeriodPos = name.lastIndexOf('.');
-				System.out.println(listOfFiles[i].getName().substring(0, lastPeriodPos));
-				files.add(listOfFiles[i].getName().substring(0, lastPeriodPos).toString());
-			} else if (listOfFiles[i].isDirectory()) {
-				System.out.println("This is not a file.");
-			}
-		}
-		
-	}
-
-	/**
 	 * 
 	 * @return width of customized map
 	 */
@@ -205,10 +120,6 @@ public class MapEditor {
 	 */
 	public int[][] getUserInputFromFile(){
 		return map.getCornersList();
-	}
-	
-	public ArrayList<String> getListofFiles(){
-		return files;
 	}
 	
 	/**
