@@ -51,11 +51,11 @@ public class PlayScreen extends BasicGameState {
 	Animation blackBeetleAnimation;
 	private SpriteSheet batSpriteSheet;
 	Animation batAnimation;
-	Image SandTile;
-	Image GravelTile;
-	Image BrickTile;
-	Image BuyTowerTitle;
-	Image TowerMenuOverlay;
+	Image SandTileGraphic;
+	Image GravelTileGraphic;
+	Image BrickTileGraphic;
+	Image BuyTowerTitleGraphic;
+	Image TowerMenuOverlayGraphic;
 	Image ExitButtonGraphic;
 	Image TileSelectGraphic;
 	Image CurrencyGraphic;
@@ -276,16 +276,16 @@ public class PlayScreen extends BasicGameState {
 				if(i<currentMap.getWidthOfMap() &&j < currentMap.getHeightOfMap()){
 
 					if (currentMap.getTile(i, j) instanceof PathTile){	
-						GravelTile.draw(i * currentMap.getPixelSize(), j * currentMap.getPixelSize());
+						GravelTileGraphic.draw(i * currentMap.getPixelSize(), j * currentMap.getPixelSize());
 						continue;
 					}
 					if (currentMap.getTile(i, j) instanceof MapTile){		
-						SandTile.draw(i * currentMap.getPixelSize(), j * currentMap.getPixelSize());
+						SandTileGraphic.draw(i * currentMap.getPixelSize(), j * currentMap.getPixelSize());
 						continue;
 					}
 
 				}
-				BrickTile.draw(i * currentMap.getPixelSize(), j * currentMap.getPixelSize());
+				BrickTileGraphic.draw(i * currentMap.getPixelSize(), j * currentMap.getPixelSize());
 			}
 		}
 
@@ -300,7 +300,7 @@ public class PlayScreen extends BasicGameState {
 
 
 		//drawing buttons and overlays
-		TowerMenuOverlay.draw(currentMap.getWidthInPixel(), 0);
+		TowerMenuOverlayGraphic.draw(currentMap.getWidthInPixel(), 0);
 		ExitButtonGraphic.draw(container.getWidth() - ExitButtonGraphic.getWidth(), container.getHeight() - ExitButtonGraphic.getHeight() - 2);
 		CurrencyGraphic.draw(1, container.getHeight() - CurrencyGraphic.getHeight());
 		WaveGraphic.draw(currentMap.getWidthInPixel() - WaveGraphic.getWidth(), currentMap.getHeightInPixel());
@@ -340,9 +340,9 @@ public class PlayScreen extends BasicGameState {
 
 	public void loadImages() throws SlickException{
 		//initialize all graphics/images from graphics folder
-		SandTile = new Image("graphics/SandTile.png");
-		GravelTile = new Image ("graphics/GravelTile.png");
-		BrickTile = new Image ("graphics/BrickTile.png");
+		SandTileGraphic = new Image("graphics/SandTile.png");
+		GravelTileGraphic = new Image ("graphics/GravelTile.png");
+		BrickTileGraphic = new Image ("graphics/BrickTile.png");
 		ExitButtonGraphic = new Image ("graphics/ExitButton.png");
 		CurrencyGraphic = new Image("graphics/CurrencyGraphic.png");
 		TileSelectGraphic = new Image ("graphics/TileSelectGraphic.png");
@@ -350,12 +350,12 @@ public class PlayScreen extends BasicGameState {
 		NextWaveActiveGraphic = new Image("graphics/NextWaveActive.png");
 		NextWaveNonActiveGraphic = new Image("graphics/NextWaveNonActive.png");
 		HeartGraphic = new Image("graphics/Heart.png");
-		TowerMenuOverlay = new Image("graphics/TowerMenuGraphic.png");
+		TowerMenuOverlayGraphic = new Image("graphics/TowerMenuGraphic.png");
 		
-		TowerGraphic = new Image("graphics/MockTowerPartial.png");
+		TowerGraphic = new Image("graphics/BasicTowerGraphic.png");
 		TowerGraphics = new ArrayList<Image>();
 		for(int i =0;i<6;i++){
-			TowerGraphics.add(new Image("graphics/MockTower.png"));
+			TowerGraphics.add(new Image("graphics/BasicTowerGraphic.png"));
 		}
 		ProjectileGraphic = new Image("graphics/Projectile.png");
 
@@ -429,6 +429,8 @@ public class PlayScreen extends BasicGameState {
 		long delay = dist/attack.getSpeed()*1000;
 		target.hitCritter(source.getPower(), delay);
 	}
+	
+	
 	private void MouseClicked(int x, int y, StateBasedGame sbg) {
 		if(lastClick + mouseClickDelay > System.currentTimeMillis())
 			return;
