@@ -1,4 +1,4 @@
-package Grid;
+package grid;
 
 /**
  * MapTile is the component of Map and Scenery Cell

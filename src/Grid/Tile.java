@@ -1,4 +1,4 @@
-package Grid;
+package grid;
 
 /**
  * @author		Wei Wang

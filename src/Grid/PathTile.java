@@ -1,4 +1,4 @@
-package Grid;
+package grid;
 
 /**
  * PathTiles are the components of the design path

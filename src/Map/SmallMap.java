@@ -1,8 +1,8 @@
-package Map;
+package map;
+
+import grid.PathTile;
 
 import java.util.Queue;
-
-import Grid.PathTile;
 
 public class SmallMap extends Map {
 	

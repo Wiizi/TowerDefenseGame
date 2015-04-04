@@ -1,14 +1,15 @@
-package Map;
+package map;
+
+import grid.PathTile;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Queue;
-
-import Grid.PathTile;
 
 /**
  * @author		Wei Wang
@@ -26,8 +27,12 @@ public class MapEditor {
 	private int height;
 	private String userInput = "";
 	private String mapInfo;
+	
+	private static final String folderName = "mapSaves";
+	private static final File directory = new File(folderName);
+	private ArrayList<String> files = new ArrayList<String>();
 
-	public MapEditor(int width, int height, String userInput){
+	public MapEditor(int width, int height, String userInput, String mapName){
 		map = new Map();
 		map.setMapSize(width, height);
 		map.setInputCorner(userInput);
@@ -43,10 +48,24 @@ public class MapEditor {
 		mapArray = map.convertToBinaryMap(map);
 		
 		try {
-			writeFile("customizedMap");
+			writeFile(mapName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void createMap(){
+		Map loadedMap = new Map();
+		map.setMapSize(getWidthFromFile(), getHeightFromFile());
+		map.setInputCorner(getUserInput());
+		map.initializeMap();
+		
+		Queue<PathTile> path = map.multipleCoordinatesSplit(getUserInput());
+		map.buildPath(path);
+		
+		Queue<PathTile> corner = map.multipleCoordinatesSplit(getUserInput());
+		map.cornerArray(corner);
+		
 	}
 	
 	/**
@@ -65,13 +84,12 @@ public class MapEditor {
 	 * @throws IOException
 	 */
 	public void writeFile(String name) throws IOException{
-		File file = new File("mapSaves/maps.txt");
+		File file = new File(folderName + "/" + name + ".txt");
 		FileOutputStream fout = new FileOutputStream(file);
 
 		StringBuffer results = new StringBuffer();
 		String data = "";
 		String nextLine = System.getProperty("line.separator");
-		String endOfMap;
 
 		if (!file.exists()){
 			try {
@@ -80,7 +98,6 @@ public class MapEditor {
 				e.printStackTrace();
 			}
 		}
-		data+= name + nextLine;
 		data+= map.getWidthOfMap() + nextLine;
 		data+= map.getHeightOfMap() + nextLine;
 		data+= map.getInputCorner() + nextLine;
@@ -92,7 +109,6 @@ public class MapEditor {
 			results.append(nextLine);
 		}
 		data+= results;
-		data+="------------------------------------------------------------------------" + nextLine;
 
 		try {
 			fout.write(data.getBytes());
@@ -109,8 +125,8 @@ public class MapEditor {
 	 * @return
 	 * @throws IOException
 	 */
-	public void readFile(String name) throws IOException{
-		File file = new File("data/" + name + ".txt");
+	public Map loadFile(String name) throws IOException{
+		File file = new File(folderName + "/" + name + ".txt");
 		FileReader fr = new FileReader(file);
 		BufferedReader br =  new BufferedReader(fr);
 		int count = 0;
@@ -139,15 +155,36 @@ public class MapEditor {
 			mapInfo = sb.toString();
 		} finally {
 			br.close();
+			createMap();
 			System.out.println("File Read Sucessfully!");
 		}	
+		
+		return map;
+	}
+	
+	public void listFilesforFolder(){
+		
+		File[] listOfFiles = directory.listFiles();
+		System.out.println("Entrer Folder");
+		for (int i = 0; i < listOfFiles.length; i++){
+			if (listOfFiles[i].isFile()) {
+				String name = listOfFiles[i].getName();
+				System.out.println("Get the File");
+				final int lastPeriodPos = name.lastIndexOf('.');
+				System.out.println(listOfFiles[i].getName().substring(0, lastPeriodPos));
+				files.add(listOfFiles[i].getName().substring(0, lastPeriodPos).toString());
+			} else if (listOfFiles[i].isDirectory()) {
+				System.out.println("This is not a file.");
+			}
+		}
+		
 	}
 
 	/**
 	 * 
 	 * @return width of customized map
 	 */
-	public int getTempWidth(){
+	public int getWidthFromFile(){
 		return width;
 	}
 	
@@ -155,17 +192,28 @@ public class MapEditor {
 	 * 
 	 * @return height of customized map
 	 */
-	public int getTempHeight(){
+	public int getHeightFromFile(){
 		return height;
 	}
 	
+	public String getUserInput(){
+		return userInput;
+	}
 	/**
 	 * 
 	 * @return user's input 
 	 */
-	public int[][] getUserInput(){
+	public int[][] getUserInputFromFile(){
 		return map.getCornersList();
 	}
+	
+	public ArrayList<String> getListofFiles(){
+		return files;
+	}
+	
+	/**
+	 * Print
+	 */
 	public String toString(){
 		return map.toString();
 	}

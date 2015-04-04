@@ -1,10 +1,10 @@
-package Map;
+package map;
+
+import grid.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
-
-import Grid.*;
 
 /**
  * @author		Wei Wang
