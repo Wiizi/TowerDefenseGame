@@ -54,9 +54,11 @@ public class PlayScreen extends BasicGameState {
 	Animation blackBeetleAnimation;
 	private SpriteSheet batSpriteSheet;
 	Animation batAnimation;
+	
 	Image SandTileGraphic;
 	Image GravelTileGraphic;
 	Image BrickTileGraphic;
+	
 	Image BuyTowerTitleGraphic;
 	Image TowerMenuOverlayGraphic;
 	Image ExitButtonGraphic;
@@ -66,9 +68,17 @@ public class PlayScreen extends BasicGameState {
 	Image NextWaveActiveGraphic; 
 	Image NextWaveNonActiveGraphic;
 	Image HeartGraphic;
+	
 	Image TowerTileGraphic;
 	Image BasicTowerGraphic;
 	Image BasicTowerProjectileGraphic;
+	Image FreezeTowerGraphic;
+	Image FreezeTowerProjectileGraphic;
+	Image SniperTowerGraphic;
+	Image SniperTowerProjectileGraphic;
+	
+	
+	
 	Rectangle ExitButton;
 	Rectangle NextWaveButton;
 
@@ -278,7 +288,7 @@ public class PlayScreen extends BasicGameState {
 		for (int i =0;i<maximumNumberTowers;i++){
 			int xCorner = currentMap.getWidthInPixel() +towerGraphicXStart + ((i)%2)*towerGraphicXOffset;
 			int yCorner = towerGraphicYStart + (i/2)*towerGraphicYOffset;
-			TowerGraphics.get(i).drawCentered(xCorner +towerButtonWidth/2,yCorner +towerButtonHeight/2);
+			BasicTowerGraphic.drawCentered(xCorner +towerButtonWidth/2,yCorner +towerButtonHeight/2);
 
 		}
 
@@ -346,14 +356,13 @@ public class PlayScreen extends BasicGameState {
 		TowerMenuOverlayGraphic = new Image("graphics/TowerMenuGraphic.png");
 
 		BasicTowerGraphic = new Image("graphics/BasicTowerGraphic.png");
-		TowerGraphics = new ArrayList<Image>();
-		for(int i =0;i<6;i++){
-			TowerGraphics.add(new Image("graphics/BasicTowerGraphic.png"));
-		}
 		BasicTowerProjectileGraphic = new Image("graphics/BasicTowerProjectileGraphic.png");
+		
+		FreezeTowerGraphic = new Image("graphics/FreezeTowerGraphic.png");
+		FreezeTowerProjectileGraphic = new Image("graphics/FreezeTowerProjectileGraphic.png");
 
-
-
+		SniperTowerGraphic = new Image ("graphics/SniperTowerGraphic.png");
+		SniperTowerProjectileGraphic = new Image ("graphics/SniperTowerProjectileGraphic.png");
 	}
 
 	public void loadAnimations() throws SlickException{
@@ -483,7 +492,7 @@ public class PlayScreen extends BasicGameState {
 		//tower selected
 		else {
 			if(mouseOnMap(x,y)){
-				Tower newTower = new GenericTower(getClosestTileCenter(x),getClosestTileCenter(y));
+				Tower newTower = new BasicTower(getClosestTileCenter(x),getClosestTileCenter(y));
 				towerList.add(newTower);
 				Player.addCredits((-1)*newTower.getBuyingCost());
 

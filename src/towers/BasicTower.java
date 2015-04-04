@@ -1,10 +1,9 @@
 package towers;
 
-import towers.Tower.type;
 
-public class GenericTower extends Tower{
+public class BasicTower extends Tower{
 
-	public GenericTower(double xPos, double yPos) {
+	public BasicTower(double xPos, double yPos) {
 		super(xPos, yPos);
 		this.buyingCost =newBuyingCost;
 		this.refundValue = newRefundValue;
