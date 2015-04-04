@@ -17,7 +17,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import Map.*;
+import map.*;
 
 
 public class MapSelectScreen extends BasicGameState {

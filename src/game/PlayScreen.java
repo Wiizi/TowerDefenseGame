@@ -27,8 +27,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import towers.Projectile;
 import towers.Tower;
-import Grid.*;
-import Map.*;
+import grid.*;
+import map.*;
 import critters.Critter;
 import critters.Critter.direction;
 import critters.CritterGenerator;
