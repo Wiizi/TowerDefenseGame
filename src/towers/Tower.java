@@ -5,7 +5,7 @@ import game.Player;
 
 public abstract class Tower {	
 	
-	protected enum type{
+	public enum type{
 		FREEZE, SNIPER, GENERIC
 	}
 	protected int buyingCost;
@@ -128,5 +128,9 @@ public abstract class Tower {
 	public void setTimeOfLastAttack(long time){
 
 		lastAttackTime = time;
+	}
+	
+	public type getType(){
+		return this.towerType;
 	}
 }

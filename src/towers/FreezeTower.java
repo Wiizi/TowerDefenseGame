@@ -1,7 +1,7 @@
 package towers; import towers.Tower.type;
 import critters.Critter;
 
-class FreezeTower extends Tower
+public class FreezeTower extends Tower
 {
 	
 
