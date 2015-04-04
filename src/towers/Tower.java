@@ -18,6 +18,7 @@ public class Tower {
 	private Critter targetCritter;
 	private final int reloadTime = 1;
 	private long lastAttackTime;
+	private double angleOfRotation;
 	//system time of last attack
 	
 	public Tower(int buyingCost, int refundValue, double range, int power, int rateofFire, 
@@ -90,8 +91,8 @@ public class Tower {
 	
 	public double getRotationAngleInDegrees(){
 		if(targetCritter !=null)
-			return (180/Math.PI)*Math.atan2(targetCritter.getYLoc()-yPos, targetCritter.getXLoc()-xPos);
-		else return 0;
+			angleOfRotation = (180/Math.PI)*Math.atan2(targetCritter.getYLoc()-yPos, targetCritter.getXLoc()-xPos);
+		return angleOfRotation;
 	}
 	
 	public double getRange() {

@@ -66,7 +66,7 @@ public class PlayScreen extends BasicGameState {
 	Image NextWaveNonActiveGraphic;
 	Image HeartGraphic;
 	Image TowerTileGraphic;
-	Image TowerGraphic;
+	Image BasicTowerGraphic;
 	Image BasicTowerProjectileGraphic;
 	Rectangle ExitButton;
 	Rectangle NextWaveButton;
@@ -121,58 +121,14 @@ public class PlayScreen extends BasicGameState {
 
 		if(waveIsInProgress){
 			if(critterQueue.size()!=0){
-				tickCount++;
-				if(tickCount>critterSpawnDelay){
-					activeCritterQueue.add(critterQueue.poll());
-					tickCount=0;	
-				}
-			}
-			boolean crittersAreStillVisible= false;
-			ArrayList<Critter> crittersToRemove = new ArrayList<Critter>();
-			//for each critter list, update their movement if they are alive
-			for(Critter s : activeCritterQueue){
-				//only living critters can move!
-				if(s.isAlive())
-					s.move();
-				else{
-					Player.addCredits(s.getReward());
-					crittersToRemove.add(s);
-				}
-				if(s.isVisible())
-					crittersAreStillVisible=true;
-				if(s.isAtEndPoint()){
-					Player.decreaseLife();
-					crittersToRemove.add(s);
-				}
+				addCrittersToActiveCritterQueue();
 			}
 			
-			//remove all the dead critters and the critters that have arrived at the exit
-			for(Critter s : crittersToRemove){
-				activeCritterQueue.remove(s);
-			}
-			
+			updateProjectiles();			
+			updateCritters();
 			targetCritters();
-			attackCritters1();
-
-		
-
-			//for each projectile update their locations
-			pToRemove = new ArrayList<Projectile>();
-			for(Projectile p: projectileList){
-				if(!p.hasArrived())
-					p.move();
-				else
-					pToRemove.add(p);
-			}
-
-			for(Projectile p: pToRemove){
-				projectileList.remove(p);
-			}
-
-			if(!crittersAreStillVisible){
-				waveIsInProgress = false;
-				currentLevel++;
-			}
+			attackCritters();
+			
 		}
 
 
@@ -202,12 +158,14 @@ public class PlayScreen extends BasicGameState {
 
 	private void drawTowers(){
 		for(Tower t: towerList){
-			TowerGraphic.setRotation( (float) t.getRotationAngleInDegrees());
-			TowerGraphic.drawCentered( (float) t.getXLoc(), (float) t.getYLoc());
+		
+			BasicTowerGraphic.setRotation( (float) t.getRotationAngleInDegrees());
+			BasicTowerGraphic.drawCentered( (float) t.getXLoc(), (float) t.getYLoc());
 		}
 	}
 	private void drawProjectiles(){
 		for(Projectile p: projectileList){
+			BasicTowerProjectileGraphic.setRotation( (float) p.angleOfProjectileInDegrees());
 			BasicTowerProjectileGraphic.drawCentered((float)p.getX(),(float)p.getY());
 		}
 	}
@@ -223,7 +181,7 @@ public class PlayScreen extends BasicGameState {
 	}
 
 
-	public void drawCritter(Critter s){
+	private void drawCritter(Critter s){
 		Animation a;
 		int orientationOffset = 0;
 		switch(s.getType()){
@@ -273,7 +231,7 @@ public class PlayScreen extends BasicGameState {
 	}
 
 
-	public void drawMapandOverlay(GameContainer container, Graphics g){
+	private void drawMapandOverlay(GameContainer container, Graphics g){
 		//draw map and background
 		for(int i = 0 ; i < container.getWidth()/32 ; i++){
 			for(int j = 0 ; j < container.getHeight()/32 ; j++){
@@ -308,6 +266,7 @@ public class PlayScreen extends BasicGameState {
 		ExitButtonGraphic.draw(container.getWidth() - ExitButtonGraphic.getWidth(), container.getHeight() - ExitButtonGraphic.getHeight() - 2);
 		CurrencyGraphic.draw(1, container.getHeight() - CurrencyGraphic.getHeight());
 		WaveGraphic.draw(currentMap.getWidthInPixel() - WaveGraphic.getWidth(), currentMap.getHeightInPixel());
+		//change wavebutton graphic
 		if(!waveIsInProgress)
 			NextWaveActiveGraphic.draw(currentMap.getWidthInPixel() - WaveGraphic.getWidth(), currentMap.getHeightInPixel() + WaveGraphic.getHeight() + 10);
 		else
@@ -331,34 +290,11 @@ public class PlayScreen extends BasicGameState {
 			if(selectedTower<0)
 				TileSelectGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
 			else
-				TowerGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
+				BasicTowerGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
 		}
 	}
 
-
-	//for every tower in the towerlist, determine if it should attack critter
-	private void attackCritters(){
-		for(Tower t: towerList){
-			for(Critter c: activeCritterQueue){
-				if(c.isAlive()&&c.isVisible()){
-					//calculate distance
-					double xDist= Math.abs(c.getXLoc() - t.getXLoc());
-					double yDist= Math.abs(c.getYLoc() -  t.getYLoc());
-					double dist = Math.sqrt((xDist*xDist)+(yDist*yDist));
-					if(dist<t.getRange()){
-						t.setTargetCritter(c);
-						
-						if(t.canAttack()){
-							towerAttack(t);
-							t.setTimeOfLastAttack(System.currentTimeMillis());
-						}
-						break;
-					}
-				}
-			}
-		}
-	}
-
+	//for each tower in the tower list, find its closest target
 	public void targetCritters(){
 		for(Tower t : towerList){
 			for(Critter c: activeCritterQueue){
@@ -377,33 +313,18 @@ public class PlayScreen extends BasicGameState {
 		}
 	}
 
-	
-	public void attackCritters1(){
+	//for each tower, attack the critter its suppose to attack, if it is able to
+	public void attackCritters(){
 		for(Tower t: towerList){
 			if(t.getTargetCritter()!= null &&t.canAttack()){
-				towerAttack(t);
+				attackCritter(t);
 				t.setTimeOfLastAttack(System.currentTimeMillis());
 			}
 		}
 	}
-/*
 
-	private void towerAttack(Critter target, Tower source){
-		Projectile projectile = new Projectile(source.getXLoc(), source.getYLoc(), 
-				target.getXLoc(), target.getYLoc(), source.getPower(), source.isFreezeTower());
-
-		projectileList.add(projectile);
-		double xDist = source.getXLoc() - target.getXLoc();
-		double yDist = source.getYLoc() - target.getYLoc();
-		long dist = (long)Math.sqrt(xDist*xDist + yDist*yDist);
-		//convert to ms
-		long delay = dist/projectile.getSpeed()*1000;
-		target.hitCritter(source.getPower(), delay);
-	}
-*/
 	
-	public void towerAttack(Tower source){
-
+	public void attackCritter(Tower source){
 		Projectile projectile = new Projectile(source.getXLoc(), source.getYLoc(), 
 				source.getTargetCritter().getXLoc(), source.getTargetCritter().getYLoc(), source.getPower(), source.isFreezeTower(), source.getTargetCritter());
 		projectileList.add(projectile);
@@ -423,7 +344,7 @@ public class PlayScreen extends BasicGameState {
 		HeartGraphic = new Image("graphics/Heart.png");
 		TowerMenuOverlayGraphic = new Image("graphics/TowerMenuGraphic.png");
 
-		TowerGraphic = new Image("graphics/BasicTowerGraphic.png");
+		BasicTowerGraphic = new Image("graphics/BasicTowerGraphic.png");
 		TowerGraphics = new ArrayList<Image>();
 		for(int i =0;i<6;i++){
 			TowerGraphics.add(new Image("graphics/BasicTowerGraphic.png"));
@@ -477,7 +398,60 @@ public class PlayScreen extends BasicGameState {
 		activeCritterQueue.add(critterQueue.poll());
 	}
 
+	public void addCrittersToActiveCritterQueue(){
+		tickCount++;
+		if(tickCount>critterSpawnDelay){
+			activeCritterQueue.add(critterQueue.poll());
+			tickCount=0;	
+		}
+	}
+	
+	public void updateCritters(){
+		boolean crittersAreStillVisible= false;
+		ArrayList<Critter> crittersToRemove = new ArrayList<Critter>();
+		//for each critter list, update their movement if they are alive
+		for(Critter s : activeCritterQueue){
+			//only living critters can move!
+			if(s.isAlive())
+				s.move();
+			else{
+				Player.addCredits(s.getReward());
+				crittersToRemove.add(s);
+			}
+			if(s.isVisible())
+				crittersAreStillVisible=true;
+			if(s.isAtEndPoint()){
+				Player.decreaseLife();
+				crittersToRemove.add(s);
+			}
+		}
+		
+		//remove all the dead critters and the critters that have arrived at the exit
+		for(Critter s : crittersToRemove){
+			activeCritterQueue.remove(s);
+		}
+		
+		
+		if(!crittersAreStillVisible){
+			waveIsInProgress = false;
+			currentLevel++;
+		}
+	}
+	
+	private void updateProjectiles(){
+		//for each projectile update their locations
+		pToRemove = new ArrayList<Projectile>();
+		for(Projectile p: projectileList){
+			if(!p.hasArrived())
+				p.move();
+			else
+				pToRemove.add(p);
+		}
 
+		for(Projectile p: pToRemove){
+			projectileList.remove(p);
+		}
+	}
 
 	private void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException {
 
