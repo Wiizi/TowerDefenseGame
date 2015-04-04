@@ -2,8 +2,13 @@ package game;
 
 
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+
+
+
+
 
 
 import org.lwjgl.input.Mouse;
@@ -18,6 +23,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import towers.Tower;
 import Grid.*;
 import Map.*;
 import critters.Critter;
@@ -31,7 +37,12 @@ public class PlayScreen extends BasicGameState {
 
 	private static Queue<Critter> critterList = new LinkedList<Critter>();
 	private static Queue<Critter> activeCritterList = new LinkedList<Critter>();
+	private static ArrayList<Tower> towerList = new ArrayList<Tower>();
 	static long tickCount = 0;
+	
+	private final int mouseClickDelay = 200;
+	private long lastClick=(-1*mouseClickDelay);
+	
 	private SpriteSheet blackBeetleSpriteSheet;
 	Animation blackBeetleAnimation;
 	private SpriteSheet batSpriteSheet;
@@ -45,9 +56,11 @@ public class PlayScreen extends BasicGameState {
 	Image TileSelectGraphic;
 	Image CurrencyGraphic;
 	Image WaveGraphic;
-	Image NextWaveActiveGraphic;
+	Image NextWaveActiveGraphic; 
 	Image NextWaveNonActiveGraphic;
 	Image HeartGraphic;
+	Image TowerTileGraphic;
+	Image TowerGraphic;
 	Rectangle ExitButton;
 	Rectangle NextWaveButton;
 	//TODO add rectangle buttons for towers and sell tower
@@ -55,16 +68,25 @@ public class PlayScreen extends BasicGameState {
 	private static Map currentMap;
 	private final int sideMenuWidth = 192;
 	private final int bottomMenuWidth = 128;
+	
+	private final int towerGraphicYStart = 58;
+	private final int towerGraphicXStart = 20;
+	private final int towerGraphicYOffset = 78;
+	private final int towerGraphicXOffset = 83;
+	
+	//which tower player is placing, corresponds to position in towerList. -1 = no tower selected
+	private static int selectedTower =-1;
+	
+	private ArrayList<Image> TowerGraphics;
+	private ArrayList<Rectangle> TowerGraphicButtons;
+	
 	private final int startingLevel = 1;
-	private final int startingCredits = 0;
-	private final int startingLives = 16;
 	private final int critterSpawnDelay = 20;
 	CritterObserver gruntObserver;
 	CritterGenerator generator;
 	private static int currentLevel;
-	private static int playerCredits;
-	private static int playerLives;
 	private static boolean waveIsInProgress;
+	
 
 	Font font ;
 	TrueTypeFont ttf;
@@ -76,14 +98,13 @@ public class PlayScreen extends BasicGameState {
 
 	@Override
 	public void init(GameContainer container, StateBasedGame sbg) throws SlickException {
-
+		
 		loadImages();
 		loadAnimations();
 		loadFonts();
 
 		currentLevel = startingLevel;
-		playerCredits = startingCredits;
-		playerLives = startingLives;
+		Player.reset();
 		waveIsInProgress = false;
 	}
 
@@ -126,72 +147,47 @@ public class PlayScreen extends BasicGameState {
 
 
 
-
-
 	@Override
 	public void render(GameContainer container, StateBasedGame sbg, Graphics g) throws SlickException {
 
 		drawMapandOverlay(container, g);
+		drawTowers();
 		if(waveIsInProgress)
-			drawCritters();
-
+			drawCritters(); 
 		
 	}
 
 
 
-
+	public void drawTowers(){
+		for(Tower t: towerList){
+			TowerGraphic.drawCentered(t.getX(), t.getY());
+		}
+		
+	}
 	public void drawCritters(){
 		for(Critter s : activeCritterList)
 			//this method draws critters depending on if they are alive or not
-			if(s.isVisible())
+			if(s.isVisible()&&s.isAlive())
 			{
-				//which critter
 				drawCritter(s);
-			/*
-				if(!(s instanceof ScoutCritter)){
-					drawGrunt(s);
-				}
 
-				if(s instanceof ScoutCritter){
-					drawScout(s);
-				}
-				*/
 			}
 			
 	}
 
-	public void drawGrunt(Critter s){
-		if( s.isAlive() ){
-			if(s.getCritterDirection()==direction.RIGHT){
-				blackBeetleAnimation.getCurrentFrame().setRotation(90*(3));
-				blackBeetleAnimation.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
-			}
-			if(s.getCritterDirection()==direction.LEFT){
-				blackBeetleAnimation.getCurrentFrame().setRotation(90*(1));
-				blackBeetleAnimation.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
-
-			}
-			if(s.getCritterDirection()==direction.DOWN){
-				blackBeetleAnimation.getCurrentFrame().setRotation(90*(0));
-				blackBeetleAnimation.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
-			}
-			if(s.getCritterDirection()==direction.UP){
-				blackBeetleAnimation.getCurrentFrame().setRotation(90*(2));
-				blackBeetleAnimation.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
-			}
-		}
-
-	}
 	
 	public void drawCritter(Critter s){
 		Animation a;
+		int orientationOffset = 0;
 		switch(s.getType()){
 			case GRUNT:
 				a = blackBeetleAnimation;
+				orientationOffset =0;
 				break;
 			case SCOUT:
 				a = batAnimation;
+				orientationOffset = 2;
 				break;
 			case ARMORED:
 				a = null;
@@ -210,42 +206,26 @@ public class PlayScreen extends BasicGameState {
 		}
 		
 		if(s.getCritterDirection()==direction.RIGHT){
-			a.getCurrentFrame().setRotation(90*(1));
+			a.getCurrentFrame().setRotation(90*((3+orientationOffset)%4));
 			a.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
 		}
 		if(s.getCritterDirection()==direction.LEFT){
-			a.getCurrentFrame().setRotation(90*(3));
+			a.getCurrentFrame().setRotation(90*((1+orientationOffset)%4));
 			a.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
+
 		}
 		if(s.getCritterDirection()==direction.DOWN){
-			a.getCurrentFrame().setRotation(90*(2));
+			a.getCurrentFrame().setRotation(90*((0+orientationOffset)%4));
 			a.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
 		}
+		
 		if(s.getCritterDirection()==direction.UP){
-			a.getCurrentFrame().setRotation(90*(0));
+			a.getCurrentFrame().setRotation(90*((2+orientationOffset)%4));
 			a.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
 		}
 		
 	}
 
-	public void drawScout(Critter s){
-		if(s.getCritterDirection()==direction.RIGHT){
-			batAnimation.getCurrentFrame().setRotation(90*(1));
-			batAnimation.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
-		}
-		if(s.getCritterDirection()==direction.LEFT){
-			batAnimation.getCurrentFrame().setRotation(90*(3));
-			batAnimation.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
-		}
-		if(s.getCritterDirection()==direction.DOWN){
-			batAnimation.getCurrentFrame().setRotation(90*(2));
-			batAnimation.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
-		}
-		if(s.getCritterDirection()==direction.UP){
-			batAnimation.getCurrentFrame().setRotation(90*(0));
-			batAnimation.getCurrentFrame().drawCentered(s.getXLoc(), s.getYLoc());
-		}
-	}
 
 	public void drawMapandOverlay(GameContainer container, Graphics g){
 		//draw map and background
@@ -268,7 +248,7 @@ public class PlayScreen extends BasicGameState {
 		}
 
 		//draw the hearts
-		for(int x = 0 ; x < playerLives ; x++){
+		for(int x = 0 ; x < Player.getLives() ; x++){
 			if(x<8)
 				HeartGraphic.draw(x * (5 + HeartGraphic.getWidth()), currentMap.getHeightOfMap() * currentMap.getPixelSize() + 5);
 			else{
@@ -287,15 +267,34 @@ public class PlayScreen extends BasicGameState {
 		else
 			NextWaveNonActiveGraphic.draw(currentMap.getWidthInPixel() - WaveGraphic.getWidth(), currentMap.getHeightInPixel() + WaveGraphic.getHeight() + 10);
 
+		
+		//draw tower graphics
+		for (int i =0;i<6;i++){
+			int xCorner = currentMap.getWidthInPixel() +towerGraphicXStart + ((i)%2)*towerGraphicXOffset;
+			int yCorner = towerGraphicYStart + (i/2)*towerGraphicYOffset;
+			TowerGraphics.get(i).draw(xCorner,yCorner);
+			
+		}
 		// drawing/updating the currency and level
-		ttf.drawString( CurrencyGraphic.getWidth() + 5, (container.getHeight() - 40), "" + playerCredits);
+		ttf.drawString( CurrencyGraphic.getWidth() + 5, (container.getHeight() - 40), "" + Player.getCredits());
 		ttf.drawString(currentMap.getWidthInPixel() - 48, currentMap.getHeightInPixel() + 15, currentLevel + "");
 
 		//if the mouse is on the map, snap to map grid
-		if(Mouse.getX()<(currentMap.getWidthInPixel()) && Mouse.getY()>(container.getHeight() - currentMap.getHeightInPixel() ))
-			TileSelectGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
+		if(mouseOnMap(Mouse.getX(),container.getHeight()-Mouse.getY())){
+			if(selectedTower<0)
+				TileSelectGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
+			else
+				TowerGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
+		}
 	}
 
+	public boolean mouseOnMap(int x, int y){
+		if(x<(currentMap.getWidthInPixel())&& y< currentMap.getHeightInPixel()){
+			return true;
+		}
+		else
+			return false;
+	}
 
 	public void loadImages() throws SlickException{
 		//initialize all graphics/images from graphics folder
@@ -310,6 +309,12 @@ public class PlayScreen extends BasicGameState {
 		NextWaveNonActiveGraphic = new Image("graphics/NextWaveNonActive.png");
 		HeartGraphic = new Image("graphics/Heart.png");
 		TowerMenuOverlay = new Image("graphics/TowerMenuGraphic.png");
+		
+		TowerGraphics = new ArrayList<Image>();
+		for(int i =0;i<6;i++){
+			TowerGraphics.add(new Image("graphics/MockTower.png"));
+		}
+		TowerGraphic = new Image("graphics/MockTowerPartial.png");
 
 
 
@@ -334,6 +339,16 @@ public class PlayScreen extends BasicGameState {
 		//create the nextwave and exit rectangle buttons
 		ExitButton = new Rectangle(container.getWidth() - ExitButtonGraphic.getWidth(), container.getHeight() - ExitButtonGraphic.getHeight() - 2, ExitButtonGraphic.getWidth(), ExitButtonGraphic.getHeight());
 		NextWaveButton = new Rectangle(currentMap.getWidthInPixel() - WaveGraphic.getWidth(), currentMap.getHeightInPixel() + WaveGraphic.getHeight() + 10, NextWaveActiveGraphic.getWidth(), NextWaveActiveGraphic.getHeight());
+	
+		//create tower buttons
+		TowerGraphicButtons = new ArrayList<Rectangle>();
+		for(int i =0;i<6;i++){
+			
+			int xCorner = currentMap.getWidthInPixel() +towerGraphicXStart + ((i)%2)*towerGraphicXOffset;
+			int yCorner = towerGraphicYStart + (i/2)*towerGraphicYOffset;
+			TowerGraphicButtons.add(new Rectangle(xCorner, yCorner, TowerGraphics.get(i).getHeight(), TowerGraphics.get(i).getWidth()));
+			
+		}
 	}
 
 
@@ -343,7 +358,7 @@ public class PlayScreen extends BasicGameState {
 
 	public float getClosestTileCenter(float X){
 
-		return (float) (Math.floor(X / currentMap.getPixelSize() * currentMap.getPixelSize()) + currentMap.getPixelSize() / 2);
+		return (float) (Math.floor(X / currentMap.getPixelSize()) * currentMap.getPixelSize() + currentMap.getPixelSize() / 2);
 	}
 
 	public void createLevelCritterQueue(){
@@ -360,19 +375,47 @@ public class PlayScreen extends BasicGameState {
 
 
 	private void MouseClicked(int x, int y, StateBasedGame sbg) {
+		if(lastClick + mouseClickDelay > System.currentTimeMillis())
+			return;
+		lastClick = System.currentTimeMillis();
+		
 		if(ExitButton.contains(x,y)){
 			currentLevel = startingLevel;
-			playerCredits = startingCredits;
-			playerLives = startingLives;
+			Player.reset();
 			waveIsInProgress = false;
 			sbg.enterState(0);
 		}
-
-		if(NextWaveButton.contains(x,y)&& !waveIsInProgress){
-			waveIsInProgress = true;
-			createLevelCritterQueue();
+		
+		//no towers selected
+		if (selectedTower < 0){
+			
+			if(NextWaveButton.contains(x,y)&& !waveIsInProgress){
+				waveIsInProgress = true;
+				createLevelCritterQueue();
+			}
+			
+			for(int i=0;i<6;i++){
+				if(TowerGraphicButtons.get(i).contains(x,y)){
+					selectedTower = i;
+					
+				}
+			}
 		}
-
+		//tower selected
+		else {
+			if(mouseOnMap(x,y)){
+				Tower newTower = new Tower((int)getClosestTileCenter(x),(int)getClosestTileCenter(y));
+				towerList.add(newTower);
+				Player.addCredits((-1)*newTower.getBuyingCost());
+				
+				if (Player.getCredits()<0){
+					//deny tower building due to insufficient funds
+					Player.addCredits(newTower.getBuyingCost());
+					towerList.remove(newTower);
+				}
+			}
+			selectedTower=-1;
+		}
 	}
 
 
