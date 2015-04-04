@@ -7,8 +7,7 @@ public class ArmoredCritter extends Critter {
 
 	public ArmoredCritter(int[][] Locations) {
 		
-		super(Locations, health, armor, speed, reward, name);
-		this.critterType = type.ARMORED;
+		super(Locations, health, armor, speed, reward, name, type.ARMORED);
 		
 	}
 

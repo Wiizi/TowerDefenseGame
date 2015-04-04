@@ -1,5 +1,7 @@
 package towers;
 
+import critters.Critter;
+
 public class Projectile {
 	
 	private double xLoc;
@@ -10,14 +12,14 @@ public class Projectile {
 	private double yInit;
 	private long totalTime;
 	private long startTime;
-	private double error = 1;
+	private final double error = 1;
 	private int power;
 	private boolean freeze;
-	private final long speed = 50;
+	private final long speed = 20;
 	private boolean arrivedAtTarget = false;
+	private Critter targetCritter;
 	
-	
-	public Projectile(double pXInit, double pYInit, double pXDest, double pYDest, int pPower, boolean pFreeze){
+	public Projectile(double pXInit, double pYInit, double pXDest, double pYDest, int pPower, boolean pFreeze, Critter pTargetCritter){
 		xInit = pXInit;
 		xLoc = pXInit;
 		xDest = pXDest;
@@ -32,21 +34,28 @@ public class Projectile {
 		double dist = Math.sqrt(xDist*xDist+yDist*yDist);
 		totalTime = ((long)dist)/speed *1000;
 		startTime = System.currentTimeMillis();
+		targetCritter = pTargetCritter;
 	}
 	
 	public double angleOfProjectileInDegrees(){
 		return (180/Math.PI)*Math.atan2(yDest-yInit, xDest-xInit);
 	}
 
+	public double angleOfProjectileInRadians(){
+		return Math.atan2(yDest-yInit, xDest-xInit);
+	}
+
 	public void move(){
 		
 		//projectile has hit
-		if (Math.abs(xLoc - xDest)< error || Math.abs(yLoc - yDest)< error){
+		if (Math.abs(xLoc - xDest)< 5 || Math.abs(yLoc - yDest)< 5){
 			arrivedAtTarget = true;
+			targetCritter.takeDamage(power);
 		}
 		else{
-			xLoc = xInit + ((xDest - xInit)*(System.currentTimeMillis()-startTime)/totalTime);
-			yLoc = yInit + ((yDest - yInit)*(System.currentTimeMillis()-startTime)/totalTime);
+			xLoc += speed*Math.cos(angleOfProjectileInRadians());
+
+			yLoc += speed*Math.sin(angleOfProjectileInRadians());
 		}
 	}
 	

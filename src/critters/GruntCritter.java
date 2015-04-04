@@ -6,8 +6,7 @@ public class GruntCritter extends Critter{
 
 	public GruntCritter(int[][] Locations) {
 		
-		super(Locations, health, armor, speed, reward, name);
-		this.critterType = type.GRUNT;
+		super(Locations, health, armor, speed, reward, name, type.GRUNT);
 
 	}
 

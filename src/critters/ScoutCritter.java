@@ -6,10 +6,8 @@ public class ScoutCritter extends Critter {
 
 	public ScoutCritter(int[][] Locations) {
 	
-		super(Locations, health, armor, speed, reward, name);
-		this.critterType = type.SCOUT;
-
-
+		super(Locations, health, armor, speed, reward, name, type.SCOUT);
+	
 	}
 
 	private static String		name		= "Scout";

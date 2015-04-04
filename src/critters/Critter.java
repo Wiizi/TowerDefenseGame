@@ -8,6 +8,8 @@ import java.util.Observable;
 abstract public class Critter{
 
 	public enum type{GRUNT, SCOUT, ARMORED, TANK, BOSS};
+	public enum direction {LEFT, RIGHT, UP, DOWN};
+	
 	private double 		health;
 	private double 		speed;
 	private double 		modifier	= 0;
@@ -27,12 +29,12 @@ abstract public class Critter{
 	protected type		critterType;
 	private List<CrObserver> critterObservers;
 	private ArrayList<DelayedDamage> damageDue = new ArrayList<DelayedDamage>();
-	public enum direction {LEFT, RIGHT, UP, DOWN};
+
 
 	direction critterDirection;
 
 	//initialize critter at the start 
-	public Critter(int[][] pLocations, double pHealth, double pArmor, double pSpeed, int pReward, String pName){
+	public Critter(int[][] pLocations, double pHealth, double pArmor, double pSpeed, int pReward, String pName, type pCritterType){
 		health =pHealth;
 		armor = pArmor;
 		speed =pSpeed;
@@ -43,7 +45,7 @@ abstract public class Critter{
 		alive = true;
 		locations = pLocations;
 		critterObservers = new ArrayList<CrObserver>();
-		critterType = type.GRUNT;
+		critterType = pCritterType;
 
 	}
 
@@ -103,6 +105,7 @@ abstract public class Critter{
 			damageDue.remove(d);
 		}
 	}
+	
 	public void hitCritter(double damage, long delay){
 		damageDue.add(new DelayedDamage(System.currentTimeMillis()+delay, damage));
 	}
@@ -121,20 +124,6 @@ abstract public class Critter{
 	}
 
 	
-	
-	//this method updates the location of both previous location variables each time the critter moves
-	public void updateLocation(){
-		PrevXLoc = XLoc;
-		PrevYLoc = YLoc;
-	}
-
-	//method checks if critter has reach endpoint
-	public boolean isCritterAtEndpoint(int[] exit){
-		if(XLoc == exit[0] && YLoc == exit[1])
-			return true;
-
-		return false;
-	}
 
 	//observer classes
 	public void addObserver(CrObserver o){
@@ -158,9 +147,6 @@ abstract public class Critter{
 
 	//Getters and Setters
 
-	
-	
-	
 	
 	public String getName() {
 		return name;

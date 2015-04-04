@@ -6,8 +6,7 @@ public class BossCritter extends Critter {
 
 	public BossCritter(int[][] Locations) {
 		
-		super(Locations, health, armor, speed, reward, name);
-		this.critterType = type.BOSS;
+		super(Locations, health, armor, speed, reward, name, type.BOSS);
 
 	}
 

@@ -17,7 +17,7 @@ public class Tower {
 	private boolean freezeTower;
 	private Critter targetCritter;
 	private final int reloadTime = 1;
-	private static long lastAttackTime;
+	private long lastAttackTime;
 	//system time of last attack
 	
 	public Tower(int buyingCost, int refundValue, double range, int power, int rateofFire, 
@@ -33,13 +33,13 @@ public class Tower {
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.freezeTower = isFreezeTower;
-		this.lastAttackTime = 0;
+		this.lastAttackTime = System.currentTimeMillis();
 	}
 	public Tower(double xPos, double yPos){
 		this.buyingCost = 100;
 		this.refundValue = 90;
 		this.range = 100;
-		this.power = 5;
+		this.power = 4;
 		this.rateofFire = 2000;
 		this.level = 1;
 		this.upgradeCost = 200;
@@ -52,7 +52,7 @@ public class Tower {
 	
 	public boolean canAttack(){
 		if( (System.currentTimeMillis()-lastAttackTime)/1000 >= reloadTime){
-			lastAttackTime = System.currentTimeMillis();
+
 			return true;
 		}
 		else
@@ -81,6 +81,19 @@ public class Tower {
 		refundValue = pRefundValue;
 	}
 
+	public void setTargetCritter(Critter c){
+		targetCritter = c;
+	}
+	public Critter getTargetCritter(){
+		return targetCritter;
+	}
+	
+	public double getRotationAngleInDegrees(){
+		if(targetCritter !=null)
+			return (180/Math.PI)*Math.atan2(targetCritter.getYLoc()-yPos, targetCritter.getXLoc()-xPos);
+		else return 0;
+	}
+	
 	public double getRange() {
 		return range;
 	}
@@ -121,11 +134,11 @@ public class Tower {
 		upgradeCost = pUpgradeCost;
 	}
 	
-	public double getX(){
+	public double getXLoc(){
 		return xPos;
 	}
 	
-	public double getY(){
+	public double getYLoc(){
 		return yPos;
 	}
 	
