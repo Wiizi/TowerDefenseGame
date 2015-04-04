@@ -5,20 +5,25 @@ import game.Player;
 
 public class Tower {	
 	
-	private int buyingCost;
-	private int refundValue;
-	private double range;
-	private int power;
-	private int rateofFire;
-	private int level;
-	private int upgradeCost;
+	protected enum type{
+		FREEZE, SNIPER, NORMAL
+	}
+	protected int buyingCost = 100;
+	protected int refundValue = 90;
+	protected double range = 100;
+	protected int power = 4;
+	protected int rateofFire = 2000;
+	private int level =1;
+	protected int upgradeCost = 200;
 	private double xPos;
 	private double yPos;
-	private boolean freezeTower;
+	protected boolean freezeTower = false;
 	private Critter targetCritter;
-	private final int reloadTime = 1;
-	private long lastAttackTime;
+	protected int reloadTime = 1;
+	private long lastAttackTime = 0;
+	protected type towerType = type.NORMAL;
 	//system time of last attack
+
 	
 	public Tower(int buyingCost, int refundValue, double range, int power, int rateofFire, 
 			int level, int upgradeCost, double xPos, double yPos, boolean isFreezeTower) {
@@ -36,16 +41,8 @@ public class Tower {
 		this.lastAttackTime = System.currentTimeMillis();
 	}
 	public Tower(double xPos, double yPos){
-		this.buyingCost = 100;
-		this.refundValue = 90;
-		this.range = 100;
-		this.power = 4;
-		this.rateofFire = 2000;
-		this.level = 1;
-		this.upgradeCost = 200;
 		this.xPos = xPos;
 		this.yPos = yPos;
-		this.freezeTower = false;
 		this.lastAttackTime = 0;
 	}
 	
