@@ -1,5 +1,6 @@
 package towers;
 
+import critters.Critter;
 import game.Player;
 
 public class Tower {	
@@ -14,10 +15,11 @@ public class Tower {
 	private int xPos;
 	private int yPos;
 	private boolean freezeTower;
-	
+	private Critter targetCritter;
+	private final int reloadTime = 1;
+	private static long lastAttackTime;
 	//system time of last attack
-	private long lastAttack;
-
+	
 	public Tower(int buyingCost, int refundValue, double range, int power, int rateofFire, 
 			int level, int upgradeCost, int xPos, int yPos, boolean isFreezeTower) {
 		// TODO Auto-generated constructor stub
@@ -31,7 +33,7 @@ public class Tower {
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.freezeTower = isFreezeTower;
-		this.lastAttack = 0;
+		this.lastAttackTime = 0;
 	}
 	public Tower(int xPos, int yPos){
 		this.buyingCost = 100;
@@ -44,89 +46,98 @@ public class Tower {
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.freezeTower = false;
-		this.lastAttack = 0;
+		this.lastAttackTime = 0;
 	}
 	
+	
+	public boolean canAttack(){
+		if( (System.currentTimeMillis()-lastAttackTime)/1000 >= reloadTime){
+			lastAttackTime = System.currentTimeMillis();
+			return true;
+		}
+		else
+			return false;
+	}
 
 	public void refundTower() { // credit of this tower's salvage value
 											// is added to the user's account.
-		Player.addCredits(this.refundValue);
+		Player.addCredits(refundValue);
 	}
 
 	public int getBuyingCost() { // getters and setters for the private
 									// attributes of this object.
-		return this.buyingCost;
+		return buyingCost;
 	}
 
-	public void setBuyingCost(int buyingCost) {
-		this.buyingCost = buyingCost;
+	public void setBuyingCost(int pBuyingCost) {
+		buyingCost = pBuyingCost;
 	}
 
 	public double getRefundValue() {
-		return this.refundValue;
+		return refundValue;
 	}
 
-	public void setRefundValue(int refundValue) {
-		this.refundValue = refundValue;
+	public void setRefundValue(int pRefundValue) {
+		refundValue = pRefundValue;
 	}
 
 	public double getRange() {
-		return this.range;
+		return range;
 	}
 
-	public void setRange(double range) {
-		this.range = range;
+	public void setRange(double pRange) {
+		range = pRange;
 	}
 
 	public int getPower() {
-		return this.power;
+		return power;
 	}
 
-	public void setPower(int power) {
-		this.power = power;
+	public void setPower(int pPower) {
+		power = pPower;
 	}
 
 	public double getRateofFire() {
-		return this.rateofFire;
+		return rateofFire;
 	}
 
-	public void setRateofFire(int rateofFire) {
-		this.rateofFire = rateofFire;
+	public void setRateofFire(int pRateofFire) {
+		rateofFire = pRateofFire;
 	}
 
 	public int getLevel() {
-		return this.level;
+		return level;
 	}
 
-	public void setLevel(int level) {
-		this.level = level;
+	public void setLevel(int pLevel) {
+		level = pLevel;
 	}
 
 	public double getUpgradeCost() {
-		return this.upgradeCost;
+		return upgradeCost;
 	}
 
-	public void setUpgradeCost(int upgradeCost) {
-		this.upgradeCost = upgradeCost;
+	public void setUpgradeCost(int pUpgradeCost) {
+		upgradeCost = pUpgradeCost;
 	}
 	
 	public int getX(){
-		return this.xPos;
+		return xPos;
 	}
 	
 	public int getY(){
-		return this.yPos;
+		return yPos;
 	}
 	
 	public boolean isFreezeTower(){
-		return this.freezeTower;
+		return freezeTower;
 	}
 	
 	public long getTimeOfLastAttack(){
-		return this.lastAttack;
+		return lastAttackTime;
 	}
 	public void setTimeOfLastAttack(long time){
-		System.out.println(time);
-		this.lastAttack = time;
+
+		lastAttackTime = time;
 	}
 }

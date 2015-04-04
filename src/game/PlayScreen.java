@@ -35,13 +35,12 @@ import critters.Critter;
 import critters.Critter.direction;
 import critters.CritterGenerator;
 import critters.CritterObserver;
-import critters.ScoutCritter;
 
 public class PlayScreen extends BasicGameState {
 
 
-	private static Queue<Critter> critterList = new LinkedList<Critter>();
-	private static Queue<Critter> activeCritterList = new LinkedList<Critter>();
+	private static Queue<Critter> critterQueue = new LinkedList<Critter>();
+	private static Queue<Critter> activeCritterQueue = new LinkedList<Critter>();
 	private static ArrayList<Tower> towerList = new ArrayList<Tower>();
 	private static ArrayList<Projectile> projectileList = new ArrayList<Projectile>();
 	static long tickCount = 0;
@@ -67,10 +66,10 @@ public class PlayScreen extends BasicGameState {
 	Image HeartGraphic;
 	Image TowerTileGraphic;
 	Image TowerGraphic;
-	Image ProjectileGraphic;
+	Image BasicTowerProjectileGraphic;
 	Rectangle ExitButton;
 	Rectangle NextWaveButton;
-	//TODO add rectangle buttons for towers and sell tower
+
 
 	private static Map currentMap;
 	private final int sideMenuWidth = 192;
@@ -80,12 +79,15 @@ public class PlayScreen extends BasicGameState {
 	private final int towerGraphicXStart = 20;
 	private final int towerGraphicYOffset = 78;
 	private final int towerGraphicXOffset = 83;
+	private final int towerButtonWidth = 66;
+	private final int towerButtonHeight = 66;
+	private final int maximumNumberTowers = 1;
 	
 	//which tower player is placing, corresponds to position in towerList. -1 = no tower selected
 	private static int selectedTower =-1;
 	
 	private ArrayList<Image> TowerGraphics;
-	private ArrayList<Rectangle> TowerGraphicButtons;
+	private ArrayList<Rectangle> TowerGraphicButtonsList;
 	
 	private final int startingLevel = 1;
 	private final int critterSpawnDelay = 20;
@@ -110,25 +112,23 @@ public class PlayScreen extends BasicGameState {
 		loadAnimations();
 		loadFonts();
 
-		currentLevel = startingLevel;
-		Player.reset();
-		waveIsInProgress = false;
+		restartGame(container, sbg);
 	}
 
 	@Override
 	public void update(GameContainer container, StateBasedGame sbg, int delta) throws SlickException {
 
 		if(waveIsInProgress){
-			if(critterList.size()!=0){
+			if(critterQueue.size()!=0){
 				tickCount++;
 				if(tickCount>critterSpawnDelay){
-					activeCritterList.add(critterList.poll());
+					activeCritterQueue.add(critterQueue.poll());
 					tickCount=0;	
 				}
 			}
 			boolean crittersAreStillVisible= false;
 			//for each critter list, update their movement if they are alive
-			for(Critter s : activeCritterList){
+			for(Critter s : activeCritterQueue){
 				//only living critters can move!
 				if(s.isAlive())
 					s.move();
@@ -157,7 +157,7 @@ public class PlayScreen extends BasicGameState {
 
 
 		if(Mouse.isButtonDown(0)){
-			MouseClicked(Mouse.getX(), container.getHeight() - Mouse.getY(), sbg, container);
+			mouseClicked(Mouse.getX(), container.getHeight() - Mouse.getY(), sbg, container);
 		}
 
 		blackBeetleAnimation.update(delta);
@@ -187,11 +187,11 @@ public class PlayScreen extends BasicGameState {
 	}
 	private void drawProjectiles(){
 		for(Projectile p: projectileList){
-			ProjectileGraphic.drawCentered((float)p.getX(),(float)p.getY());
+			BasicTowerProjectileGraphic.drawCentered((float)p.getX(),(float)p.getY());
 		}
 	}
 	public void drawCritters(){
-		for(Critter s : activeCritterList)
+		for(Critter s : activeCritterQueue)
 			//this method draws critters depending on if they are alive or not
 			if(s.isVisible()&&s.isAlive())
 			{
@@ -294,12 +294,13 @@ public class PlayScreen extends BasicGameState {
 
 		
 		//draw tower graphics
-		for (int i =0;i<6;i++){
+		for (int i =0;i<maximumNumberTowers;i++){
 			int xCorner = currentMap.getWidthInPixel() +towerGraphicXStart + ((i)%2)*towerGraphicXOffset;
 			int yCorner = towerGraphicYStart + (i/2)*towerGraphicYOffset;
 			TowerGraphics.get(i).draw(xCorner,yCorner);
 			
 		}
+		
 		// drawing/updating the currency and level
 		ttf.drawString( CurrencyGraphic.getWidth() + 5, (container.getHeight() - 40), "" + Player.getCredits());
 		ttf.drawString(currentMap.getWidthInPixel() - 48, currentMap.getHeightInPixel() + 15, currentLevel + "");
@@ -324,8 +325,8 @@ public class PlayScreen extends BasicGameState {
 	//for every tower in the towerlist, determine if it should attack critter
 	private void attackCritters(){
 		for(Tower t: towerList){
-			if(t.getTimeOfLastAttack() + t.getRateofFire() < System.currentTimeMillis()){
-				for(Critter c: activeCritterList){
+			if(t.canAttack()){
+				for(Critter c: activeCritterQueue){
 					if(c.isAlive()&&c.isVisible()){
 						//calculate distance
 						int xDist= Math.abs((int)c.getXLoc() - t.getX());
@@ -362,7 +363,7 @@ public class PlayScreen extends BasicGameState {
 		for(int i =0;i<6;i++){
 			TowerGraphics.add(new Image("graphics/BasicTowerGraphic.png"));
 		}
-		ProjectileGraphic = new Image("graphics/Projectile.png");
+		BasicTowerProjectileGraphic = new Image("graphics/BasicTowerProjectileGraphic.png");
 
 
 
@@ -389,12 +390,11 @@ public class PlayScreen extends BasicGameState {
 		NextWaveButton = new Rectangle(currentMap.getWidthInPixel() - WaveGraphic.getWidth(), currentMap.getHeightInPixel() + WaveGraphic.getHeight() + 10, NextWaveActiveGraphic.getWidth(), NextWaveActiveGraphic.getHeight());
 	
 		//create tower buttons
-		TowerGraphicButtons = new ArrayList<Rectangle>();
-		for(int i =0;i<6;i++){
-			
+		TowerGraphicButtonsList = new ArrayList<Rectangle>();
+		for(int i =0;i<maximumNumberTowers;i++){
 			int xCorner = currentMap.getWidthInPixel() +towerGraphicXStart + ((i)%2)*towerGraphicXOffset;
 			int yCorner = towerGraphicYStart + (i/2)*towerGraphicYOffset;
-			TowerGraphicButtons.add(new Rectangle(xCorner, yCorner, TowerGraphics.get(i).getHeight(), TowerGraphics.get(i).getWidth()));
+			TowerGraphicButtonsList.add(new Rectangle(xCorner, yCorner, towerButtonWidth, towerButtonHeight));
 			
 		}
 	}
@@ -416,9 +416,9 @@ public class PlayScreen extends BasicGameState {
 		generator = new CritterGenerator(locations,currentLevel);
 		generator.createCritterQueue();
 		generator.RandomizeCritterQueue();
-		critterList = generator.getCritterQueue();
-		activeCritterList = new LinkedList<Critter>();
-		activeCritterList.add(critterList.poll());
+		critterQueue = generator.getCritterQueue();
+		activeCritterQueue = new LinkedList<Critter>();
+		activeCritterQueue.add(critterQueue.poll());
 	}
 
 
@@ -436,19 +436,15 @@ public class PlayScreen extends BasicGameState {
 	}
 	
 	
-	private void MouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException {
+	private void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException {
+		
+		//protection against multiple click registration
 		if(lastClick + mouseClickDelay > System.currentTimeMillis())
 			return;
 		lastClick = System.currentTimeMillis();
 		
 		if(ExitButton.contains(x,y)){
-			currentLevel = startingLevel;
-			Player.reset();
-			waveIsInProgress = false;
-			AppGameContainer gameContainer = (AppGameContainer) container;
-			gameContainer.setDisplayMode(640, 480, false);
-			Mouse.getDX();
-			sbg.enterState(Game.menuScreen);
+			restartGame(container, sbg);
 		}
 		
 		//no towers selected
@@ -459,8 +455,8 @@ public class PlayScreen extends BasicGameState {
 				createLevelCritterQueue();
 			}
 			
-			for(int i=0;i<6;i++){
-				if(TowerGraphicButtons.get(i).contains(x,y)){
+			for(int i=0;i<maximumNumberTowers;i++){
+				if(TowerGraphicButtonsList.get(i).contains(x,y)){
 					selectedTower = i;
 					
 				}
@@ -483,6 +479,17 @@ public class PlayScreen extends BasicGameState {
 		}
 	}
 
+	public void restartGame(GameContainer container, StateBasedGame sbg) throws SlickException{
+		currentLevel = startingLevel;
+		Player.reset();
+		waveIsInProgress = false;
+		critterQueue = new LinkedList<Critter>();
+		activeCritterQueue = new LinkedList<Critter>();
+		towerList =  new ArrayList<Tower>();
+		AppGameContainer gameContainer = (AppGameContainer) container;
+		gameContainer.setDisplayMode(640, 480, false);
+		sbg.enterState(Game.menuScreen);
+	}
 
 	@Override
 	public int getID() {
