@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Font;
+import java.awt.TextField;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
@@ -8,7 +9,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -19,7 +19,9 @@ public class EditMapScreen extends BasicGameState {
 	Image ExitButtonGraphic;
 	Rectangle ExitGameButton;
 	ArrayList<Rectangle> buttonList = new ArrayList<Rectangle>();
-
+	
+	TextField MapWidth;
+	TextField MapHeight;
 	public EditMapScreen (int state){
 
 	}
@@ -29,7 +31,8 @@ public class EditMapScreen extends BasicGameState {
 		SandTile = new Image("graphics/SandTile.png");
 		ExitButtonGraphic = new Image ("graphics/ExitButton.png");
 		ExitGameButton = new Rectangle(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2, ExitButtonGraphic.getWidth(),ExitButtonGraphic.getHeight());
-
+		MapWidth = new TextField();
+		MapHeight = new TextField();
 
 	}
 
@@ -60,6 +63,8 @@ public class EditMapScreen extends BasicGameState {
 		}
 
 		ExitButtonGraphic.draw(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2);
+		
+		
 	}
 
 	public void mouseClicked(int x, int y, StateBasedGame sbg){
