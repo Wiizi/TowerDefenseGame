@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Mouse;
+import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -21,6 +22,8 @@ public class EditMapScreen extends BasicGameState {
 	Image SandTile;
 	Image ExitButtonGraphic;
 	Image CreateMapButtonGraphic;
+	Image BlackTileBoundaryGraphic;
+	
 	Rectangle ExitGameButton;
 	Rectangle CreateMapButton;
 	ArrayList<Rectangle> buttonList = new ArrayList<Rectangle>();
@@ -37,7 +40,14 @@ public class EditMapScreen extends BasicGameState {
 	
 	public final int minimumMapDimension = 12;
 	public final int maximumMapDimension = 20;
+	
+	private static int mapWidthInput=0;
+	private static int mapHeightInput=0;
 
+	boolean mapSizeInputAccepted = false;
+	boolean startingLocationSelected=false;
+	boolean exitLocationSelected = false;
+	
 	public EditMapScreen (int state){
 
 	}
@@ -53,7 +63,7 @@ public class EditMapScreen extends BasicGameState {
 		mapWidthTextField = new TextField(container, ttf , 40,60,60,20);
 		mapHeightTextField = new TextField(container, ttf, 40 +ttf.getWidth(WidthString)+10, 60, 60, 20);
 		CreateMapButton = new Rectangle(mapHeightTextField.getX() + ttf.getWidth(WidthString)+10, 40 + mapWidthTextField.getHeight()/2 ,CreateMapButtonGraphic.getWidth(), CreateMapButtonGraphic.getHeight());
-		ExitGameButton = new Rectangle(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2, ExitButtonGraphic.getWidth(),ExitButtonGraphic.getHeight());
+		
 
 	}
 
@@ -70,12 +80,31 @@ public class EditMapScreen extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame sbg, Graphics g) throws SlickException {
 		drawMapAndOverlay(container);
 
-		ttf.drawString(40, 40, WidthString, Color.black);
-		ttf.drawString(40 +ttf.getWidth(WidthString)+10, 40, HeightString, Color.black);
+		
 		ttf.drawString(mapWidthTextField.getX(), mapWidthTextField.getY()+mapWidthTextField.getHeight()+10, statusString, Color.black);
-		CreateMapButtonGraphic.draw(mapHeightTextField.getX() + ttf.getWidth(WidthString)+10, 40 + mapWidthTextField.getHeight()/2 );
+		
 		g.setColor(Color.white);
+		
+		if(mapSizeInputAccepted){
+			generateMapGrid();
+			mapWidthTextField.setAcceptingInput(false);
+			mapHeightTextField.setAcceptingInput(false);
+			
+			if(!startingLocationSelected)
+			{
+				statusString = "Select a starting location";
+			}
+				
+				
+		}else{
+			ttf.drawString(40, 40, WidthString, Color.black);
+			ttf.drawString(40 +ttf.getWidth(WidthString)+10, 40, HeightString, Color.black);
+			CreateMapButtonGraphic.draw(mapHeightTextField.getX() + ttf.getWidth(WidthString)+10, 40 + mapWidthTextField.getHeight()/2 );
 
+		}
+		
+		
+		
 		mapWidthTextField.render(container, g);
 		mapHeightTextField.render(container, g);
 	}
@@ -100,34 +129,39 @@ public class EditMapScreen extends BasicGameState {
 		SandTile = new Image("graphics/SandTile.png");
 		ExitButtonGraphic = new Image ("graphics/ExitButton.png");
 		CreateMapButtonGraphic = new Image("graphics/CreateMapButtonGraphic.png");
+		BlackTileBoundaryGraphic = new Image("graphics/BlackTileBoundaryGraphic.png");
 	}
 
-	public void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container){
-		int mapWidth=0;
-		int mapHeight=0;
+	public void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException{
+	
 		if(ExitGameButton.contains(x, y)){
 			Mouse.getDY();
+			AppGameContainer gameContainer = (AppGameContainer) container;
+			gameContainer.setDisplayMode(640, 480, false);
+			reInitialize();
 			sbg.enterState(Game.menuScreen);
 		}
 
 		if(CreateMapButton.contains(x, y)){
 			statusString ="";
 			try{
-				mapWidth = Integer.parseInt(mapWidthTextField.getText());
-				mapHeight = Integer.parseInt(mapHeightTextField.getText());
+				mapWidthInput = Integer.parseInt(mapWidthTextField.getText());
+				mapHeightInput = Integer.parseInt(mapHeightTextField.getText());
 			}
 			catch(NumberFormatException e){
 				statusString = "Illegal input format";
 			}
-			if(mapWidth <minimumMapDimension || mapHeight <minimumMapDimension)
+			if(mapWidthInput <minimumMapDimension || mapHeightInput <minimumMapDimension)
 			{
 				statusString = "Map to small. Minimum dimensions are "+minimumMapDimension+"x"+minimumMapDimension;
+				mapSizeInputAccepted = false;
 			}
-			else if (mapWidth > maximumMapDimension || mapHeight > maximumMapDimension){
+			else if (mapWidthInput > maximumMapDimension || mapHeightInput > maximumMapDimension){
 				statusString = "Map to large. Maximum dimensions are "+maximumMapDimension+"x"+maximumMapDimension;
+				mapSizeInputAccepted = false;
 			}
 			else{
-				generateMapGrid(mapWidth, mapHeight, container);
+				mapSizeInputAccepted = true;
 			}
 			
 		}
@@ -135,15 +169,31 @@ public class EditMapScreen extends BasicGameState {
 	}
 
 
-	public void generateMapGrid(int mapWidth, int mapHeight, GameContainer container){
-		int currentX = 40;
-		int currentY = 100;
-		for(int x = 0 ; x < mapWidth; x++ ){
-			for(int y = 0 ; y < mapHeight; y++){
-				
+	public void generateMapGrid(){
+		
+		int currentX = 100;
+		int currentY = 130;
+		for(int y = 0 ; y < mapHeightInput; y++){
+			for(int x = 0 ; x < mapWidthInput; x++ ){
+				BlackTileBoundaryGraphic.draw(currentX, currentY);
+				currentX+=32;
 			}
-			
+			currentY+=32;
+			currentX=100;
 		}
+		
+	}
+	
+	public void reInitialize(){
+		mapWidthTextField.setText("");
+		mapHeightTextField.setText("");
+		mapWidthInput = 0;
+		mapHeightInput = 0;
+		mapSizeInputAccepted = false;
+	}
+	
+	public void createRectangleButtons(GameContainer container){
+		ExitGameButton = new Rectangle(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2, ExitButtonGraphic.getWidth(),ExitButtonGraphic.getHeight());
 	}
 
 	@Override
