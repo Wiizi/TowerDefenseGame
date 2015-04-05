@@ -1,6 +1,5 @@
 package towers;
 
-import towers.Tower.type;
 
 public class BasicTower extends Tower{
 
