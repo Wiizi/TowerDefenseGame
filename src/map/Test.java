@@ -8,8 +8,11 @@ public class Test {
 
 	public static void main(String[] args) throws IOException{
 
-		LoadFile loading = new LoadFile();
-		System.out.println(loading.loadFile(loading.getListofFiles().get(0)));
-		System.out.println(loading.getAllMap());
+//		LoadFile loading = new LoadFile();
+//		System.out.println(loading.loadFile(loading.getListofFiles().get(0)));
+//		System.out.println(loading.getAllMap());
+		
+		Map map = new SmallMap();
+		System.out.println(map);
 	}
 }
