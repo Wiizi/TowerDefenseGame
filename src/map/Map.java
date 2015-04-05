@@ -23,7 +23,7 @@ public class Map {
 	
 	private static final int CELL_SIZE = 32;
 
-	private boolean validityOfMap, validityOfEntry, validityOfExit, validityOfPathInput, validityOfPath;
+	private boolean validityOfMap, validityOfEntry, validityOfExit, validityOfPathInput, validityOfPath, validityOfPathLength;
 
 	/**
 	 * Map design
@@ -207,6 +207,9 @@ public class Map {
 			path.add(p);
 		}
 
+		if (path.size() >= 2){
+			validityOfPathLength = true;
+		}
 		return path;
 	}
 	
@@ -278,8 +281,13 @@ public class Map {
 		PathTile current, next;
 
 		if (newPath.isEmpty()){
+			validityOfPathLength = false;
 			return;
-		}	
+		}
+
+		if (newPath.size() >= 2){
+			validityOfPathLength = true;
+		}		
 				
 		current = newPath.remove();
 		next = current;
@@ -297,7 +305,20 @@ public class Map {
 			placeEntry(entry.getX(), entry.getY());
 			placeExit(current.getX(), current.getY());
 			
-			validityOfPathInput = true;
+			//Verify whether the Entry and Exit are on the edges of the map
+			if (entry.getX() == 0 || entry.getY() == 0 || entry.getX() == (getWidthOfMap() - 1) || entry.getY() == (getHeightOfMap() - 1)){
+				validityOfEntry = true;
+			}
+			
+			if (current.getX() == 0 || current.getY() == 0 || current.getX() == (getWidthOfMap() - 1) || current.getY() == (getHeightOfMap() - 1)){
+				validityOfExit = true;
+			}
+			
+			if (validityOfEntry && validityOfExit){
+				validityOfPathInput = true;
+			} else {
+				validityOfPathInput = false;
+			}
 		}
 		else {
 			validityOfPathInput = false;
@@ -462,7 +483,7 @@ public class Map {
 	 */
 	public boolean ValidityOfMap(){
 		boolean validity;
-		if (validityOfMap && validityOfPathInput && validityOfPath){
+		if (validityOfMap && validityOfPathInput && validityOfPath && validityOfPathLength){
 			validity = true;
 		}
 		else {
@@ -474,6 +495,9 @@ public class Map {
 			}
 			if (!validityOfPath){
 				System.out.println("Invalid Path Link - inputs do not share the same x or y axis!");
+			}
+			if (!validityOfPathLength){
+				System.out.println("Invalid Path - path is too short!");
 			}
 			validity = false;
 		}
