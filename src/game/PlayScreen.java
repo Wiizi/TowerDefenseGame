@@ -15,6 +15,7 @@ import java.util.Queue;
 
 
 
+
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
@@ -29,6 +30,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import towers.*;
+import towers.Projectile.projectileType;
 import grid.*;
 import map.*;
 import critters.Critter;
@@ -92,7 +94,7 @@ public class PlayScreen extends BasicGameState {
 	private final int towerGraphicXOffset = 83;
 	private final int towerButtonWidth = 66;
 	private final int towerButtonHeight = 66;
-	private final int maximumNumberTowers = 1;
+	private final int maximumNumberTowers = 3;
 
 	//which tower player is placing, corresponds to position in towerList. -1 = no tower selected
 	private static int selectedTower =-1;
@@ -168,15 +170,47 @@ public class PlayScreen extends BasicGameState {
 
 	private void drawTowers(){
 		for(Tower t: towerList){
+			
+			Image img = BasicTowerGraphic;
+			switch(t.getType()){
+			case FREEZE:
+				img = FreezeTowerGraphic;
+				break;
+			case GENERIC:
+				//do nothing
+				break;
+			case SNIPER:
+				img = SniperTowerGraphic;
+				break;
+			default:
+				//do nothing
+				break;
+			
+			}
 		
-			BasicTowerGraphic.setRotation( (float) t.getRotationAngleInDegrees());
-			BasicTowerGraphic.drawCentered( (float) t.getXLoc(), (float) t.getYLoc());
+			img.setRotation( (float) t.getRotationAngleInDegrees());
+			img.drawCentered( (float) t.getXLoc(), (float) t.getYLoc());
 		}
 	}
 	private void drawProjectiles(){
 		for(Projectile p: projectileList){
-			BasicTowerProjectileGraphic.setRotation( (float) p.angleOfProjectileInDegrees());
-			BasicTowerProjectileGraphic.drawCentered((float)p.getX(),(float)p.getY());
+			Image img;
+			switch(p.getType()){
+			case GENERIC:
+				img = BasicTowerProjectileGraphic;
+				break;
+			case FREEZE:
+				img = FreezeTowerProjectileGraphic;
+				break;
+			case SNIPER:
+				img = SniperTowerProjectileGraphic;
+				break;
+			default:
+				img = BasicTowerProjectileGraphic;
+				break;
+			}
+			img.setRotation( (float) p.angleOfProjectileInDegrees());
+			img.drawCentered((float)p.getX(),(float)p.getY());
 		}
 	}
 	public void drawCritters(){
@@ -287,7 +321,22 @@ public class PlayScreen extends BasicGameState {
 		for (int i =0;i<maximumNumberTowers;i++){
 			int xCorner = currentMap.getWidthInPixel() +towerGraphicXStart + ((i)%2)*towerGraphicXOffset;
 			int yCorner = towerGraphicYStart + (i/2)*towerGraphicYOffset;
-			BasicTowerGraphic.drawCentered(xCorner +towerButtonWidth/2,yCorner +towerButtonHeight/2);
+			Image img;
+			switch(i){
+			case 0:
+				img = BasicTowerGraphic;
+				break;
+			case 1:
+				img = FreezeTowerGraphic;
+				break;
+			case 2:
+				img = SniperTowerGraphic;
+				break;
+			default:
+				img = BasicTowerGraphic;
+				break;
+			}
+			img.drawCentered(xCorner +towerButtonWidth/2,yCorner +towerButtonHeight/2);
 
 		}
 
@@ -299,8 +348,24 @@ public class PlayScreen extends BasicGameState {
 		if(mouseOnMap(Mouse.getX(),container.getHeight()-Mouse.getY())){
 			if(selectedTower<0)
 				TileSelectGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
-			else
-				BasicTowerGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
+			else{
+				Image img;
+				switch(selectedTower){
+				case 0:
+					img = BasicTowerGraphic;
+					break;
+				case 1:
+					img =  FreezeTowerGraphic;
+					break;
+				case 2:
+					img = SniperTowerGraphic;
+					break;
+				default:
+					img = BasicTowerGraphic;
+					break;
+				}
+				img.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
+			}
 		}
 	}
 
@@ -335,8 +400,22 @@ public class PlayScreen extends BasicGameState {
 
 	
 	public void attackCritter(Tower source){
-		Projectile projectile = new Projectile(source.getXLoc(), source.getYLoc(), 
-				source.getTargetCritter().getXLoc(), source.getTargetCritter().getYLoc(), source.getPower(), source.isFreezeTower(), source.getTargetCritter());
+		projectileType projType = projectileType.GENERIC;
+		switch(source.getType()){
+		case GENERIC:
+			projType = projectileType.GENERIC;
+			break;
+		case SNIPER:
+			projType = projectileType.SNIPER;
+			break;
+		case FREEZE:
+			projType = projectileType.FREEZE;
+			break;
+		default:
+			break;
+		}
+		Projectile projectile = new Projectile(source.getXLoc(), source.getYLoc(), (double)source.getTargetCritter().getXLoc(), 
+				(double)source.getTargetCritter().getYLoc(), source.getPower(), source.getTargetCritter(), projType);
 		projectileList.add(projectile);
 	}
 
@@ -492,6 +571,19 @@ public class PlayScreen extends BasicGameState {
 		else {
 			if(mouseOnMap(x,y)){
 				Tower newTower = new BasicTower(getClosestTileCenter(x),getClosestTileCenter(y));
+				switch(selectedTower){
+				case 0:
+					//do nothing
+					break;
+				case 1:
+					newTower= new FreezeTower(getClosestTileCenter(x),getClosestTileCenter(y));
+					break;
+				case 2:
+					newTower= new SniperTower(getClosestTileCenter(x),getClosestTileCenter(y));
+					break;
+		
+				}
+				
 				towerList.add(newTower);
 				Player.addCredits((-1)*newTower.getBuyingCost());
 

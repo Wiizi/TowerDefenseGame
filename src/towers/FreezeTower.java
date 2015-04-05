@@ -1,7 +1,7 @@
 package towers; import towers.Tower.type;
 import critters.Critter;
 
-class FreezeTower extends Tower
+public class FreezeTower extends Tower
 {
 	
 
@@ -23,7 +23,7 @@ class FreezeTower extends Tower
 	private static int newBuyingCost = 200;
 	private static int newRefundValue = 180;
 	private static int newUpgradeCost = 300;
-	private static int newReloadTime = 8;
+	private static int newReloadTime = 3;
 	private static int newPower = 0;
 	private static double newRange = 50;
 }
