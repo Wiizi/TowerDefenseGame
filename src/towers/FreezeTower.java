@@ -25,5 +25,5 @@ public class FreezeTower extends Tower
 	private static int newUpgradeCost = 300;
 	private static int newReloadTime = 3;
 	private static int newPower = 0;
-	private static double newRange = 50;
+	private static double newRange = 100;
 }
