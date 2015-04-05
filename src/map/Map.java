@@ -149,6 +149,7 @@ public class Map {
 	public void placeEntry(int x, int y){
 		mapTile[x][y] = new PathTile(x, y);
 		mapTile[x][y].setType(2);
+		entry = (PathTile) mapTile[x][y];
 	}
 
 	/**
@@ -346,7 +347,18 @@ public class Map {
 			placePathPoint(x1, y1);
 			placePathPoint(x2, y2);
 
-			validityOfPath = false;
+			if (x1 == 0 || y1 == 0 || x1 == (getWidthOfMap() - 1) || y1 == (getHeightOfMap() - 1)){
+				validityOfEntry = true;
+			}
+			
+			if (x2 == 0 || y2 == 0 || x2 == (getWidthOfMap() - 1) || y2 == (getHeightOfMap() - 1)){
+				validityOfExit = true;
+			}
+			if (validityOfEntry && validityOfExit){
+				validityOfPathInput = true;
+			} else {
+				validityOfPathInput = false;
+			}
 		}
 		else {
 
