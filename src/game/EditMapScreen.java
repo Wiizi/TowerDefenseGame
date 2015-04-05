@@ -45,6 +45,9 @@ public class EditMapScreen extends BasicGameState {
 	private static int mapHeightInput=0;
 
 	boolean mapSizeInputAccepted = false;
+	boolean startingLocationSelected=false;
+	boolean exitLocationSelected = false;
+	
 	public EditMapScreen (int state){
 
 	}
@@ -86,6 +89,13 @@ public class EditMapScreen extends BasicGameState {
 			generateMapGrid();
 			mapWidthTextField.setAcceptingInput(false);
 			mapHeightTextField.setAcceptingInput(false);
+			
+			if(!startingLocationSelected)
+			{
+				statusString = "Select a starting location";
+			}
+				
+				
 		}else{
 			ttf.drawString(40, 40, WidthString, Color.black);
 			ttf.drawString(40 +ttf.getWidth(WidthString)+10, 40, HeightString, Color.black);
@@ -122,10 +132,13 @@ public class EditMapScreen extends BasicGameState {
 		BlackTileBoundaryGraphic = new Image("graphics/BlackTileBoundaryGraphic.png");
 	}
 
-	public void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container){
+	public void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException{
 	
 		if(ExitGameButton.contains(x, y)){
 			Mouse.getDY();
+			AppGameContainer gameContainer = (AppGameContainer) container;
+			gameContainer.setDisplayMode(640, 480, false);
+			reInitialize();
 			sbg.enterState(Game.menuScreen);
 		}
 
@@ -169,6 +182,14 @@ public class EditMapScreen extends BasicGameState {
 			currentX=100;
 		}
 		
+	}
+	
+	public void reInitialize(){
+		mapWidthTextField.setText("");
+		mapHeightTextField.setText("");
+		mapWidthInput = 0;
+		mapHeightInput = 0;
+		mapSizeInputAccepted = false;
 	}
 	
 	public void createRectangleButtons(GameContainer container){
