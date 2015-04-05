@@ -336,6 +336,7 @@ public class PlayScreen extends BasicGameState {
 				img = BasicTowerGraphic;
 				break;
 			}
+			img.setRotation(0);
 			img.drawCentered(xCorner +towerButtonWidth/2,yCorner +towerButtonHeight/2);
 
 		}

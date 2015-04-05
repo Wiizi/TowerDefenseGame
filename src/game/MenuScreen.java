@@ -40,7 +40,7 @@ public class MenuScreen extends BasicGameState{
 
 		
 		if(Mouse.isButtonDown(0)){
-			mouseClicked(Mouse.getX(), container.getHeight()- Mouse.getY(), sbg);
+			mouseClicked(Mouse.getX(), container.getHeight()- Mouse.getY(), sbg, container);
 		}
 		
 	}
@@ -83,13 +83,18 @@ public class MenuScreen extends BasicGameState{
 		ExitButtonGraphic = new Image ("graphics/ExitButton.png");
 	}
 
-	public void mouseClicked( float x, float y, StateBasedGame sbg){
+	public void mouseClicked( float x, float y, StateBasedGame sbg, GameContainer container) throws SlickException{
 
 		if(StartGameButton.contains(x, y))
 			sbg.enterState(Game.mapSelectScreen);
-		if(EditMapButton.contains(x, y))
+		if(EditMapButton.contains(x, y)){
+			EditMapScreen s = (EditMapScreen) sbg.getState(Game.editMapScreen);
+			AppGameContainer gameContainer = (AppGameContainer) container;
+			gameContainer.setDisplayMode(840, 840, false);
+			s.createRectangleButtons(container);
 			sbg.enterState(Game.editMapScreen);
 
+		}
 
 	}
 
