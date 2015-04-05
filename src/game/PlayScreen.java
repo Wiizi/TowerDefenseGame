@@ -315,6 +315,7 @@ public class PlayScreen extends BasicGameState {
 		TowerMenuOverlayGraphic.draw(currentMap.getWidthInPixel(), 0);
 		ExitButtonGraphic.draw(container.getWidth() - ExitButtonGraphic.getWidth(), container.getHeight() - ExitButtonGraphic.getHeight() - 2);
 		WaveGraphic.draw(currentMap.getWidthInPixel() - WaveGraphic.getWidth(), currentMap.getHeightInPixel());
+		CurrencyGraphic.draw(0, container.getHeight() - CurrencyGraphic.getHeight()-5);
 		//change wavebutton graphic
 		if(!waveIsInProgress)
 			NextWaveActiveGraphic.draw(currentMap.getWidthInPixel() - WaveGraphic.getWidth(), currentMap.getHeightInPixel() + WaveGraphic.getHeight() + 10);
@@ -401,7 +402,7 @@ public class PlayScreen extends BasicGameState {
 					double dist = Math.sqrt((xDist*xDist)+(yDist*yDist));
 					if(dist<t.getRange()){
 						t.setTargetCritter(c);
-						break;
+					
 					}
 				}
 				t.setTargetCritter(null);
@@ -560,7 +561,7 @@ public class PlayScreen extends BasicGameState {
 		}
 		
 		
-		if(!crittersAreStillVisible){
+		if(!crittersAreStillVisible && critterQueue.size()==0){
 			waveIsInProgress = false;
 			currentLevel++;
 		}
