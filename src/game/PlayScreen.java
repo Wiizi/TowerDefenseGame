@@ -57,6 +57,8 @@ public class PlayScreen extends BasicGameState {
 	Animation batAnimation;
 	private SpriteSheet scorpionSpriteSheet;
 	Animation scorpionAnimation;
+	private SpriteSheet zombieSpriteSheet;
+	Animation zombieAnimation;
 	
 	Image SandTileGraphic;
 	Image GravelTileGraphic;
@@ -159,7 +161,7 @@ public class PlayScreen extends BasicGameState {
 		blackBeetleAnimation.update(delta);
 		batAnimation.update(delta);
 		scorpionAnimation.update(delta);
-
+		zombieAnimation.update(delta);
 	}
 
 
@@ -239,7 +241,7 @@ public class PlayScreen extends BasicGameState {
 		int orientationOffset = 0;
 		switch(s.getType()){
 		case GRUNT:
-			a = blackBeetleAnimation;
+			a = zombieAnimation;
 			orientationOffset =0;
 			break;
 		case SCOUT:
@@ -247,11 +249,13 @@ public class PlayScreen extends BasicGameState {
 			orientationOffset = 2;
 			break;
 		case ARMORED:
-			a = scorpionAnimation;
-			orientationOffset = 2;
+			a = blackBeetleAnimation;
+			orientationOffset =0;
 			break;
 		case TANK:
-			a = blackBeetleAnimation;
+		
+			a = scorpionAnimation;
+			orientationOffset = 2;
 			break;
 		case BOSS:
 			a = blackBeetleAnimation;
@@ -485,6 +489,8 @@ public class PlayScreen extends BasicGameState {
 		blackBeetleAnimation = new Animation(blackBeetleSpriteSheet, 100);
 		scorpionSpriteSheet = new SpriteSheet("graphics/ScorpionSpriteSheet.png",37,32,0);
 		scorpionAnimation = new Animation(scorpionSpriteSheet,100);
+		zombieSpriteSheet = new SpriteSheet("graphics/ZombieSpriteSheet.png",31,26,1);
+		zombieAnimation = new Animation(zombieSpriteSheet, 50);
 	}
 
 	public void loadFonts(){
