@@ -66,6 +66,8 @@ public class PlayScreen extends BasicGameState {
 	Image UpgradeButtonGraphic;
 	Image SellButtonGraphic;
 	Image TileSelectGraphic;
+	Image UpgradeSelectGraphic;
+	Image SellSelectGraphic;
 	Image CurrencyGraphic;
 	Image WaveGraphic;
 	Image NextWaveActiveGraphic; 
@@ -94,11 +96,11 @@ public class PlayScreen extends BasicGameState {
 
 	private final int towerGraphicYStart = 58;
 	private final int towerGraphicXStart = 20;
-	private final int towerGraphicYOffset = 78;
+	private final int towerGraphicYOffset = 79;
 	private final int towerGraphicXOffset = 83;
 	private final int towerButtonWidth = 66;
 	private final int towerButtonHeight = 66;
-	private final int maximumNumberTowers = 3;
+	private final int maximumNumberTowers = 3; //no more than 4
 
 	//which tower player is placing, corresponds to position in towerList. -1 = no tower selected
 	private static int selectedTower =-1;
@@ -312,8 +314,6 @@ public class PlayScreen extends BasicGameState {
 		//drawing buttons and overlays
 		TowerMenuOverlayGraphic.draw(currentMap.getWidthInPixel(), 0);
 		ExitButtonGraphic.draw(container.getWidth() - ExitButtonGraphic.getWidth(), container.getHeight() - ExitButtonGraphic.getHeight() - 2);
-		UpgradeButtonGraphic.draw(currentMap.getWidthInPixel() +10, TowerMenuOverlayGraphic.getHeight() +  UpgradeButtonGraphic.getHeight() + 20);
-		SellButtonGraphic.draw(currentMap.getWidthInPixel() +10, TowerMenuOverlayGraphic.getHeight() +  10);
 		WaveGraphic.draw(currentMap.getWidthInPixel() - WaveGraphic.getWidth(), currentMap.getHeightInPixel());
 		//change wavebutton graphic
 		if(!waveIsInProgress)
@@ -343,8 +343,18 @@ public class PlayScreen extends BasicGameState {
 			}
 			img.setRotation(0);
 			img.drawCentered(xCorner +towerButtonWidth/2,yCorner +towerButtonHeight/2);
+			
+			
 
 		}
+		//draw sell and upgrade buttons
+		int xCorner = currentMap.getWidthInPixel() +towerGraphicXStart + ((4)%2)*towerGraphicXOffset;
+		int yCorner = towerGraphicYStart + (4/2)*towerGraphicYOffset;
+		SellButtonGraphic.drawCentered(xCorner +towerButtonWidth/2,yCorner +towerButtonHeight/2);
+		
+		xCorner = currentMap.getWidthInPixel() +towerGraphicXStart + ((5)%2)*towerGraphicXOffset;
+		yCorner = towerGraphicYStart + (5/2)*towerGraphicYOffset;
+		UpgradeButtonGraphic.drawCentered(xCorner +towerButtonWidth/2,yCorner +towerButtonHeight/2);
 
 		// drawing/updating the currency and level
 		ttf.drawString( CurrencyGraphic.getWidth() + 5, (container.getHeight() - 40), "" + Player.getCredits());
@@ -352,11 +362,17 @@ public class PlayScreen extends BasicGameState {
 
 		//if the mouse is on the map, snap to map grid
 		if(mouseOnMap(Mouse.getX(),container.getHeight()-Mouse.getY())){
-			if(selectedTower<0)
-				TileSelectGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
-			else{
 				Image img;
 				switch(selectedTower){
+				case -3:
+					img = SellSelectGraphic;
+					break;
+				case -2:
+					img = UpgradeSelectGraphic;
+					break;
+				case -1:
+					img = TileSelectGraphic;
+					break; 
 				case 0:
 					img = BasicTowerGraphic;
 					break;
@@ -367,11 +383,10 @@ public class PlayScreen extends BasicGameState {
 					img = SniperTowerGraphic;
 					break;
 				default:
-					img = BasicTowerGraphic;
+					img = TileSelectGraphic;
 					break;
 				}
 				img.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
-			}
 		}
 	}
 
@@ -431,10 +446,14 @@ public class PlayScreen extends BasicGameState {
 		GravelTileGraphic = new Image ("graphics/GravelTile.png");
 		BrickTileGraphic = new Image ("graphics/BrickTile.png");
 		ExitButtonGraphic = new Image ("graphics/ExitButton.png");
-		UpgradeButtonGraphic = new Image ("graphics/ExitButton.png");
-		SellButtonGraphic = new Image ("graphics/ExitButton.png");		
+		UpgradeButtonGraphic = new Image ("graphics/UpgradeButtonGraphic.png");
+		SellButtonGraphic = new Image ("graphics/SellButtonGraphic.png");	
+		UpgradeSelectGraphic = new Image("graphics/UpgradeSelectGraphic.png");
+		SellSelectGraphic = new Image("graphics/SellSelectGraphic.png");
 		CurrencyGraphic = new Image("graphics/CurrencyGraphic.png");
 		TileSelectGraphic = new Image ("graphics/TileSelectGraphic.png");
+		UpgradeSelectGraphic = new Image("graphics/UpgradeSelectGraphic.png");
+		SellSelectGraphic = new Image("graphics/SellSelectGraphic.png");
 		WaveGraphic = new Image ("graphics/WaveGraphic.png");
 		NextWaveActiveGraphic = new Image("graphics/NextWaveActive.png");
 		NextWaveNonActiveGraphic = new Image("graphics/NextWaveNonActive.png");
@@ -481,6 +500,16 @@ public class PlayScreen extends BasicGameState {
 			TowerGraphicButtonsList.add(new Rectangle(xCorner, yCorner, towerButtonWidth, towerButtonHeight));
 
 		}
+		//sell and upgrade button
+		int i = 4;
+		int xCorner = currentMap.getWidthInPixel() +towerGraphicXStart + ((i)%2)*towerGraphicXOffset;
+		int yCorner = towerGraphicYStart + (i/2)*towerGraphicYOffset;
+		SellButton = new Rectangle(xCorner,yCorner, towerButtonWidth, towerButtonHeight);
+		
+		i = 5;
+		xCorner = currentMap.getWidthInPixel() +towerGraphicXStart + ((i)%2)*towerGraphicXOffset;
+		yCorner = towerGraphicYStart + (i/2)*towerGraphicYOffset;
+		UpgradeButton = new Rectangle(xCorner,yCorner, towerButtonWidth, towerButtonHeight);
 	}
 
 
@@ -564,17 +593,17 @@ public class PlayScreen extends BasicGameState {
 		}
 
 		//no towers selected
-		if (selectedTower < 0){
+		if (selectedTower ==-1){
 
 			if(NextWaveButton.contains(x,y)&& !waveIsInProgress){
 				waveIsInProgress = true;
 				createCritterQueueforLevel();
 			}
 			if(UpgradeButton.contains(x,y)){
-				//selectedTower = -3;
+				selectedTower = -2;
 			}
 			if(SellButton.contains(x,y)){
-				//selectedTower = -2;
+				selectedTower = -3;
 			}
 			
 			for(int i=0;i<maximumNumberTowers;i++){
@@ -583,9 +612,10 @@ public class PlayScreen extends BasicGameState {
 
 				}
 			}
+			return;
 		}
 		//tower selected
-		else {
+		else if (selectedTower >=0){
 			if(mouseOnMap(x,y)){
 				Tower newTower = new BasicTower(getClosestTileCenter(x),getClosestTileCenter(y));
 				switch(selectedTower){
@@ -610,8 +640,25 @@ public class PlayScreen extends BasicGameState {
 					towerList.remove(newTower);
 				}
 			}
-			selectedTower=-1;
 		}
+		else if(selectedTower == -2){
+			if(mouseOnMap(x,y)){
+				Tower t = getNearestTower(x,y);
+				if(t!=null)
+					t.upgrade();
+			}
+		}
+		else if(selectedTower == -3){
+			if(mouseOnMap(x,y)){
+				Tower t = getNearestTower(x,y);
+				if(t!=null){
+					t.refundTower();			
+					towerList.remove(t);
+				}
+			}
+			
+		}
+		selectedTower=-1;
 	}
 	
 	public boolean mouseOnMap(int x, int y){
@@ -622,7 +669,18 @@ public class PlayScreen extends BasicGameState {
 			return false;
 	}
 
-
+	public Tower getNearestTower(int x, int y){
+		double distanceApproximation=100;
+		Tower nearestTower=null;
+		for(Tower t: towerList){
+			if(Math.abs(t.getXLoc()-x)+Math.abs(t.getYLoc()-y)<distanceApproximation){
+				nearestTower = t;
+				distanceApproximation =Math.abs(t.getXLoc()-x)+Math.abs(t.getYLoc()-y);
+			}
+			
+		}
+		return nearestTower;
+	}
 	public void restartGame(GameContainer container, StateBasedGame sbg) throws SlickException{
 		currentLevel = startingLevel;
 		Player.reset();
