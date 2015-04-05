@@ -147,6 +147,7 @@ public class Map {
 	 * @param y		Y-coordinate of Entry point
 	 */
 	public void placeEntry(int x, int y){
+		mapTile[x][y] = new PathTile(x, y);
 		mapTile[x][y].setType(2);
 	}
 
@@ -165,6 +166,7 @@ public class Map {
 	 * @param y		Y-coordinate of Exit point
 	 */
 	public void placeExit(int x, int y){
+		mapTile[x][y] = new PathTile(x, y);
 		mapTile[x][y].setType(3);
 	}
 

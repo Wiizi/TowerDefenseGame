@@ -1,10 +1,14 @@
 package game;
 
 
+import grid.MapTile;
+import grid.PathTile;
 import grid.Tile;
 
 import java.awt.Font;
 import java.util.ArrayList;
+
+import map.Map;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.AppGameContainer;
@@ -27,6 +31,9 @@ public class EditMapScreen extends BasicGameState {
 	Image BlackTileBoundaryGraphic;
 	Image StartingPointGraphic;
 	Image ExitPointGraphic;
+	Image BluePathTileGraphic;
+	Image SandTileGraphic;
+	Image GravelTileGraphic;
 
 	
 	private final int mouseClickDelay = 200;
@@ -40,6 +47,8 @@ public class EditMapScreen extends BasicGameState {
 	TextField mapWidthTextField;
 	TextField mapHeightTextField;
 
+	Map userCreatedMap;
+	
 	Font font ;
 	TrueTypeFont ttf;
 
@@ -47,8 +56,8 @@ public class EditMapScreen extends BasicGameState {
 	public final String HeightString = "Enter Map Height:";
 	public static String statusString= "";
 
-	public final int minimumMapDimension = 12;
-	public final int maximumMapDimension = 20;
+	private final int minimumMapDimension = 12;
+	private final int maximumMapDimension = 20;
 
 	public final int mapDrawOffsetX = 96;
 	public final int mapDrawOffsetY = 128;
@@ -57,10 +66,14 @@ public class EditMapScreen extends BasicGameState {
 	private static int mapWidthInput=0;
 	private static int mapHeightInput=0;
 	
+	private int selectedTileX=-1;
+	private int selectedTileY=-1;
+	private int[] exitPoint;
+	
 
 	boolean mapSizeInputAccepted = false;
-	boolean startingPointSelected=false;
-	boolean exitPointSelected = false;
+	boolean startingPointAccepted=false;
+	boolean exitPointAccepted = false;
 
 	public EditMapScreen (int state){
 
@@ -103,30 +116,34 @@ public class EditMapScreen extends BasicGameState {
 
 	@Override
 	public void render(GameContainer container, StateBasedGame sbg, Graphics g) throws SlickException {
-		drawMapAndOverlay(container);
-
+		drawBackGroundAndButtons(container);
+	
 
 		ttf.drawString(mapWidthTextField.getX(), mapWidthTextField.getY()+mapWidthTextField.getHeight()+10, statusString, Color.black);
 
 		g.setColor(Color.white);
 
 		if(mapSizeInputAccepted){
-			generateMapGrid();
+			drawMap(container);
+			ttf.drawString(30, 0, ""+userCreatedMap.ValidityOfMap());
 			if(mouseOnMap(Mouse.getX(),container.getHeight()-Mouse.getY())){
-				if(!startingPointSelected)	
+				if(!startingPointAccepted)	
 					StartingPointGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
-				else if(!exitPointSelected )
+				else if(!exitPointAccepted )
 					ExitPointGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));		
 			}
 
-			if(startingPointSelected){
+			if(startingPointAccepted){
 				int[] startingpoint =mapPoints.get(0);
 				StartingPointGraphic.drawCentered(startingpoint[0]*32 +mapDrawOffsetX +16, startingpoint[1]*32 +mapDrawOffsetY +16);
 			}
-			if(exitPointSelected){
-				int[] exitpoint =mapPoints.get(1);
-				ExitPointGraphic.drawCentered(exitpoint[0]*32 +mapDrawOffsetX +16, exitpoint[1]*32 +mapDrawOffsetY +16);
+			if(exitPointAccepted){
+				
+				ExitPointGraphic.drawCentered(exitPoint[0]*32 +mapDrawOffsetX +16, exitPoint[1]*32 +mapDrawOffsetY +16);
 			}
+			
+			//create the mapgrid
+			generateMapGrid();
 		}
 		else{
 			ttf.drawString(40, 40, WidthString, Color.black);
@@ -134,8 +151,6 @@ public class EditMapScreen extends BasicGameState {
 			CreateMapButtonGraphic.draw(mapHeightTextField.getX() + ttf.getWidth(WidthString)+10, 40 + mapWidthTextField.getHeight()/2 );
 
 		}
-
-
 
 
 		mapWidthTextField.render(container, g);
@@ -146,7 +161,7 @@ public class EditMapScreen extends BasicGameState {
 
 
 
-	public void drawMapAndOverlay(GameContainer container){
+	public void drawBackGroundAndButtons(GameContainer container){
 		for(int x = 0; x <container.getWidth(); x+=SandTile.getWidth()){
 			for(int y = 0 ; y< container.getHeight(); y+=SandTile.getHeight()){
 				SandTile.draw(x,y);
@@ -154,9 +169,27 @@ public class EditMapScreen extends BasicGameState {
 		}
 
 		ExitButtonGraphic.draw(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2);
-
-
 	}
+	
+		
+	public void drawMap(GameContainer container){
+		for(int i = 0 ; i < userCreatedMap.getWidthOfMap(); i++){
+			for(int j = 0 ; j < userCreatedMap.getHeightOfMap() ; j++){
+				
+					if (userCreatedMap.getTile(i, j) instanceof PathTile){	
+						GravelTileGraphic.draw(mapDrawOffsetX +i * userCreatedMap.getPixelSize(), mapDrawOffsetY + j * userCreatedMap.getPixelSize());
+						continue;
+					}
+					if (userCreatedMap.getTile(i, j) instanceof MapTile){		
+						SandTileGraphic.draw(mapDrawOffsetX +i * userCreatedMap.getPixelSize(), mapDrawOffsetY + j * userCreatedMap.getPixelSize());
+						continue;
+					}
+
+				}
+			}
+	
+		}
+	
 
 	public void loadImages() throws SlickException{
 		SandTile = new Image("graphics/SandTile.png");
@@ -165,6 +198,9 @@ public class EditMapScreen extends BasicGameState {
 		BlackTileBoundaryGraphic = new Image("graphics/BlackTileBoundaryGraphic.png");
 		StartingPointGraphic = new Image("graphics/StartingPointGraphic.png");
 		ExitPointGraphic = new Image("graphics/ExitPointGraphic.png");
+		BluePathTileGraphic = new Image("graphics/BluePathTileGraphic.png");
+		SandTileGraphic = new Image("graphics/SandTile.png");
+		GravelTileGraphic = new Image("graphics/GravelTile.png");
 	}
 
 	public float getClosestTileCenter(float X){
@@ -192,12 +228,15 @@ public class EditMapScreen extends BasicGameState {
 		int xLoc = (int) Math.floor((x-mapDrawOffsetX) / 32);
 		int yLoc = (int) Math.floor((y-mapDrawOffsetY) / 32);
 
-		if(!startingPointSelected){
+		if(!startingPointAccepted){
 			if(xLoc == 0 || xLoc == mapWidthInput-1 ||yLoc == 0 || yLoc == mapHeightInput-1){
 				int[] point = {xLoc, yLoc};
+				userCreatedMap.placeEntry(xLoc, yLoc);
+				
 				mapPoints.add(point);
-
-				startingPointSelected = true;
+				selectedTileX = xLoc;
+				selectedTileY = yLoc;
+				startingPointAccepted = true;
 				statusString = "Select Exit Point";
 				return;
 			}
@@ -206,19 +245,57 @@ public class EditMapScreen extends BasicGameState {
 			return;
 
 		}
-		if(!exitPointSelected){
-			if(xLoc == 0 || xLoc == mapWidthInput-1 ||yLoc == 0 || yLoc == mapHeightInput-1){
-				int[] point = {xLoc, yLoc};
-				mapPoints.add(point);
-
-				exitPointSelected = true;
+		if(!exitPointAccepted){
+			int[] startingPoint = mapPoints.get(0);
+			if(xLoc == startingPoint[0] &&yLoc ==startingPoint[1]){
+				statusString = "Cannot place Exit point on starting point";
+				return;
+			}
+			if(xLoc == 0 || xLoc == mapWidthInput-1 ||yLoc == 0 || yLoc == mapHeightInput-1 ){
+				userCreatedMap.placeExit(xLoc, yLoc);
+				
+				exitPoint = new int[] {xLoc, yLoc};
+				exitPointAccepted = true;
 				statusString = "Select any point on a blue line";
 				return;
 			}
 			else
-				statusString = "Invalid Exit Point. Starting points can only be placed on the edges of the map";
+				statusString = "Invalid Exit Point. Exit points can only be placed on the edges of the map";
 			return;
 		}
+		
+		if(exitPointAccepted&&startingPointAccepted){
+			if(xLoc==selectedTileX ||yLoc == selectedTileY){
+				int[] point = {xLoc, yLoc};
+				userCreatedMap.linkTwoPoints(new PathTile(selectedTileX, selectedTileY), new PathTile(xLoc, yLoc));
+				mapPoints.add(point);
+				selectedTileX = xLoc;
+				selectedTileY = yLoc;
+			}
+		}
+		/*
+		if(startingPointAccepted){
+			int[] startingPoint = mapPoints.get(0);
+			if(xLoc == startingPoint[0] &&yLoc ==startingPoint[1]){
+				statusString = "Cannot place point on starting point";
+				return;
+			}
+			if(xLoc==selectedTileX ||yLoc == selectedTileY){
+				if(xLoc == 0 || xLoc == mapWidthInput-1 ||yLoc == 0 || yLoc == mapHeightInput-1 ){
+				
+					userCreatedMap.placeExit(xLoc, yLoc);
+					return;
+				}
+				int[] point = {xLoc, yLoc};
+				userCreatedMap.linkTwoPoints(new PathTile(selectedTileX, selectedTileY), new PathTile(xLoc, yLoc));
+				mapPoints.add(point);
+				selectedTileX = xLoc;
+				selectedTileY = yLoc;
+			}
+			
+		}
+		*/
+		
 	}
 
 
@@ -252,6 +329,9 @@ public class EditMapScreen extends BasicGameState {
 				mapSizeInputAccepted = false;
 			}
 			else{
+				userCreatedMap = new Map();
+				userCreatedMap.setMapSize(mapWidthInput, mapHeightInput);
+				userCreatedMap.initializeMap();
 				mapSizeInputAccepted = true;
 				statusString = "Select a starting location";
 			}
@@ -268,6 +348,9 @@ public class EditMapScreen extends BasicGameState {
 		for(int y = 0 ; y < mapHeightInput; y++){
 			for(int x = 0 ; x < mapWidthInput; x++ ){
 				BlackTileBoundaryGraphic.draw(currentX, currentY);
+				if(mapSizeInputAccepted&&startingPointAccepted&&exitPointAccepted)
+					if(x ==selectedTileX ||y == selectedTileY)
+						BluePathTileGraphic.draw(currentX, currentY);
 				currentX+=32;
 			}
 			currentY+=32;
@@ -289,6 +372,8 @@ public class EditMapScreen extends BasicGameState {
 
 		mapPoints = new ArrayList<int[]>();
 		mapSizeInputAccepted = false;
+		startingPointAccepted=false;
+		exitPointAccepted = false;
 		statusString ="";
 	}
 
