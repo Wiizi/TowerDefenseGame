@@ -15,8 +15,6 @@ public class FreezeTower extends Tower
 		this.range = newRange;
 		this.power = newPower;
 		this.towerType = type.FREEZE;
-		
-		
 	}
 
 	
