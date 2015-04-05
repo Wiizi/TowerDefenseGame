@@ -63,6 +63,8 @@ public class PlayScreen extends BasicGameState {
 	Image BuyTowerTitleGraphic;
 	Image TowerMenuOverlayGraphic;
 	Image ExitButtonGraphic;
+	Image UpgradeButtonGraphic;
+	Image SellButtonGraphic;
 	Image TileSelectGraphic;
 	Image CurrencyGraphic;
 	Image WaveGraphic;
@@ -82,6 +84,8 @@ public class PlayScreen extends BasicGameState {
 	
 	Rectangle ExitButton;
 	Rectangle NextWaveButton;
+	Rectangle SellButton;
+	Rectangle UpgradeButton;
 
 
 	private static Map currentMap;
@@ -308,7 +312,8 @@ public class PlayScreen extends BasicGameState {
 		//drawing buttons and overlays
 		TowerMenuOverlayGraphic.draw(currentMap.getWidthInPixel(), 0);
 		ExitButtonGraphic.draw(container.getWidth() - ExitButtonGraphic.getWidth(), container.getHeight() - ExitButtonGraphic.getHeight() - 2);
-		CurrencyGraphic.draw(1, container.getHeight() - CurrencyGraphic.getHeight());
+		UpgradeButtonGraphic.draw(currentMap.getWidthInPixel() +10, TowerMenuOverlayGraphic.getHeight() +  UpgradeButtonGraphic.getHeight() + 20);
+		SellButtonGraphic.draw(currentMap.getWidthInPixel() +10, TowerMenuOverlayGraphic.getHeight() +  10);
 		WaveGraphic.draw(currentMap.getWidthInPixel() - WaveGraphic.getWidth(), currentMap.getHeightInPixel());
 		//change wavebutton graphic
 		if(!waveIsInProgress)
@@ -425,6 +430,8 @@ public class PlayScreen extends BasicGameState {
 		GravelTileGraphic = new Image ("graphics/GravelTile.png");
 		BrickTileGraphic = new Image ("graphics/BrickTile.png");
 		ExitButtonGraphic = new Image ("graphics/ExitButton.png");
+		UpgradeButtonGraphic = new Image ("graphics/ExitButton.png");
+		SellButtonGraphic = new Image ("graphics/ExitButton.png");		
 		CurrencyGraphic = new Image("graphics/CurrencyGraphic.png");
 		TileSelectGraphic = new Image ("graphics/TileSelectGraphic.png");
 		WaveGraphic = new Image ("graphics/WaveGraphic.png");
@@ -432,6 +439,7 @@ public class PlayScreen extends BasicGameState {
 		NextWaveNonActiveGraphic = new Image("graphics/NextWaveNonActive.png");
 		HeartGraphic = new Image("graphics/Heart.png");
 		TowerMenuOverlayGraphic = new Image("graphics/TowerMenuGraphic.png");
+		
 
 		BasicTowerGraphic = new Image("graphics/BasicTowerGraphic.png");
 		BasicTowerProjectileGraphic = new Image("graphics/BasicTowerProjectileGraphic.png");
@@ -461,7 +469,9 @@ public class PlayScreen extends BasicGameState {
 		//create the nextwave and exit rectangle buttons
 		ExitButton = new Rectangle(container.getWidth() - ExitButtonGraphic.getWidth(), container.getHeight() - ExitButtonGraphic.getHeight() - 2, ExitButtonGraphic.getWidth(), ExitButtonGraphic.getHeight());
 		NextWaveButton = new Rectangle(currentMap.getWidthInPixel() - WaveGraphic.getWidth(), currentMap.getHeightInPixel() + WaveGraphic.getHeight() + 10, NextWaveActiveGraphic.getWidth(), NextWaveActiveGraphic.getHeight());
-
+		SellButton = new Rectangle(currentMap.getWidthInPixel() +10, TowerMenuOverlayGraphic.getHeight() +  10, SellButtonGraphic.getWidth(), SellButtonGraphic.getHeight());
+		UpgradeButton = new Rectangle(currentMap.getWidthInPixel() +10, TowerMenuOverlayGraphic.getHeight() + UpgradeButtonGraphic.getHeight()+ 20, NextWaveActiveGraphic.getWidth(), NextWaveActiveGraphic.getHeight());
+		
 		//create tower buttons
 		TowerGraphicButtonsList = new ArrayList<Rectangle>();
 		for(int i =0;i<maximumNumberTowers;i++){
@@ -559,7 +569,13 @@ public class PlayScreen extends BasicGameState {
 				waveIsInProgress = true;
 				createCritterQueueforLevel();
 			}
-
+			if(UpgradeButton.contains(x,y)){
+				//selectedTower = -3;
+			}
+			if(SellButton.contains(x,y)){
+				//selectedTower = -2;
+			}
+			
 			for(int i=0;i<maximumNumberTowers;i++){
 				if(TowerGraphicButtonsList.get(i).contains(x,y)){
 					selectedTower = i;
