@@ -3,7 +3,9 @@ package towers;
 import critters.Critter;
 
 public class Projectile {
-	
+	public enum projectileType{
+		GENERIC,FREEZE,SNIPER
+	}
 	private double xLoc;
 	private double yLoc;
 	private double xDest;
@@ -14,12 +16,14 @@ public class Projectile {
 	private long startTime;
 	private final double error = 1;
 	private int power;
-	private boolean freeze;
 	private final long speed = 20;
+	private projectileType projType;
 	private boolean arrivedAtTarget = false;
 	private Critter targetCritter;
 	
-	public Projectile(double pXInit, double pYInit, double pXDest, double pYDest, int pPower, boolean pFreeze, Critter pTargetCritter){
+	public Projectile(double pXInit, double pYInit, double pXDest, double pYDest, int pPower, Critter pTargetCritter, projectileType pType){
+		
+
 		xInit = pXInit;
 		xLoc = pXInit;
 		xDest = pXDest;
@@ -27,7 +31,6 @@ public class Projectile {
 		yLoc = pYInit;
 		yDest = pYDest;
 		power = pPower;
-		freeze = pFreeze;
 		arrivedAtTarget = false;
 		double yDist = yInit-yDest;
 		double xDist = xInit-xDest;
@@ -35,6 +38,7 @@ public class Projectile {
 		totalTime = ((long)dist)/speed *1000;
 		startTime = System.currentTimeMillis();
 		targetCritter = pTargetCritter;
+		projType = pType;
 	}
 	
 	public double angleOfProjectileInDegrees(){
@@ -72,6 +76,10 @@ public class Projectile {
 	
 	public long getSpeed(){
 		return this.speed;
+	}
+	
+	public projectileType getType(){
+		return this.projType;
 	}
 	
 }
