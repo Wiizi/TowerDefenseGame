@@ -9,10 +9,13 @@ public abstract class Tower {
 		FREEZE, SNIPER, GENERIC
 	}
 	protected int buyingCost;
+	private double modifierBase = 1.0;
+	private double modifierIncrease = 0.4;
 	protected int refundValue = 90;
 	protected double range = 100;
 	protected int power = 4;
 	private int level =1;
+	private static int maxLevel = 3;
 	protected int upgradeCost = 200;
 	private double xPos;
 	private double yPos;
@@ -80,7 +83,7 @@ public abstract class Tower {
 	}
 	
 	public double getRange() {
-		return range;
+		return (range*getModifier());
 	}
 
 	public void setRange(double pRange) {
@@ -88,7 +91,7 @@ public abstract class Tower {
 	}
 
 	public int getPower() {
-		return power;
+		return (int)(power*getModifier());
 	}
 
 	public void setPower(int pPower) {
@@ -98,10 +101,14 @@ public abstract class Tower {
 	public int getLevel() {
 		return level;
 	}
-
-	public void upgrade() {
-		level++;
-		Player.addCredits(-1*upgradeCost);
+//returns if upgrade was successful
+	public boolean upgrade() {
+		if(level < maxLevel && Player.getCredits()>=upgradeCost){
+			level++;
+			Player.addCredits(-1*upgradeCost);
+			return true;
+		}
+		return false;
 	}
 
 	public double getUpgradeCost() {
@@ -132,5 +139,9 @@ public abstract class Tower {
 	
 	public type getType(){
 		return this.towerType;
+	}
+	
+	public double getModifier(){
+		return (modifierBase + (level*modifierIncrease));
 	}
 }
