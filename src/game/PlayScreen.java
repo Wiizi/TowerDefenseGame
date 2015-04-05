@@ -402,6 +402,7 @@ public class PlayScreen extends BasicGameState {
 					double dist = Math.sqrt((xDist*xDist)+(yDist*yDist));
 					if(dist<t.getRange()){
 						t.setTargetCritter(c);
+						break;
 					
 					}
 				}
