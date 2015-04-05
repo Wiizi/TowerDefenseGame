@@ -55,6 +55,8 @@ public class PlayScreen extends BasicGameState {
 	Animation blackBeetleAnimation;
 	private SpriteSheet batSpriteSheet;
 	Animation batAnimation;
+	private SpriteSheet scorpionSpriteSheet;
+	Animation scorpionAnimation;
 	
 	Image SandTileGraphic;
 	Image GravelTileGraphic;
@@ -108,7 +110,7 @@ public class PlayScreen extends BasicGameState {
 	private ArrayList<Image> TowerGraphics;
 	private ArrayList<Rectangle> TowerGraphicButtonsList;
 
-	private final int startingLevel = 1;
+	private final int startingLevel = 3;
 	private final int critterSpawnDelay = 20;
 	CritterObserver gruntObserver;
 	CritterGenerator generator;
@@ -156,6 +158,7 @@ public class PlayScreen extends BasicGameState {
 
 		blackBeetleAnimation.update(delta);
 		batAnimation.update(delta);
+		scorpionAnimation.update(delta);
 
 	}
 
@@ -244,7 +247,8 @@ public class PlayScreen extends BasicGameState {
 			orientationOffset = 2;
 			break;
 		case ARMORED:
-			a = blackBeetleAnimation;
+			a = scorpionAnimation;
+			orientationOffset = 2;
 			break;
 		case TANK:
 			a = blackBeetleAnimation;
@@ -479,6 +483,8 @@ public class PlayScreen extends BasicGameState {
 		batAnimation = new Animation(batSpriteSheet,150);
 		blackBeetleSpriteSheet = new SpriteSheet("graphics/beetleDownSheet.png", 28, 29,0);
 		blackBeetleAnimation = new Animation(blackBeetleSpriteSheet, 100);
+		scorpionSpriteSheet = new SpriteSheet("graphics/ScorpionSpriteSheet.png",37,32,0);
+		scorpionAnimation = new Animation(scorpionSpriteSheet,100);
 	}
 
 	public void loadFonts(){
