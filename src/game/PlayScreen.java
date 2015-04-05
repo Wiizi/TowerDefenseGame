@@ -114,7 +114,7 @@ public class PlayScreen extends BasicGameState {
 	private ArrayList<Image> TowerGraphics;
 	private ArrayList<Rectangle> TowerGraphicButtonsList;
 
-	private final int startingLevel = 4;
+	private final int startingLevel = 1;
 	private final int critterSpawnDelay = 20;
 	CritterObserver gruntObserver;
 	CritterGenerator generator;

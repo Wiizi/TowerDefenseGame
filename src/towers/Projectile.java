@@ -24,13 +24,14 @@ public class Projectile {
 	public Projectile(double pXInit, double pYInit, double pXDest, double pYDest, int pPower, Critter pTargetCritter, projectileType pType){
 		
 
-		xInit = pXInit;
-		xLoc = pXInit;
+		xInit = pXInit;		
 		xDest = pXDest;
-		yInit= pYInit;
-		yLoc = pYInit;
+		yInit= pYInit;	
 		yDest = pYDest;
 		power = pPower;
+		
+		xLoc = xInit +12*Math.cos(angleOfProjectileInRadians());
+		yLoc = yInit +12*Math.sin(angleOfProjectileInRadians());
 		arrivedAtTarget = false;
 		double yDist = yInit-yDest;
 		double xDist = xInit-xDest;
@@ -52,7 +53,7 @@ public class Projectile {
 	public void move(){
 		
 		//projectile has hit
-		if (Math.abs(xLoc - xDest)< 5 || Math.abs(yLoc - yDest)< 5){
+		if (Math.abs(xLoc - xDest)< speed/2 || Math.abs(yLoc - yDest)< speed/2){
 			arrivedAtTarget = true;
 			targetCritter.takeDamage(power);
 		}

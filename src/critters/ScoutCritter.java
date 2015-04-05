@@ -13,7 +13,7 @@ public class ScoutCritter extends Critter {
 	private static String		name		= "Scout";
 	private static double 		health 		= 3;
 	private static double 		speed		= 3;
-	private static int			reward		= 3;
+	private static int			reward		= 10;
 	private static double		armor		= 0.5;
 	
 

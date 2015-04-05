@@ -21,7 +21,7 @@ public abstract class Tower {
 	private double yPos;
 	protected boolean freezeTower = false;
 	private Critter targetCritter;
-	protected int reloadTime;
+	protected double reloadTime;
 	private long lastAttackTime;
 	private double angleOfRotation;
 	protected type towerType;

@@ -14,14 +14,17 @@ public class CritterGenerator {
 	
 	//The critter stream sets the type and quantity of each critter for each level. It can be easily adjusted
 	int[][] CritterStream = {		
-			{5,1,0,0,0},
-			{5,2,1,0,0},
-			{5,3,1,1,0},
+			{2,1,0,0,0},
+			{5,2,0,0,0},
+			{6,2,1,0,0},
 			{6,3,2,2,1},
-			{6,3,3,3,2},
-			{8,4,4,4,2},
+			{6,3,3,3,1},
+			{8,4,4,4,1},
 			{9,5,5,5,2},
-			{10,6,6,6,4},	};
+			{10,6,6,6,2},	
+			{12,6,6,7,2}
+	
+							};
 
 	//creating  critter queue and finding starting point
 
