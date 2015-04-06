@@ -25,6 +25,7 @@ public abstract class Tower {
 	private long lastAttackTime;
 	private double angleOfRotation;
 	protected type towerType;
+	private double critterTravelDistanceMaximum =0;
 	//system time of last attack
 
 	
@@ -70,12 +71,25 @@ public abstract class Tower {
 	}
 
 	public void setTargetCritter(Critter c){
+		critterTravelDistanceMaximum = 0;
 		targetCritter = c;
 	}
 	public Critter getTargetCritter(){
 		return targetCritter;
 	}
 	
+	
+	
+	public double getCritterTravelDistanceMaximum() {
+		return critterTravelDistanceMaximum;
+	}
+
+
+	public void setCritterTravelDistanceMaximum(double critterTravelDistanceMaximum) {
+		this.critterTravelDistanceMaximum = critterTravelDistanceMaximum;
+	}
+
+
 	public double getRotationAngleInDegrees(){
 		if(targetCritter !=null)
 			angleOfRotation = (180/Math.PI)*Math.atan2(targetCritter.getYLoc()-yPos, targetCritter.getXLoc()-xPos);

@@ -25,6 +25,7 @@ abstract public class Critter{
 	private boolean 	atEndPoint = false;
 	protected type		critterType;
 	private List<CrObserver> critterObservers;
+	private double distanceTravelled;
 
 
 
@@ -43,6 +44,7 @@ abstract public class Critter{
 		locations = pLocations;
 		critterObservers = new ArrayList<CrObserver>();
 		critterType = pCritterType;
+		distanceTravelled=0;
 
 	}
 
@@ -60,21 +62,25 @@ abstract public class Critter{
 			if(!(XLoc>locations[locationIncrementer+1][0]-speed&&XLoc<locations[locationIncrementer+1][0]+speed) ){
 				if(XLoc<=locations[locationIncrementer+1][0]){
 					XLoc += speed;
+					distanceTravelled+=speed;
 					critterDirection = direction.RIGHT;
 				}
 				else if(XLoc>=locations[locationIncrementer+1][0])
 				{
 					XLoc -= speed;
+					distanceTravelled+=speed;
 					critterDirection = direction.LEFT;
 				}
 			}
 			else if(!(YLoc>=locations[locationIncrementer+1][1]-speed&&YLoc<=locations[locationIncrementer+1][1]+speed) ){
 				if(YLoc<=locations[locationIncrementer+1][1]){
 					YLoc += speed;
+					distanceTravelled+=speed;
 					critterDirection = direction.DOWN;
 				}
 				else if(YLoc>=locations[locationIncrementer+1][1]){
 					YLoc -= speed;
+					distanceTravelled+=speed;
 					critterDirection = direction.UP;
 				}
 			}
@@ -134,6 +140,14 @@ abstract public class Critter{
 	}
 	
 	
+	
+	
+
+	public double getDistanceTravelled() {
+		return distanceTravelled;
+	}
+
+
 
 	public boolean isAtEndPoint() {
 		return atEndPoint;
