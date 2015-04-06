@@ -11,12 +11,12 @@ public abstract class Tower {
 	protected int buyingCost;
 	private double modifierBase = 1.0;
 	private double modifierIncrease = 0.4;
-	protected int refundValue = 90;
-	protected double range = 100;
-	protected int power = 4;
+	protected int refundValue;
+	protected double range;
+	protected double power ;
 	private int level =1;
-	private static int maxLevel = 3;
-	protected int upgradeCost = 200;
+	private static int maxLevel;
+	protected int upgradeCost;
 	private double xPos;
 	private double yPos;
 	protected boolean freezeTower = false;
@@ -40,7 +40,7 @@ public abstract class Tower {
 	
 	
 	public boolean canAttack(){
-		if( (System.currentTimeMillis()-lastAttackTime)/1000 >= reloadTime){
+		if( (System.currentTimeMillis()-lastAttackTime)/1000.0 >= reloadTime){
 
 			return true;
 		}
@@ -104,8 +104,8 @@ public abstract class Tower {
 		range = pRange;
 	}
 
-	public int getPower() {
-		return (int)(power*getModifier());
+	public double getPower() {
+		return power*getModifier();
 	}
 
 	public void setPower(int pPower) {
@@ -156,6 +156,6 @@ public abstract class Tower {
 	}
 	
 	public double getModifier(){
-		return (modifierBase + (level*modifierIncrease));
+		return (modifierBase + ((level-1)*modifierIncrease));
 	}
 }

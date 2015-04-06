@@ -98,6 +98,8 @@ abstract public class Critter{
 
 
 	public void takeDamage(double damage){
+
+
 		health = health - damage/armor;
 		if(health <= 0){
 			alive = false;

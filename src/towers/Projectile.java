@@ -15,13 +15,13 @@ public class Projectile {
 	private long totalTime;
 	private long startTime;
 	private final double error = 1;
-	private int power;
-	private final long speed = 20;
+	private double power;
+	private double speed = 20;
 	private projectileType projType;
 	private boolean arrivedAtTarget = false;
 	private Critter targetCritter;
 	
-	public Projectile(double pXInit, double pYInit, double pXDest, double pYDest, int pPower, Critter pTargetCritter, projectileType pType){
+	public Projectile(double pXInit, double pYInit, double pXDest, double pYDest, double pPower, Critter pTargetCritter, projectileType pType){
 		
 
 		xInit = pXInit;		
@@ -36,10 +36,12 @@ public class Projectile {
 		double yDist = yInit-yDest;
 		double xDist = xInit-xDest;
 		double dist = Math.sqrt(xDist*xDist+yDist*yDist);
-		totalTime = ((long)dist)/speed *1000;
-		startTime = System.currentTimeMillis();
+		
 		targetCritter = pTargetCritter;
 		projType = pType;
+		if(projType == projectileType.SNIPER){
+			speed=30;
+		}
 	}
 	
 	public double angleOfProjectileInDegrees(){
@@ -75,7 +77,7 @@ public class Projectile {
 		return this.yLoc;
 	}
 	
-	public long getSpeed(){
+	public double getSpeed(){
 		return this.speed;
 	}
 	
