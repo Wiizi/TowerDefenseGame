@@ -19,8 +19,11 @@ public class MenuScreen extends BasicGameState{
 	Rectangle StartGameButton;
 	Rectangle ExitGameButton;
 	Rectangle EditMapButton;
+	
 	private final String authors = "A Java Game by Callum May, Wei Wang,\nCharles Liu and Robert Zhao";
 
+	private final int mouseClickDelay = 200;
+	private long lastClick=(-1*mouseClickDelay);
 
 	public MenuScreen (int state){
 
@@ -85,10 +88,22 @@ public class MenuScreen extends BasicGameState{
 
 	public void mouseClicked( float x, float y, StateBasedGame sbg, GameContainer container) throws SlickException{
 
+		//protection against multiple click registration
+		if(lastClick + mouseClickDelay > System.currentTimeMillis())
+			return;
+		lastClick = System.currentTimeMillis();
+
 		if(StartGameButton.contains(x, y)){
 			MapSelectScreen s = (MapSelectScreen) sbg.getState(Game.mapSelectScreen);
 			s.initializeAndLoadMaps();
 			s.createRectangleMapButtons(container);
+			
+			try {
+			    Thread.sleep(300);                
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
+			
 			sbg.enterState(Game.mapSelectScreen);
 		}
 		if(EditMapButton.contains(x, y)){

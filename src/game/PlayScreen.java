@@ -181,7 +181,7 @@ public class PlayScreen extends BasicGameState {
 	public void render(GameContainer container, StateBasedGame sbg, Graphics g) throws SlickException {
 		
 			drawMapandOverlay(container, g);
-			drawTowers();
+			drawTowers(g);
 
 			if(waveIsInProgress){
 				drawCritters(); 
@@ -202,7 +202,7 @@ public class PlayScreen extends BasicGameState {
 	}
 
 
-	private void drawTowers(){
+	private void drawTowers( Graphics g){
 		for(Tower t: towerList){
 
 			Image img = BasicTowerGraphic;
@@ -224,6 +224,11 @@ public class PlayScreen extends BasicGameState {
 
 			img.setRotation( (float) t.getRotationAngleInDegrees());
 			img.drawCentered( (float) t.getXLoc(), (float) t.getYLoc());
+			for(int count = 1; count < t.getLevel() ;count++){
+				g.setColor(Color.blue);
+				g.fillOval( (float) (t.getXLoc()- 5 +(count-1)*5), (float) (t.getYLoc())+12, (float) 5.0,(float) 5.0);
+				
+			}
 		}
 	}
 	private void drawProjectiles(){

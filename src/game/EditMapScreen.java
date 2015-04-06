@@ -93,6 +93,7 @@ public class EditMapScreen extends BasicGameState {
 
 	@Override
 	public void init(GameContainer container, StateBasedGame arg1) throws SlickException {
+		
 		loadImages();
 
 
@@ -313,6 +314,12 @@ public class EditMapScreen extends BasicGameState {
 
 	public void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException, IOException{
 
+		//protection against multiple click registration
+				if(lastClick + mouseClickDelay > System.currentTimeMillis())
+					return;
+				lastClick = System.currentTimeMillis();
+		
+		
 		if(ExitGameButton.contains(x, y)){
 			Mouse.getDY();
 			AppGameContainer gameContainer = (AppGameContainer) container;
@@ -359,7 +366,7 @@ public class EditMapScreen extends BasicGameState {
 		}
 
 		if(SaveMapButton.contains(x,y) ){
-			if(mapInputAccepted && exitPointAccepted && startingPointAccepted/*&& userCreatedMap.ValidityOfMap() && !mapCreated*/){
+			if(mapInputAccepted && exitPointAccepted && startingPointAccepted){
 				saveMap = new MapEditor(mapWidthInput, mapHeightInput, userCreatedMap.arrangePathPoint(mapPoints));
 				saveMap.writeFile(mapNameInput);
 				mapCreated = true;
