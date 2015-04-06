@@ -58,6 +58,8 @@ public class Projectile {
 		if (Math.abs(xLoc - xDest)< speed/2 || Math.abs(yLoc - yDest)< speed/2){
 			arrivedAtTarget = true;
 			targetCritter.takeDamage(power);
+			if(projType == projectileType.FREEZE)
+				targetCritter.freezeCritter();
 		}
 		else{
 			xLoc += speed*Math.cos(angleOfProjectileInRadians());

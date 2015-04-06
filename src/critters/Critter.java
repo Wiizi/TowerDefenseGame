@@ -18,6 +18,10 @@ abstract public class Critter{
 	private float		YLoc;
 	private String		name;
 	private boolean 	alive;
+	private static double	freezeMultiplier = 0.5;	//how much speed is reduced by when frozen
+	private boolean		frozen = false;
+	private long		freezeStartTime = -10000;	//when the critter was frozen
+	private static long freezeDuration = 3000;		//How long freeze lasts in ms
 	public boolean		canMove = true;
 	private int[][] 	locations;
 	private int 		locationIncrementer = 0;
@@ -51,6 +55,9 @@ abstract public class Critter{
 
 	
 	public void move(){
+		if(System.currentTimeMillis() > freezeStartTime + freezeDuration&&frozen){
+			unfreezeCritter();
+		}
 
 		if(locationIncrementer ==0)
 		{
@@ -59,28 +66,28 @@ abstract public class Critter{
 
 		try{
 
-			if(!(XLoc>locations[locationIncrementer+1][0]-speed&&XLoc<locations[locationIncrementer+1][0]+speed) ){
+			if(!(XLoc>locations[locationIncrementer+1][0]-this.getSpeed()&&XLoc<locations[locationIncrementer+1][0]+this.getSpeed()) ){
 				if(XLoc<=locations[locationIncrementer+1][0]){
-					XLoc += speed;
-					distanceTravelled+=speed;
+					XLoc += this.getSpeed();
+					distanceTravelled+=this.getSpeed();
 					critterDirection = direction.RIGHT;
 				}
 				else if(XLoc>=locations[locationIncrementer+1][0])
 				{
-					XLoc -= speed;
-					distanceTravelled+=speed;
+					XLoc -= this.getSpeed();
+					distanceTravelled+=this.getSpeed();
 					critterDirection = direction.LEFT;
 				}
 			}
-			else if(!(YLoc>=locations[locationIncrementer+1][1]-speed&&YLoc<=locations[locationIncrementer+1][1]+speed) ){
+			else if(!(YLoc>=locations[locationIncrementer+1][1]-this.getSpeed()&&YLoc<=locations[locationIncrementer+1][1]+this.getSpeed()) ){
 				if(YLoc<=locations[locationIncrementer+1][1]){
-					YLoc += speed;
-					distanceTravelled+=speed;
+					YLoc += this.getSpeed();
+					distanceTravelled+=this.getSpeed();
 					critterDirection = direction.DOWN;
 				}
 				else if(YLoc>=locations[locationIncrementer+1][1]){
-					YLoc -= speed;
-					distanceTravelled+=speed;
+					YLoc -= this.getSpeed();
+					distanceTravelled+=this.getSpeed();
 					critterDirection = direction.UP;
 				}
 			}
@@ -111,7 +118,14 @@ abstract public class Critter{
 		notifyObservers();
 
 	}
-
+	public void freezeCritter(){
+		this.frozen = true;
+		freezeStartTime = System.currentTimeMillis();
+	}
+	public void unfreezeCritter(){
+		this.frozen = false;
+		freezeStartTime = -10000;
+	}
 	
 
 	//observer classes
@@ -135,7 +149,6 @@ abstract public class Critter{
 
 
 	//Getters and Setters
-
 	
 	public String getName() {
 		return name;
@@ -158,7 +171,10 @@ abstract public class Critter{
 
 
 	public double getSpeed() {
-		return speed;
+		if(frozen)
+			return (speed * freezeMultiplier);
+		else
+			return speed;
 	}
 
 	public direction getCritterDirection() {
@@ -208,6 +224,8 @@ abstract public class Critter{
 	public type getType(){
 		return critterType;
 	}
+	
+	
 
 
 
