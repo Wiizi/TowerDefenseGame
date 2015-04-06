@@ -52,6 +52,7 @@ public class EditMapScreen extends BasicGameState {
 	
 	TextField mapWidthTextField;
 	TextField mapHeightTextField;
+	TextField mapNameTextField;
 
 	Map userCreatedMap;
 	MapEditor saveMap;
@@ -137,7 +138,7 @@ public class EditMapScreen extends BasicGameState {
 
 		if(mapSizeInputAccepted){
 			drawMap(container);
-//			ttf.drawString(30, 0, ""+userCreatedMap.ValidityOfMap());
+			ttf.drawString(30, 0, ""+userCreatedMap.ValidityOfMap());
 			if(mouseOnMap(Mouse.getX(),container.getHeight()-Mouse.getY())){
 				if(!startingPointAccepted)	
 					StartingPointGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
@@ -363,8 +364,8 @@ public class EditMapScreen extends BasicGameState {
 
 		if(SaveMapButton.contains(x,y) ){
 			if(mapSizeInputAccepted && exitPointAccepted && startingPointAccepted && userCreatedMap.ValidityOfMap()){
-				//saveMap = new MapEditor(mapWidthInput, mapHeightInput, userCreatedMap.arrangePathPoint(mapPoints));
-				//saveMap.writeFile("04-06");
+				saveMap = new MapEditor(mapWidthInput, mapHeightInput, userCreatedMap.arrangePathPoint(mapPoints));
+				saveMap.writeFile("04-06");
 
 				System.out.println("there");
 			}
