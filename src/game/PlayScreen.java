@@ -226,7 +226,7 @@ public class PlayScreen extends BasicGameState {
 			img.drawCentered( (float) t.getXLoc(), (float) t.getYLoc());
 			for(int count = 1; count < t.getLevel() ;count++){
 				g.setColor(Color.blue);
-				g.fillOval( (float) (t.getXLoc()-2.5 -(count-1)*5), (float) (t.getYLoc())+12, (float) 5.0,(float) 5.0);
+				g.fillOval( (float) (t.getXLoc()- 5 +(count-1)*5), (float) (t.getYLoc())+12, (float) 5.0,(float) 5.0);
 				
 			}
 		}
