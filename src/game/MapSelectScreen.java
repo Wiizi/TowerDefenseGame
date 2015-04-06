@@ -26,7 +26,7 @@ public class MapSelectScreen extends BasicGameState {
 
 	ArrayList<Map> mapList;
 	ArrayList<Rectangle> mapButtonList;
-	private final int rectangleWidth = 150;
+	private final int rectangleWidth = 100;
 	private final int rectangleHeight = 30;
 	private final int sideMenuWidth = 192;
 	private final int bottomMenuWidth = 128;
