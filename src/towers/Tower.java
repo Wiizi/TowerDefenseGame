@@ -50,7 +50,7 @@ public abstract class Tower {
 
 	public void refundTower() { // credit of this tower's salvage value
 											// is added to the user's account.
-		Player.addCredits(refundValue);
+		Player.getPlayer().addCredits(refundValue);
 	}
 
 	public int getBuyingCost() { // getters and setters for the private
@@ -116,9 +116,9 @@ public abstract class Tower {
 	}
 //returns if upgrade was successful
 	public boolean upgrade() {
-		if(level < maxLevel && Player.getCredits()>=upgradeCost){
+		if(level < maxLevel && Player.getPlayer().getCredits()>=upgradeCost){
 			level++;
-			Player.addCredits(-1*upgradeCost);
+			Player.getPlayer().addCredits(-1*upgradeCost);
 			return true;
 		}
 		return false;

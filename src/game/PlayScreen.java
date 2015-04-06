@@ -161,7 +161,7 @@ public class PlayScreen extends BasicGameState {
 				mouseClicked(Mouse.getX(), container.getHeight() - Mouse.getY(), sbg, container);
 			}
 			
-			if(Player.getLives()<=0){
+			if(Player.getPlayer().getLives()<=0){
 				gameOver = true;
 				}
 
@@ -339,7 +339,7 @@ public class PlayScreen extends BasicGameState {
 		}
 
 		//draw the hearts
-		for(int x = 0 ; x < Player.getLives() ; x++){
+		for(int x = 0 ; x < Player.getPlayer().getLives() ; x++){
 			if(x<8)
 				HeartGraphic.draw(x * (5 + HeartGraphic.getWidth()), currentMap.getHeightOfMap() * currentMap.getPixelSize() + 5);
 			else{
@@ -395,7 +395,7 @@ public class PlayScreen extends BasicGameState {
 		UpgradeButtonGraphic.drawCentered(xCorner +towerButtonWidth/2,yCorner +towerButtonHeight/2);
 
 		// drawing/updating the currency and level
-		ttf.drawString( CurrencyGraphic.getWidth() + 5, (container.getHeight() - 40), "" + Player.getCredits());
+		ttf.drawString( CurrencyGraphic.getWidth() + 5, (container.getHeight() - 40), "" + Player.getPlayer().getCredits());
 		ttf.drawString(currentMap.getWidthInPixel() - 48, currentMap.getHeightInPixel() + 15, currentLevel + "");
 
 		//if the mouse is on the map, snap to map grid
@@ -596,13 +596,13 @@ public class PlayScreen extends BasicGameState {
 			if(s.isAlive())
 				s.move();
 			else{
-				Player.addCredits(s.getReward());
+				Player.getPlayer().addCredits(s.getReward());
 				crittersToRemove.add(s);
 			}
 			if(s.isVisible())
 				crittersAreStillVisible=true;
 			if(s.isAtEndPoint()){
-				Player.decreaseLife();
+				Player.getPlayer().decreaseLife();
 				crittersToRemove.add(s);
 			}
 		}
@@ -690,11 +690,11 @@ public class PlayScreen extends BasicGameState {
 				}
 
 				towerList.add(newTower);
-				Player.addCredits((-1)*newTower.getBuyingCost());
+				Player.getPlayer().addCredits((-1)*newTower.getBuyingCost());
 
-				if (Player.getCredits()<0){
+				if (Player.getPlayer().getCredits()<0){
 					//deny tower building due to insufficient funds or invalid tile
-					Player.addCredits(newTower.getBuyingCost());
+					Player.getPlayer().addCredits(newTower.getBuyingCost());
 					towerList.remove(newTower);
 				}
 			}
@@ -758,7 +758,8 @@ public class PlayScreen extends BasicGameState {
 	}
 	public void restartGame() {
 		currentLevel = startingLevel;
-		Player.reset();
+		Player.getPlayer().reset();
+
 		waveIsInProgress = false;
 		critterQueue = new LinkedList<Critter>();
 		activeCritterQueue = new LinkedList<Critter>();
