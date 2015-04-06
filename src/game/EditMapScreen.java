@@ -6,9 +6,11 @@ import grid.PathTile;
 import grid.Tile;
 
 import java.awt.Font;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import map.Map;
+import map.MapEditor;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.AppGameContainer;
@@ -34,6 +36,7 @@ public class EditMapScreen extends BasicGameState {
 	Image BluePathTileGraphic;
 	Image SandTileGraphic;
 	Image GravelTileGraphic;
+	Image SaveMapButtonGraphic;
 
 	
 	private final int mouseClickDelay = 200;
@@ -43,12 +46,15 @@ public class EditMapScreen extends BasicGameState {
 	ArrayList<Integer> mapPoints = new ArrayList<Integer>();
 	Rectangle ExitGameButton;
 	Rectangle CreateMapButton;
+	Rectangle SaveMapButton;
 	ArrayList<Rectangle> buttonList = new ArrayList<Rectangle>();
-
+	
+	
 	TextField mapWidthTextField;
 	TextField mapHeightTextField;
 
 	Map userCreatedMap;
+	MapEditor saveMap;
 	
 	Font font ;
 	TrueTypeFont ttf;
@@ -110,7 +116,12 @@ public class EditMapScreen extends BasicGameState {
 				mapGridClicked(Mouse.getX(), container.getHeight() - Mouse.getY(), sbg, container);
 			}
 			else{
-				mouseClicked(Mouse.getX(), container.getHeight() - Mouse.getY(), sbg, container);
+				try {
+					mouseClicked(Mouse.getX(), container.getHeight() - Mouse.getY(), sbg, container);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -146,6 +157,9 @@ public class EditMapScreen extends BasicGameState {
 			
 			//create the mapgrid
 			generateMapGrid();
+			
+			
+			SaveMapButtonGraphic.drawCentered(container.getWidth()/2 , container.getHeight() - SaveMapButtonGraphic.getHeight()/2 -10 );
 		}
 		else{
 			ttf.drawString(40, 40, WidthString, Color.black);
@@ -203,6 +217,8 @@ public class EditMapScreen extends BasicGameState {
 		BluePathTileGraphic = new Image("graphics/BluePathTileGraphic.png");
 		SandTileGraphic = new Image("graphics/SandTile.png");
 		GravelTileGraphic = new Image("graphics/GravelTile.png");
+		SaveMapButtonGraphic = new Image("graphics/SaveMapButtonGraphic.png");
+		
 	}
 
 	public float getClosestTileCenter(float X){
@@ -307,7 +323,7 @@ public class EditMapScreen extends BasicGameState {
 
 
 
-	public void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException{
+	public void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException, IOException{
 
 		if(ExitGameButton.contains(x, y)){
 			Mouse.getDY();
@@ -343,6 +359,13 @@ public class EditMapScreen extends BasicGameState {
 				statusString = "Select a starting location";
 			}
 
+		}
+		
+		if(SaveMapButton.contains(x,y) && mapSizeInputAccepted && exitPointAccepted && startingPointAccepted){
+			saveMap = new MapEditor(mapWidthInput, mapHeightInput, userCreatedMap.arrangePathPoint(mapPoints));
+			saveMap.writeFile("04-06");
+			
+			System.out.println("there");
 		}
 
 	}
@@ -388,6 +411,7 @@ public class EditMapScreen extends BasicGameState {
 	public void createRectangleButtons(GameContainer container){
 		CreateMapButton = new Rectangle(mapHeightTextField.getX() + ttf.getWidth(WidthString)+10, 40 + mapWidthTextField.getHeight()/2 ,CreateMapButtonGraphic.getWidth(), CreateMapButtonGraphic.getHeight());
 		ExitGameButton = new Rectangle(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2, ExitButtonGraphic.getWidth(),ExitButtonGraphic.getHeight());
+		SaveMapButton = new Rectangle(container.getWidth()/2 - SaveMapButtonGraphic.getWidth()/2, container.getHeight() - SaveMapButtonGraphic.getHeight() -10, SaveMapButtonGraphic.getWidth(), SaveMapButtonGraphic.getHeight());
 	}
 
 	@Override
