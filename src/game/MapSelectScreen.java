@@ -38,11 +38,6 @@ public class MapSelectScreen extends BasicGameState {
 
 	LoadFile loading;
 	
-	
-	private final int mouseClickDelay = 200;
-	private long lastClick=(-1*mouseClickDelay);
-	
-	
 	public MapSelectScreen (int state){
 
 	}
@@ -103,15 +98,8 @@ public class MapSelectScreen extends BasicGameState {
 		mapButtonList = new ArrayList<Rectangle>();
 		mapList = new ArrayList<Map>();
 		loading = new LoadFile();
-/*		Map smallMap = new SmallMap();
-		Map mediumMap = new MediumMap();
-		Map largeMap = new LargeMap();
 
-		mapList.add(smallMap);
-		mapList.add(mediumMap);
-		mapList.add(largeMap);*/
 		mapList.addAll(loading.getAllMap());
-
 
 	}
 	
@@ -133,12 +121,6 @@ public class MapSelectScreen extends BasicGameState {
 	}
 
 	public void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException{
-		
-		if(lastClick + mouseClickDelay > System.currentTimeMillis())
-			return;
-		lastClick = System.currentTimeMillis();
-		
-		
 		for(int count = 0 ; count < mapButtonList.size() ; count++){
 			//compare if the click occurred inside one of the rectangle buttons, 
 			//if it did, load that map, change the frame size to match the map size, and switch states to the PlayScreen state
