@@ -20,7 +20,7 @@ public class LoadFile {
 	
 	private static final String folderName = "mapSaves";
 	private static final File directory = new File(folderName);
-	private static ArrayList<String> files = new ArrayList<String>();
+	private static ArrayList<String> files;
 	private static ArrayList<Map> mapList;
 	
 	
@@ -31,6 +31,7 @@ public class LoadFile {
 	
 	public void listFilesforFolder(){
 		
+		files = new ArrayList<String>();
 		File[] listOfFiles = directory.listFiles();
 		for (int i = 0; i < listOfFiles.length; i++){
 			if (listOfFiles[i].isFile()) {
