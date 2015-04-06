@@ -247,13 +247,14 @@ public class Map {
 			cornerArray[i][1] = array.get(count + 1) * getPixelSize() + getPixelSize() / 2;
 
 			if (count == 0){
-				if (array.get(count) == 0 || array.get(count) == getWidthOfMap() - 1){
+				if (array.get(count) == 0){
 					cornerArray[0][0] = array.get(count) * getPixelSize();
 				}
-				if (array.get(count + 1) == 0 || array.get(count + 1) == getHeightOfMap() - 1){
-					cornerArray[0][1] = array.get(count + 1) * getPixelSize();
-				
-//					Math.floor(double x / CELL_SIZE)* CELL_SIZE +CELL_SIZE/2
+				if (array.get(count) == getWidthOfMap() - 1){
+					cornerArray[0][0] = (array.get(count) + 1) * getPixelSize();
+				}
+				if (array.get(count + 1) == 0){
+					cornerArray[0][1] = array.get(count + 1) * getPixelSize() + getPixelSize() / 2;
 				}
 			}
 			count+= 2;
@@ -464,16 +465,10 @@ public class Map {
 	 */
 	public boolean ValidityOfMap(){
 		boolean validity;
-		if (validityOfMap ||validityOfPath){
+		if (validityOfMap || validityOfPath){
 			validity = true;
 		}
 		else {
-			if (!validityOfMap){
-				System.out.println("Invalid Map");
-			}
-			if (!validityOfPath){
-				System.out.println("Invalid Path Link");
-			}
 			validity = false;
 		}
 		return validity;

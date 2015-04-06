@@ -127,26 +127,6 @@ public class MapEditor {
 	}
 	
 	/**
-	 * Verify whether the design map is valid according to the game rules
-	 * 
-	 * @return validity
-	 */
-	public boolean ValidityOfMap(){
-		boolean validity;
-		
-		if (validityOfMap){
-			validity = true;
-		}
-		if (fileWritten){
-			validity = true;
-		}
-		else {
-			validity = false;
-		}
-		return validity;
-	}
-	
-	/**
 	 * Print
 	 */
 	public String toString(){
