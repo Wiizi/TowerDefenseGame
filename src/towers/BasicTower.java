@@ -17,8 +17,8 @@ public class BasicTower extends Tower{
 	private static int newBuyingCost = 100;
 	private static int newRefundValue = 90;
 	private static int newUpgradeCost = 100;
-	private static double newReloadTime = 0.3;
+	private static double newReloadTime = 0.03;
 	private static double newRange = 100;
-	private static double newPower = 0.6;
+	private static double newPower = 100.6;
 
 }
