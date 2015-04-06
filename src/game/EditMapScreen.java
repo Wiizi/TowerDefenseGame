@@ -360,16 +360,31 @@ public class EditMapScreen extends BasicGameState {
 			}
 
 		}
-		
-		if(SaveMapButton.contains(x,y) && mapSizeInputAccepted && exitPointAccepted && startingPointAccepted){
-			saveMap = new MapEditor(mapWidthInput, mapHeightInput, userCreatedMap.arrangePathPoint(mapPoints));
-			saveMap.writeFile("04-06");
-			
-			System.out.println("there");
+
+		if(SaveMapButton.contains(x,y) ){
+			if(mapSizeInputAccepted && exitPointAccepted && startingPointAccepted && userCreatedMap.ValidityOfMap()){
+				//saveMap = new MapEditor(mapWidthInput, mapHeightInput, userCreatedMap.arrangePathPoint(mapPoints));
+				//saveMap.writeFile("04-06");
+
+				System.out.println("there");
+			}
+			else{
+				statusString = "Invalid Map. Please try again";
+				reInitializeMapPathCreation();
+			}
 		}
+
 
 	}
 
+	public void reInitializeMapPathCreation(){
+		mapPoints = new ArrayList<Integer>();
+		startingPointAccepted=false;
+		exitPointAccepted = false;
+		userCreatedMap = new Map();
+		userCreatedMap.setMapSize(mapWidthInput, mapHeightInput);
+		userCreatedMap.initializeMap();
+	}
 
 	public void generateMapGrid(){
 

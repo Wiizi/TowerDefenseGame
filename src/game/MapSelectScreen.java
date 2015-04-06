@@ -93,6 +93,7 @@ public class MapSelectScreen extends BasicGameState {
 		}
 	}
 	
+	
 	public void initializeAndLoadMaps(){
 		mapButtonList = new ArrayList<Rectangle>();
 		mapList = new ArrayList<Map>();
