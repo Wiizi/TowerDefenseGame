@@ -12,9 +12,6 @@ public class Projectile {
 	private double yDest;
 	private double xInit;
 	private double yInit;
-	private long totalTime;
-	private long startTime;
-	private final double error = 1;
 	private double power;
 	private double speed = 20;
 	private projectileType projType;
@@ -33,9 +30,6 @@ public class Projectile {
 		xLoc = xInit +12*Math.cos(angleOfProjectileInRadians());
 		yLoc = yInit +12*Math.sin(angleOfProjectileInRadians());
 		arrivedAtTarget = false;
-		double yDist = yInit-yDest;
-		double xDist = xInit-xDest;
-		double dist = Math.sqrt(xDist*xDist+yDist*yDist);
 		
 		targetCritter = pTargetCritter;
 		projType = pType;

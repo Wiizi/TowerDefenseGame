@@ -5,7 +5,7 @@ import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 
 
-import critters.CritterObserver;
+
 
 public class Game extends StateBasedGame {
 
@@ -18,7 +18,7 @@ public class Game extends StateBasedGame {
 	Image GravelTile;
 	Image StartGameButtonGraphic;
 	Image EditMapButtonGraphic;
-	CritterObserver gruntObserver;
+
 
 	public static final int menuScreen = 0;
 	public static final int playScreen = 1;

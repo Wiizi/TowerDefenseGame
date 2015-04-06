@@ -263,16 +263,6 @@ public class Map {
 	public int[][] getCornersList(){
 		return cornerArray;
 	}
-	
-	public String arangePathPoit(ArrayList<int[]> pathPoint){
-		String temp="";
-		for (int i = 0; i < pathPoint.size(); i++){
-			if (!(i == 1)){
-				temp+="(" + pathPoint.get(i)
-			}
-		}
-		return inputCorner;
-	}
 
 	/**
 	 * Link all the path tile together
