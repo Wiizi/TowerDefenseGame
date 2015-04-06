@@ -21,7 +21,7 @@ public class LoadFile {
 	private static final String folderName = "mapSaves";
 	private static final File directory = new File(folderName);
 	private static ArrayList<String> files = new ArrayList<String>();
-	private ArrayList<Map> mapList = new ArrayList<Map>();
+	private ArrayList<Map> mapList;
 	
 	
 	public LoadFile(){
@@ -88,6 +88,8 @@ public class LoadFile {
 	}
 
 	public ArrayList<Map> getAllMap(){
+		mapList = new ArrayList<Map>();
+		
 		for (int i = 0; i < getListofFiles().size(); i++){
 			try {
 				loadFile(getListofFiles().get(i));
