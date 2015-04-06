@@ -17,8 +17,9 @@ public class Projectile {
 	private projectileType projType;
 	private boolean arrivedAtTarget = false;
 	private Critter targetCritter;
+	private int towerSourceLevel;
 	
-	public Projectile(double pXInit, double pYInit, double pXDest, double pYDest, double pPower, Critter pTargetCritter, projectileType pType){
+	public Projectile(double pXInit, double pYInit, double pXDest, double pYDest, double pPower, Critter pTargetCritter, projectileType pType, int level){
 		
 
 		xInit = pXInit;		
@@ -30,6 +31,8 @@ public class Projectile {
 		xLoc = xInit +12*Math.cos(angleOfProjectileInRadians());
 		yLoc = yInit +12*Math.sin(angleOfProjectileInRadians());
 		arrivedAtTarget = false;
+		
+		towerSourceLevel = level;
 		
 		targetCritter = pTargetCritter;
 		projType = pType;
@@ -52,8 +55,11 @@ public class Projectile {
 		if (Math.abs(xLoc - xDest)< speed/2 || Math.abs(yLoc - yDest)< speed/2){
 			arrivedAtTarget = true;
 			targetCritter.takeDamage(power);
-			if(projType == projectileType.FREEZE)
+			if(projType == projectileType.FREEZE){
+				targetCritter.setFreezeDuration(4000 +(towerSourceLevel-1)*1000);
 				targetCritter.freezeCritter();
+				
+			}
 		}
 		else{
 			xLoc += speed*Math.cos(angleOfProjectileInRadians());

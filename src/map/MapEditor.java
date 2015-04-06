@@ -27,8 +27,6 @@ public class MapEditor {
 	private String userInput = "";
 	
 	private static final String folderName = "mapSaves";
-	
-	private boolean validityOfMap, fileWritten;
 
 	public MapEditor(int width, int height, String userInput){
 		map = new Map();
@@ -43,7 +41,6 @@ public class MapEditor {
 		Queue<PathTile> corner = map.multipleCoordinatesSplit(userInput);
 		map.cornerArray(corner);
 		
-		validityOfMap = true;
 		mapArray = map.convertToBinaryMap(map);
 	}
 	
@@ -92,7 +89,6 @@ public class MapEditor {
 		try {
 			fout.write(data.getBytes());
 			fout.close();
-			fileWritten = true;
 			System.out.println("File Written Sucessfully!");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -124,26 +120,6 @@ public class MapEditor {
 	 */
 	public int[][] getUserInputFromFile(){
 		return map.getCornersList();
-	}
-	
-	/**
-	 * Verify whether the design map is valid according to the game rules
-	 * 
-	 * @return validity
-	 */
-	public boolean ValidityOfMap(){
-		boolean validity;
-		
-		if (validityOfMap){
-			validity = true;
-		}
-		if (fileWritten){
-			validity = true;
-		}
-		else {
-			validity = false;
-		}
-		return validity;
 	}
 	
 	/**

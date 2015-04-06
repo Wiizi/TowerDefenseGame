@@ -71,7 +71,6 @@ public abstract class Tower {
 	}
 
 	public void setTargetCritter(Critter c){
-		critterTravelDistanceMaximum = 0;
 		targetCritter = c;
 	}
 	public Critter getTargetCritter(){
