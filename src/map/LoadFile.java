@@ -82,7 +82,6 @@ public class LoadFile {
 		} finally {
 			br.close();
 			mapList.add(createMap());
-			System.out.println("File Read Sucessfully!");
 		}	
 		
 		return loadedMap;
