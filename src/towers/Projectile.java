@@ -15,30 +15,33 @@ public class Projectile {
 	private long totalTime;
 	private long startTime;
 	private final double error = 1;
-	private int power;
-	private final long speed = 20;
+	private double power;
+	private double speed = 20;
 	private projectileType projType;
 	private boolean arrivedAtTarget = false;
 	private Critter targetCritter;
 	
-	public Projectile(double pXInit, double pYInit, double pXDest, double pYDest, int pPower, Critter pTargetCritter, projectileType pType){
+	public Projectile(double pXInit, double pYInit, double pXDest, double pYDest, double pPower, Critter pTargetCritter, projectileType pType){
 		
 
-		xInit = pXInit;
-		xLoc = pXInit;
+		xInit = pXInit;		
 		xDest = pXDest;
-		yInit= pYInit;
-		yLoc = pYInit;
+		yInit= pYInit;	
 		yDest = pYDest;
 		power = pPower;
+		
+		xLoc = xInit +12*Math.cos(angleOfProjectileInRadians());
+		yLoc = yInit +12*Math.sin(angleOfProjectileInRadians());
 		arrivedAtTarget = false;
 		double yDist = yInit-yDest;
 		double xDist = xInit-xDest;
 		double dist = Math.sqrt(xDist*xDist+yDist*yDist);
-		totalTime = ((long)dist)/speed *1000;
-		startTime = System.currentTimeMillis();
+		
 		targetCritter = pTargetCritter;
 		projType = pType;
+		if(projType == projectileType.SNIPER){
+			speed=30;
+		}
 	}
 	
 	public double angleOfProjectileInDegrees(){
@@ -52,7 +55,7 @@ public class Projectile {
 	public void move(){
 		
 		//projectile has hit
-		if (Math.abs(xLoc - xDest)< 5 || Math.abs(yLoc - yDest)< 5){
+		if (Math.abs(xLoc - xDest)< speed/2 || Math.abs(yLoc - yDest)< speed/2){
 			arrivedAtTarget = true;
 			targetCritter.takeDamage(power);
 		}
@@ -74,7 +77,7 @@ public class Projectile {
 		return this.yLoc;
 	}
 	
-	public long getSpeed(){
+	public double getSpeed(){
 		return this.speed;
 	}
 	

@@ -12,8 +12,8 @@ public class GruntCritter extends Critter{
 
 	private static String		name		= "Grunt";
 	private static double 		health 		= 5;
-	private static double 		speed		= 1.5;
-	private static int			reward		= 5;
+	private static double 		speed		= 1;
+	private static int			reward		= 25;
 	private static double		armor		= 1;
 
 }
