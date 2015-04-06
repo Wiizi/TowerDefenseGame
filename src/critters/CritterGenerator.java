@@ -29,11 +29,11 @@ public class CritterGenerator {
 	
 							};
 	//automate critter list generation for 100 levels after hardcoded stream
-	public int[][] addCritterList(){
+	public int[][] addCritterList(int lvlStart){
 		int[][] cListToAppend = new int[100][5];
-		for(int i=0;i<100;i++){
+		for(int i=lvlStart;i<100+lvlStart;i++){
 			for(int j=0;j<5;j++){
-				cListToAppend[i][j] = (i/3) + (4-j)*5;
+				cListToAppend[i-lvlStart][j] = (i/3) + (4-j)*5;
 			}
 		}
 		return cListToAppend;
@@ -48,7 +48,17 @@ public class CritterGenerator {
 
 	public void createCritterQueue(){
 		//for that level, create the critter objects as per the values in the critter stream and then randomize the queue 
-		int[][] fullCritterStream = new int[CritterStream.length+addCritterList().length][5];
+		int[][] critterStreamToAppend = addCritterList(CritterStream.length);
+		int[][] fullCritterStream = new int[CritterStream.length+critterStreamToAppend.length][5];
+		System.out.println(fullCritterStream.length);
+		for(int i=0;i<fullCritterStream.length;i++){
+			if(i<CritterStream.length){
+				fullCritterStream[i]=CritterStream[i];
+			}
+			else{
+				fullCritterStream[i]=critterStreamToAppend[i-CritterStream.length];
+			}
+		}
 		for(int x = 0; x < 5 ; x++)
 		{
 			for(int y = 0; y < fullCritterStream[level][x] ; y++){	
