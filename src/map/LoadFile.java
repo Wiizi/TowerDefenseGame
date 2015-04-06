@@ -21,7 +21,7 @@ public class LoadFile {
 	private static final String folderName = "mapSaves";
 	private static final File directory = new File(folderName);
 	private static ArrayList<String> files = new ArrayList<String>();
-	private ArrayList<Map> mapList;
+	private static ArrayList<Map> mapList;
 	
 	
 	public LoadFile(){
