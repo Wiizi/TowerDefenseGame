@@ -30,8 +30,8 @@ public class CritterGenerator {
 							};
 	//automate critter list generation for 100 levels after hardcoded stream
 	public int[][] addCritterList(int lvlStart){
-		int[][] cListToAppend = new int[100][5];
-		for(int i=lvlStart;i<100+lvlStart;i++){
+		int[][] cListToAppend = new int[1000][5];
+		for(int i=lvlStart;i<1000+lvlStart;i++){
 			for(int j=0;j<5;j++){
 				cListToAppend[i-lvlStart][j] = (i/3) + (4-j)*5;
 			}

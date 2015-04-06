@@ -103,17 +103,22 @@ public class MapSelectScreen extends BasicGameState {
 		mapButtonList = new ArrayList<Rectangle>();
 		mapList = new ArrayList<Map>();
 		loading = new LoadFile();
+/*		Map smallMap = new SmallMap();
+		Map mediumMap = new MediumMap();
+		Map largeMap = new LargeMap();
 
+		mapList.add(smallMap);
+		mapList.add(mediumMap);
+		mapList.add(largeMap);*/
 		mapList.addAll(loading.getAllMap());
 
-		System.out.println("map list size "+mapList.size());
+
 	}
 	
 	//create rectangle button for each map
 	public void createRectangleMapButtons(GameContainer container){
 		int mapX = mapButtonXInitialOffset;
 		int mapY = mapButtonYInitialOffset;
-
 		for(Map s : mapList){
 			Rectangle rectangle = new Rectangle(mapX, mapY, rectangleWidth, rectangleHeight);
 			mapX +=(rectangleWidth+30) ;
@@ -122,10 +127,8 @@ public class MapSelectScreen extends BasicGameState {
 				mapY+=rectangleHeight+30;
 			}
 			mapButtonList.add(rectangle);
-		
 
 		}
-		System.out.println("buttonList size "+mapButtonList.size());
 
 	}
 
