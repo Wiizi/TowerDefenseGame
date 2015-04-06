@@ -97,13 +97,13 @@ public class MapSelectScreen extends BasicGameState {
 	public void initializeAndLoadMaps(){
 		mapButtonList = new ArrayList<Rectangle>();
 		mapList = new ArrayList<Map>();
-		Map smallMap = new SmallMap();
+/*		Map smallMap = new SmallMap();
 		Map mediumMap = new MediumMap();
 		Map largeMap = new LargeMap();
 
 		mapList.add(smallMap);
 		mapList.add(mediumMap);
-		mapList.add(largeMap);
+		mapList.add(largeMap);*/
 		mapList.addAll(loading.getAllMap());
 
 	}

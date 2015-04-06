@@ -52,6 +52,7 @@ public class EditMapScreen extends BasicGameState {
 	
 	TextField mapWidthTextField;
 	TextField mapHeightTextField;
+	TextField mapNameTextField;
 
 	Map userCreatedMap;
 	MapEditor saveMap;
@@ -363,8 +364,8 @@ public class EditMapScreen extends BasicGameState {
 
 		if(SaveMapButton.contains(x,y) ){
 			if(mapSizeInputAccepted && exitPointAccepted && startingPointAccepted && userCreatedMap.ValidityOfMap()){
-				//saveMap = new MapEditor(mapWidthInput, mapHeightInput, userCreatedMap.arrangePathPoint(mapPoints));
-				//saveMap.writeFile("04-06");
+				saveMap = new MapEditor(mapWidthInput, mapHeightInput, userCreatedMap.arrangePathPoint(mapPoints));
+				saveMap.writeFile("04-06");
 
 				System.out.println("there");
 			}
