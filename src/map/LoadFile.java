@@ -82,10 +82,6 @@ public class LoadFile {
 		} finally {
 			br.close();
 			mapList.add(createMap());
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
 		}	
 		
 		return loadedMap;
