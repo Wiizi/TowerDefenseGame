@@ -15,7 +15,7 @@ public abstract class Tower {
 	protected double range;
 	protected double power ;
 	private int level =1;
-	private static int maxLevel;
+	private static int maxLevel = 3;
 	protected int upgradeCost;
 	private double xPos;
 	private double yPos;
