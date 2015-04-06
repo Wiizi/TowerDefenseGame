@@ -3,30 +3,37 @@ package game;
 public class Player {
 	private static int credits = 0;
 	private static int lives;
-	private static final int STARTINGCREDITS = 300;
+	private static final int STARTINGCREDITS = 200;
 	private static final int STARTINGLIVES = 16;
+	private static Player instance = null;
 	
-	public static void reset(){
+	public static synchronized Player getPlayer(){
+		if(instance ==null){
+			instance = new Player();
+		}
+		return instance;
+	}
+	public  void reset(){
 		lives = STARTINGLIVES;
 		credits = STARTINGCREDITS;
 	}
 	
-	public static void addCredits(int amount){
+	public  void addCredits(int amount){
 		credits += amount;
 	}
 	
-	public static void addLife(){
+	public void addLife(){
 		lives++;
 	}
-	public static void decreaseLife(){
+	public void decreaseLife(){
 		lives--;
 	}
 	
-	public static int getLives(){
+	public int getLives(){
 		return lives;
 	}
 	
-	public static int getCredits(){
+	public int getCredits(){
 		return credits;
 	}
 }

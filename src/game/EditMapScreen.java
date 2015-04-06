@@ -365,7 +365,7 @@ public class EditMapScreen extends BasicGameState {
 
 		}
 
-		if(SaveMapButton.contains(x,y) ){
+		if(SaveMapButton.contains(x,y) && !mapCreated ){
 			if(mapInputAccepted && exitPointAccepted && startingPointAccepted){
 				saveMap = new MapEditor(mapWidthInput, mapHeightInput, userCreatedMap.arrangePathPoint(mapPoints));
 				saveMap.writeFile(mapNameInput);
