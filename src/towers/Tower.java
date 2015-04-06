@@ -9,8 +9,8 @@ public abstract class Tower {
 		FREEZE, SNIPER, GENERIC
 	}
 	protected int buyingCost;
-	private double modifierBase = 1.0;
-	private double modifierIncrease = 0.4;
+	private double modifierBase = 1.0;		//base multiplier for upgrades
+	private double modifierIncrease = 1.5;	//how much range and attack increase by when upgraded
 	protected int refundValue;
 	protected double range;
 	protected double power ;
