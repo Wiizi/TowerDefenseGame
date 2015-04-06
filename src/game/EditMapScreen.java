@@ -39,7 +39,8 @@ public class EditMapScreen extends BasicGameState {
 	private final int mouseClickDelay = 200;
 	private long lastClick=(-1*mouseClickDelay);
 
-	ArrayList<int[]> mapPoints = new ArrayList<int[]>(); 
+//	ArrayList<int[]> mapPoints = new ArrayList<int[]>(); 
+	ArrayList<Integer> mapPoints = new ArrayList<Integer>();
 	Rectangle ExitGameButton;
 	Rectangle CreateMapButton;
 	ArrayList<Rectangle> buttonList = new ArrayList<Rectangle>();
@@ -125,7 +126,7 @@ public class EditMapScreen extends BasicGameState {
 
 		if(mapSizeInputAccepted){
 			drawMap(container);
-			ttf.drawString(30, 0, ""+userCreatedMap.ValidityOfMap());
+//			ttf.drawString(30, 0, ""+userCreatedMap.ValidityOfMap());
 			if(mouseOnMap(Mouse.getX(),container.getHeight()-Mouse.getY())){
 				if(!startingPointAccepted)	
 					StartingPointGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
@@ -134,7 +135,8 @@ public class EditMapScreen extends BasicGameState {
 			}
 
 			if(startingPointAccepted){
-				int[] startingpoint =mapPoints.get(0);
+//				int[] startingpoint =mapPoints.get(0);
+				int[] startingpoint = new int[] {mapPoints.get(0), mapPoints.get(1)};
 				StartingPointGraphic.drawCentered(startingpoint[0]*32 +mapDrawOffsetX +16, startingpoint[1]*32 +mapDrawOffsetY +16);
 			}
 			if(exitPointAccepted){
@@ -230,10 +232,12 @@ public class EditMapScreen extends BasicGameState {
 
 		if(!startingPointAccepted){
 			if(xLoc == 0 || xLoc == mapWidthInput-1 ||yLoc == 0 || yLoc == mapHeightInput-1){
-				int[] point = {xLoc, yLoc};
+//				int[] point = {xLoc, yLoc};
 				userCreatedMap.placeEntry(xLoc, yLoc);
 				
-				mapPoints.add(point);
+//				mapPoints.add(point);
+				mapPoints.add(xLoc);
+				mapPoints.add(yLoc);
 				selectedTileX = xLoc;
 				selectedTileY = yLoc;
 				startingPointAccepted = true;
@@ -246,7 +250,8 @@ public class EditMapScreen extends BasicGameState {
 
 		}
 		if(!exitPointAccepted){
-			int[] startingPoint = mapPoints.get(0);
+//			int[] startingPoint = mapPoints.get(0);
+			int[] startingPoint = new int[] {mapPoints.get(0), mapPoints.get(1)};
 			if(xLoc == startingPoint[0] &&yLoc ==startingPoint[1]){
 				statusString = "Cannot place Exit point on starting point";
 				return;
@@ -266,9 +271,11 @@ public class EditMapScreen extends BasicGameState {
 		
 		if(exitPointAccepted&&startingPointAccepted){
 			if(xLoc==selectedTileX ||yLoc == selectedTileY){
-				int[] point = {xLoc, yLoc};
+//				int[] point = {xLoc, yLoc};
 				userCreatedMap.linkTwoPoints(new PathTile(selectedTileX, selectedTileY), new PathTile(xLoc, yLoc));
-				mapPoints.add(point);
+//				mapPoints.add(point);
+				mapPoints.add(xLoc);
+				mapPoints.add(yLoc);
 				selectedTileX = xLoc;
 				selectedTileY = yLoc;
 			}
@@ -370,7 +377,8 @@ public class EditMapScreen extends BasicGameState {
 		mapWidthInput = 0;
 		mapHeightInput = 0;
 
-		mapPoints = new ArrayList<int[]>();
+//		mapPoints = new ArrayList<int[]>();
+		mapPoints = new ArrayList<Integer>();
 		mapSizeInputAccepted = false;
 		startingPointAccepted=false;
 		exitPointAccepted = false;

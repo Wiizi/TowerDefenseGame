@@ -23,7 +23,7 @@ public class Map {
 	
 	private static final int CELL_SIZE = 32;
 
-	private boolean validityOfMap, validityOfEntry, validityOfExit, validityOfPathInput, validityOfPath, validityOfPathLength;
+	private boolean validityOfPath, validityOfPathLength;
 
 	/**
 	 * Map design
@@ -73,10 +73,6 @@ public class Map {
 					mapTile[i][j] = new MapTile(i,j);
 				}
 			}		
-			validityOfMap = true;
-		}
-		else {
-			validityOfMap = false;
 		}
 	}
 
@@ -182,6 +178,17 @@ public class Map {
 		if (mapTile[x][y] instanceof MapTile){
 			mapTile[x][y] = new PathTile(x, y);
 		}
+	}
+	
+	public String arrangePathPoint(ArrayList<Integer> pathPoints){
+		String temp = "";
+		for (int i = 0 ; i < pathPoints.size(); i+=2){
+			temp += "(" + pathPoints.get(i) + "," + pathPoints.get(i + 1) + ") ";
+		}
+
+		inputCorner = temp.substring(0);
+		
+		return inputCorner;
 	}
 
 	/**
@@ -304,24 +311,7 @@ public class Map {
 			//Indicates the Entry and Exit of the path
 			placeEntry(entry.getX(), entry.getY());
 			placeExit(current.getX(), current.getY());
-			
-			//Verify whether the Entry and Exit are on the edges of the map
-			if (entry.getX() == 0 || entry.getY() == 0 || entry.getX() == (getWidthOfMap() - 1) || entry.getY() == (getHeightOfMap() - 1)){
-				validityOfEntry = true;
-			}
-			
-			if (current.getX() == 0 || current.getY() == 0 || current.getX() == (getWidthOfMap() - 1) || current.getY() == (getHeightOfMap() - 1)){
-				validityOfExit = true;
-			}
-			
-			if (validityOfEntry && validityOfExit){
-				validityOfPathInput = true;
-			} else {
-				validityOfPathInput = false;
-			}
-		}
-		else {
-			validityOfPathInput = false;
+
 		}
 	}
 
@@ -347,17 +337,11 @@ public class Map {
 			placePathPoint(x1, y1);
 			placePathPoint(x2, y2);
 
-			if (x1 == 0 || y1 == 0 || x1 == (getWidthOfMap() - 1) || y1 == (getHeightOfMap() - 1)){
-				validityOfEntry = true;
+			if (x1 == 0 || x1 == getWidthOfMap() - 1 || y1 == 0 || y1 == getHeightOfMap() - 1){
+				validityOfPath = true;
 			}
-			
-			if (x2 == 0 || y2 == 0 || x2 == (getWidthOfMap() - 1) || y2 == (getHeightOfMap() - 1)){
-				validityOfExit = true;
-			}
-			if (validityOfEntry && validityOfExit){
-				validityOfPathInput = true;
-			} else {
-				validityOfPathInput = false;
+			if (x2 == 0 || x2 == getWidthOfMap() - 1 || y2 == 0 || y2 == getHeightOfMap() - 1){
+				validityOfPath = true;
 			}
 		}
 		else {
@@ -483,16 +467,10 @@ public class Map {
 	 */
 	public boolean ValidityOfMap(){
 		boolean validity;
-		if (validityOfMap && validityOfPathInput && validityOfPath && validityOfPathLength){
+		if (validityOfPath && validityOfPathLength){
 			validity = true;
 		}
 		else {
-			if (!validityOfMap){
-				System.out.println("Invalid Map - wrong values of width/height!");
-			}
-			if (!validityOfPathInput){
-				System.out.println("Invalid Input Value - input does not exist on the grid!");
-			}
 			if (!validityOfPath){
 				System.out.println("Invalid Path Link - inputs do not share the same x or y axis!");
 			}
