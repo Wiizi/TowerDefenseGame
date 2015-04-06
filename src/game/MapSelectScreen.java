@@ -36,6 +36,8 @@ public class MapSelectScreen extends BasicGameState {
 	Font font ;
 	TrueTypeFont ttf;
 
+	LoadFile loading = new LoadFile();
+	
 	public MapSelectScreen (int state){
 
 	}
@@ -48,8 +50,7 @@ public class MapSelectScreen extends BasicGameState {
 		font = new Font("Verdana", Font.BOLD, 30);
 		ttf = new TrueTypeFont(font, true);
 
-		initializeAndLoadMaps();
-		createRectangleMapButtons(container);
+
 
 	}
 
@@ -88,9 +89,10 @@ public class MapSelectScreen extends BasicGameState {
 		for(int count = 0 ; count<mapButtonList.size() ; count++){
 			g.setColor(Color.black);
 			g.draw(mapButtonList.get(count));
-			g.drawString("Map"+(count+1), mapButtonList.get(count).getMinX()+10, mapButtonList.get(count).getMinY()+rectangleHeight/4);	
+			g.drawString(loading.getListofFiles().get(count) , mapButtonList.get(count).getMinX()+10, mapButtonList.get(count).getMinY()+rectangleHeight/4);	
 		}
 	}
+	
 	
 	public void initializeAndLoadMaps(){
 		mapButtonList = new ArrayList<Rectangle>();
@@ -102,6 +104,7 @@ public class MapSelectScreen extends BasicGameState {
 		mapList.add(smallMap);
 		mapList.add(mediumMap);
 		mapList.add(largeMap);
+		mapList.addAll(loading.getAllMap());
 
 	}
 	
