@@ -480,6 +480,12 @@ public class PlayScreen extends BasicGameState {
 				(double)source.getTargetCritter().getYLoc(), source.getPower(), source.getTargetCritter(), projType, source.getLevel());
 		projectileList.add(projectile);
 	}
+	
+	public void reloadTowers(){
+		for(Tower t : towerList){
+			t.setTimeOfLastAttack(0);
+		}
+	}
 
 	public void loadImages() throws SlickException{
 		//initialize all graphics/images from graphics folder
@@ -648,6 +654,7 @@ public class PlayScreen extends BasicGameState {
 			if(NextWaveButton.contains(x,y)&& !waveIsInProgress){
 				waveIsInProgress = true;
 				projectileList = new ArrayList<Projectile>();
+				reloadTowers();
 				createCritterQueueforLevel();
 			}
 			if(UpgradeButton.contains(x,y)){
