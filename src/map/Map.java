@@ -23,7 +23,7 @@ public class Map {
 	
 	private static final int CELL_SIZE = 32;
 
-	private boolean validityOfPath, validityOfPathLength;
+	private boolean validityOfMap, validityOfPath;
 
 	/**
 	 * Map design
@@ -37,6 +37,8 @@ public class Map {
 		this.widthOfMap = 0;
 		this.heightOfMap = 0;
 		this.inputCorner = "";
+		
+		validityOfMap = true;
 	}
 
 	/**
@@ -74,6 +76,7 @@ public class Map {
 				}
 			}		
 		}
+		validityOfMap = true;
 	}
 
 	/**
@@ -213,10 +216,6 @@ public class Map {
 			PathTile p = new PathTile(Integer.valueOf(x), Integer.valueOf(y));
 			path.add(p);
 		}
-
-		if (path.size() >= 2){
-			validityOfPathLength = true;
-		}
 		return path;
 	}
 	
@@ -288,12 +287,10 @@ public class Map {
 		PathTile current, next;
 
 		if (newPath.isEmpty()){
-			validityOfPathLength = false;
 			return;
 		}
 
 		if (newPath.size() >= 2){
-			validityOfPathLength = true;
 		}		
 				
 		current = newPath.remove();
@@ -467,15 +464,15 @@ public class Map {
 	 */
 	public boolean ValidityOfMap(){
 		boolean validity;
-		if (validityOfPath && validityOfPathLength){
+		if (validityOfMap ||validityOfPath){
 			validity = true;
 		}
 		else {
-			if (!validityOfPath){
-				System.out.println("Invalid Path Link - inputs do not share the same x or y axis!");
+			if (!validityOfMap){
+				System.out.println("Invalid Map");
 			}
-			if (!validityOfPathLength){
-				System.out.println("Invalid Path - path is too short!");
+			if (!validityOfPath){
+				System.out.println("Invalid Path Link");
 			}
 			validity = false;
 		}
