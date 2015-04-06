@@ -16,10 +16,10 @@ public class SniperTower extends Tower{
 	
 	private static int newBuyingCost = 300;
 	private static int newRefundValue = 250;
-	private static int newUpgradeCost = 400;
-	private static int newReloadTime = 5;
+	private static int newUpgradeCost = 280;
+	private static int newReloadTime = 7;
 	private static double newRange = 300;
-	private static int newPower = 10;
+	private static int newPower = 20;
 
 
 }
