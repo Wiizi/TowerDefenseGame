@@ -60,8 +60,9 @@ public class EditMapScreen extends BasicGameState {
 	Font font ;
 	TrueTypeFont ttf;
 
-	public final String WidthString = "Enter Map Width:";
-	public final String HeightString = "Enter Map Height:";
+	public final String widthString = "Enter Map Width:";
+	public final String heightString = "Enter Map Height:";
+	public final String nameString = "Enter Map Name: ";
 	public static String statusString= "";
 
 	private final int minimumMapDimension = 12;
@@ -73,6 +74,7 @@ public class EditMapScreen extends BasicGameState {
 
 	private static int mapWidthInput=0;
 	private static int mapHeightInput=0;
+	private static String mapNameInput ="";
 	
 	private int selectedTileX=-1;
 	private int selectedTileY=-1;
@@ -82,6 +84,7 @@ public class EditMapScreen extends BasicGameState {
 	boolean mapSizeInputAccepted = false;
 	boolean startingPointAccepted=false;
 	boolean exitPointAccepted = false;
+	boolean mapCreated = false;
 
 	public EditMapScreen (int state){
 
@@ -96,8 +99,8 @@ public class EditMapScreen extends BasicGameState {
 		ttf = new TrueTypeFont(font, true);
 
 		mapWidthTextField = new TextField(container, ttf , 40,60,60,20);
-		mapHeightTextField = new TextField(container, ttf, 40 +ttf.getWidth(WidthString)+10, 60, 60, 20);
-
+		mapHeightTextField = new TextField(container, ttf, 40 +ttf.getWidth(widthString)+10, 60, 60, 20);
+		mapNameTextField = new TextField (container, ttf, 40 +ttf.getWidth(widthString)+10 , 10,100,20);
 
 
 	}
@@ -108,6 +111,7 @@ public class EditMapScreen extends BasicGameState {
 		if(mapSizeInputAccepted){
 			mapWidthTextField.setAcceptingInput(false);
 			mapHeightTextField.setAcceptingInput(false);
+			mapNameTextField.setAcceptingInput(false);
 		}
 
 
@@ -155,23 +159,25 @@ public class EditMapScreen extends BasicGameState {
 				
 				ExitPointGraphic.drawCentered(exitPoint[0]*32 +mapDrawOffsetX +16, exitPoint[1]*32 +mapDrawOffsetY +16);
 			}
-			
+			if(!mapCreated){
 			//create the mapgrid
 			generateMapGrid();
-			
-			
-			SaveMapButtonGraphic.drawCentered(container.getWidth()/2 , container.getHeight() - SaveMapButtonGraphic.getHeight()/2 -10 );
+			}
+			if (!mapCreated)
+				SaveMapButtonGraphic.drawCentered(container.getWidth()/2 , container.getHeight() - SaveMapButtonGraphic.getHeight()/2 -10 );
 		}
 		else{
-			ttf.drawString(40, 40, WidthString, Color.black);
-			ttf.drawString(40 +ttf.getWidth(WidthString)+10, 40, HeightString, Color.black);
-			CreateMapButtonGraphic.draw(mapHeightTextField.getX() + ttf.getWidth(WidthString)+10, 40 + mapWidthTextField.getHeight()/2 );
+			ttf.drawString(40, 40, widthString, Color.black);
+			ttf.drawString(40 +ttf.getWidth(widthString)+10, 40, heightString, Color.black);
+			ttf.drawString(40, 10, nameString, Color.black);
+			CreateMapButtonGraphic.draw(mapHeightTextField.getX() + ttf.getWidth(widthString)+10, 40 + mapWidthTextField.getHeight()/2 );
 
 		}
 
 
 		mapWidthTextField.render(container, g);
 		mapHeightTextField.render(container, g);
+		mapNameTextField.render(container, g);
 	}
 
 
@@ -237,11 +243,13 @@ public class EditMapScreen extends BasicGameState {
 
 
 	public void mapGridClicked(int x, int y, StateBasedGame sbg, GameContainer container){
-		//protection against multiple click registration
+
 		if(lastClick + mouseClickDelay > System.currentTimeMillis())
 			return;
 		lastClick = System.currentTimeMillis();
 
+		if(mapCreated)
+			return;
 
 		
 		int xLoc = (int) Math.floor((x-mapDrawOffsetX) / 32);
@@ -249,10 +257,9 @@ public class EditMapScreen extends BasicGameState {
 
 		if(!startingPointAccepted){
 			if(xLoc == 0 || xLoc == mapWidthInput-1 ||yLoc == 0 || yLoc == mapHeightInput-1){
-//				int[] point = {xLoc, yLoc};
+
 				userCreatedMap.placeEntry(xLoc, yLoc);
-				
-//				mapPoints.add(point);
+
 				mapPoints.add(xLoc);
 				mapPoints.add(yLoc);
 				selectedTileX = xLoc;
@@ -267,7 +274,7 @@ public class EditMapScreen extends BasicGameState {
 
 		}
 		if(!exitPointAccepted){
-//			int[] startingPoint = mapPoints.get(0);
+
 			int[] startingPoint = new int[] {mapPoints.get(0), mapPoints.get(1)};
 			if(xLoc == startingPoint[0] &&yLoc ==startingPoint[1]){
 				statusString = "Cannot place Exit point on starting point";
@@ -288,37 +295,16 @@ public class EditMapScreen extends BasicGameState {
 		
 		if(exitPointAccepted&&startingPointAccepted){
 			if(xLoc==selectedTileX ||yLoc == selectedTileY){
-//				int[] point = {xLoc, yLoc};
+
 				userCreatedMap.linkTwoPoints(new PathTile(selectedTileX, selectedTileY), new PathTile(xLoc, yLoc));
-//				mapPoints.add(point);
+
 				mapPoints.add(xLoc);
 				mapPoints.add(yLoc);
 				selectedTileX = xLoc;
 				selectedTileY = yLoc;
 			}
 		}
-		/*
-		if(startingPointAccepted){
-			int[] startingPoint = mapPoints.get(0);
-			if(xLoc == startingPoint[0] &&yLoc ==startingPoint[1]){
-				statusString = "Cannot place point on starting point";
-				return;
-			}
-			if(xLoc==selectedTileX ||yLoc == selectedTileY){
-				if(xLoc == 0 || xLoc == mapWidthInput-1 ||yLoc == 0 || yLoc == mapHeightInput-1 ){
-				
-					userCreatedMap.placeExit(xLoc, yLoc);
-					return;
-				}
-				int[] point = {xLoc, yLoc};
-				userCreatedMap.linkTwoPoints(new PathTile(selectedTileX, selectedTileY), new PathTile(xLoc, yLoc));
-				mapPoints.add(point);
-				selectedTileX = xLoc;
-				selectedTileY = yLoc;
-			}
-			
-		}
-		*/
+
 		
 	}
 
@@ -339,6 +325,9 @@ public class EditMapScreen extends BasicGameState {
 			try{
 				mapWidthInput = Integer.parseInt(mapWidthTextField.getText());
 				mapHeightInput = Integer.parseInt(mapHeightTextField.getText());
+				mapNameInput = mapNameTextField.getText();
+				if(mapNameInput.equals(""));
+					throw new NumberFormatException();
 			}
 			catch(NumberFormatException e){
 				statusString = "Illegal input format";
@@ -363,11 +352,12 @@ public class EditMapScreen extends BasicGameState {
 		}
 
 		if(SaveMapButton.contains(x,y) ){
-			if(mapSizeInputAccepted && exitPointAccepted && startingPointAccepted && userCreatedMap.ValidityOfMap()){
+			if(mapSizeInputAccepted && exitPointAccepted && startingPointAccepted/*&& userCreatedMap.ValidityOfMap() && !mapCreated*/){
 				saveMap = new MapEditor(mapWidthInput, mapHeightInput, userCreatedMap.arrangePathPoint(mapPoints));
-				saveMap.writeFile("04-06");
+				saveMap.writeFile(mapNameInput);
+				mapCreated = true;
+				statusString = "Map successfully created";
 
-				System.out.println("there");
 			}
 			else{
 				statusString = "Invalid Map. Please try again";
@@ -382,6 +372,7 @@ public class EditMapScreen extends BasicGameState {
 		mapPoints = new ArrayList<Integer>();
 		startingPointAccepted=false;
 		exitPointAccepted = false;
+		mapCreated = false;
 		userCreatedMap = new Map();
 		userCreatedMap.setMapSize(mapWidthInput, mapHeightInput);
 		userCreatedMap.initializeMap();
@@ -412,20 +403,25 @@ public class EditMapScreen extends BasicGameState {
 
 		mapHeightTextField.setText("");
 		mapHeightTextField.setAcceptingInput(true);
+		
+		mapNameTextField.setText("");
+		mapNameTextField.setAcceptingInput(true);
 
 		mapWidthInput = 0;
 		mapHeightInput = 0;
+		mapNameInput ="";
 
 //		mapPoints = new ArrayList<int[]>();
 		mapPoints = new ArrayList<Integer>();
 		mapSizeInputAccepted = false;
 		startingPointAccepted=false;
 		exitPointAccepted = false;
+		mapCreated = false;
 		statusString ="";
 	}
 
 	public void createRectangleButtons(GameContainer container){
-		CreateMapButton = new Rectangle(mapHeightTextField.getX() + ttf.getWidth(WidthString)+10, 40 + mapWidthTextField.getHeight()/2 ,CreateMapButtonGraphic.getWidth(), CreateMapButtonGraphic.getHeight());
+		CreateMapButton = new Rectangle(mapHeightTextField.getX() + ttf.getWidth(widthString)+10, 40 + mapWidthTextField.getHeight()/2 ,CreateMapButtonGraphic.getWidth(), CreateMapButtonGraphic.getHeight());
 		ExitGameButton = new Rectangle(container.getWidth()-ExitButtonGraphic.getWidth(), container.getHeight()-ExitButtonGraphic.getHeight()-2, ExitButtonGraphic.getWidth(),ExitButtonGraphic.getHeight());
 		SaveMapButton = new Rectangle(container.getWidth()/2 - SaveMapButtonGraphic.getWidth()/2, container.getHeight() - SaveMapButtonGraphic.getHeight() -10, SaveMapButtonGraphic.getWidth(), SaveMapButtonGraphic.getHeight());
 	}

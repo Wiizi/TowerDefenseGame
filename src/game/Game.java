@@ -48,6 +48,7 @@ public class Game extends StateBasedGame {
 		AppGameContainer app = new AppGameContainer(new Game("Tower Defense"));
 		//set resolution to map size
 		app.setDisplayMode(640, 480, false);
+		app.setShowFPS(false);
 		//this is delta info, so that the game isn't reliant on the speed of the users computer
 		app.setMinimumLogicUpdateInterval(20);
 		app.setMaximumLogicUpdateInterval(21);

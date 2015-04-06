@@ -36,7 +36,7 @@ public class MapSelectScreen extends BasicGameState {
 	Font font ;
 	TrueTypeFont ttf;
 
-	LoadFile loading = new LoadFile();
+	LoadFile loading;
 	
 	public MapSelectScreen (int state){
 
@@ -97,6 +97,7 @@ public class MapSelectScreen extends BasicGameState {
 	public void initializeAndLoadMaps(){
 		mapButtonList = new ArrayList<Rectangle>();
 		mapList = new ArrayList<Map>();
+		loading = new LoadFile();
 /*		Map smallMap = new SmallMap();
 		Map mediumMap = new MediumMap();
 		Map largeMap = new LargeMap();
@@ -105,6 +106,7 @@ public class MapSelectScreen extends BasicGameState {
 		mapList.add(mediumMap);
 		mapList.add(largeMap);*/
 		mapList.addAll(loading.getAllMap());
+
 
 	}
 	
@@ -122,6 +124,7 @@ public class MapSelectScreen extends BasicGameState {
 			mapButtonList.add(rectangle);
 
 		}
+
 	}
 
 	public void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException{
