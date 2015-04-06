@@ -9,24 +9,24 @@ abstract public class Critter{
 	public enum type{GRUNT, SCOUT, ARMORED, TANK, BOSS};
 	public enum direction {LEFT, RIGHT, UP, DOWN};
 	
-	private double 		health;
-	private double 		speed;
-	private int			reward;
-	private double 		armor;
-	private float 		XLoc;
-	private float		YLoc;
-	private String		name;
-	private boolean 	alive;
-	private static double	freezeMultiplier = 0.3;	//how much speed is reduced by when frozen
-	private boolean		frozen = false;
-	private long		freezeStartTime = -10000;	//when the critter was frozen
-	private static long freezeDuration = 4000;		//How long freeze lasts in ms
-	public boolean		canMove = true;
-	private int[][] 	locations;
-	private int 		locationIncrementer = 0;
-	private boolean 	visible = false;
-	private boolean 	atEndPoint = false;
-	protected type		critterType;
+	private double 			health;
+	private double 			speed;
+	private int				reward;
+	private double 			armor;
+	private float 			XLoc;
+	private float			YLoc;
+	private String			name;
+	private boolean 		alive;
+	private final double	freezeMultiplier = 0.3;	//how much speed is reduced by when frozen
+	private boolean			frozen = false;
+	private long			freezeStartTime = -10000;	//when the critter was frozen
+	private long 			freezeDuration = 4000;		//How long freeze lasts in ms
+	public boolean			canMove = true;
+	private int[][] 		locations;
+	private int 			locationIncrementer = 0;
+	private boolean 		visible = false;
+	private boolean 		atEndPoint = false;
+	protected type			critterType;
 
 	private double distanceTravelled;
 
@@ -146,6 +146,11 @@ abstract public class Critter{
 
 
 
+	public void setFreezeDuration (long duration){
+		freezeDuration = duration;
+	}
+	
+	
 	public double getSpeed() {
 		if(frozen)
 			return (speed * freezeMultiplier);

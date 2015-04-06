@@ -441,6 +441,7 @@ public class PlayScreen extends BasicGameState {
 				}
 
 			}
+			t.setCritterTravelDistanceMaximum(0);
 		}
 	}
 
@@ -471,7 +472,7 @@ public class PlayScreen extends BasicGameState {
 			break;
 		}
 		Projectile projectile = new Projectile(source.getXLoc(), source.getYLoc(), (double)source.getTargetCritter().getXLoc(), 
-				(double)source.getTargetCritter().getYLoc(), source.getPower(), source.getTargetCritter(), projType);
+				(double)source.getTargetCritter().getYLoc(), source.getPower(), source.getTargetCritter(), projType, source.getLevel());
 		projectileList.add(projectile);
 	}
 
@@ -641,7 +642,7 @@ public class PlayScreen extends BasicGameState {
 
 			if(NextWaveButton.contains(x,y)&& !waveIsInProgress){
 				waveIsInProgress = true;
-
+				projectileList = new ArrayList<Projectile>();
 				createCritterQueueforLevel();
 			}
 			if(UpgradeButton.contains(x,y)){
