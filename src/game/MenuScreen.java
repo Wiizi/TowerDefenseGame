@@ -103,7 +103,7 @@ public class MenuScreen extends BasicGameState{
 			} catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
-			
+
 			sbg.enterState(Game.mapSelectScreen);
 		}
 		if(EditMapButton.contains(x, y)){
