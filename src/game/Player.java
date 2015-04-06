@@ -2,8 +2,8 @@ package game;
 
 public class Player {
 	private static int credits = 0;
-	private static int lives = 16;
-	private static final int STARTINGCREDITS = 500;
+	private static int lives;
+	private static final int STARTINGCREDITS = 300;
 	private static final int STARTINGLIVES = 16;
 	
 	public static void reset(){
