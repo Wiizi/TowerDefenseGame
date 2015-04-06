@@ -269,6 +269,8 @@ public class EditMapScreen extends BasicGameState {
 				int[] point = {xLoc, yLoc};
 				userCreatedMap.linkTwoPoints(new PathTile(selectedTileX, selectedTileY), new PathTile(xLoc, yLoc));
 				mapPoints.add(point);
+//				mapPoints.add(xLoc);
+//				mapPoints.add(yLoc);
 				selectedTileX = xLoc;
 				selectedTileY = yLoc;
 			}
@@ -297,7 +299,6 @@ public class EditMapScreen extends BasicGameState {
 		*/
 		
 	}
-
 
 
 	public void mouseClicked(int x, int y, StateBasedGame sbg, GameContainer container) throws SlickException{
@@ -371,6 +372,7 @@ public class EditMapScreen extends BasicGameState {
 		mapHeightInput = 0;
 
 		mapPoints = new ArrayList<int[]>();
+//		mapPoints = new ArrayList<Integer>();
 		mapSizeInputAccepted = false;
 		startingPointAccepted=false;
 		exitPointAccepted = false;
