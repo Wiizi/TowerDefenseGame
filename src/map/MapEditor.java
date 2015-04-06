@@ -89,7 +89,7 @@ public class MapEditor {
 		try {
 			fout.write(data.getBytes());
 			fout.close();
-			System.out.println("File Written Sucessfully!");
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

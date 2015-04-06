@@ -39,7 +39,7 @@ public class LoadFile {
 				final int lastPeriodPos = name.lastIndexOf('.');
 				files.add(listOfFiles[i].getName().substring(0, lastPeriodPos).toString());
 			} else if (listOfFiles[i].isDirectory()) {
-				System.out.println("This is not a file.");
+
 			}
 		}
 	}
@@ -82,7 +82,7 @@ public class LoadFile {
 		} finally {
 			br.close();
 			mapList.add(createMap());
-			System.out.println("File Read Sucessfully!");
+
 		}	
 		
 		return loadedMap;
