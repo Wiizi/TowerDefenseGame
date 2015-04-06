@@ -662,7 +662,7 @@ public class PlayScreen extends BasicGameState {
 		}
 		//tower selected
 		else if (selectedTower >=0){
-			if(mouseOnMap(x,y)){
+			if(mouseOnMap(x,y)&&canPlaceTowerHere(x,y)){
 				Tower newTower = new BasicTower(getClosestTileCenter(x),getClosestTileCenter(y));
 				switch(selectedTower){
 				case 0:
@@ -681,7 +681,7 @@ public class PlayScreen extends BasicGameState {
 				Player.addCredits((-1)*newTower.getBuyingCost());
 
 				if (Player.getCredits()<0){
-					//deny tower building due to insufficient funds
+					//deny tower building due to insufficient funds or invalid tile
 					Player.addCredits(newTower.getBuyingCost());
 					towerList.remove(newTower);
 				}
@@ -727,6 +727,23 @@ public class PlayScreen extends BasicGameState {
 		}
 		return nearestTower;
 	}
+	public boolean canPlaceTowerHere(float x, float y){
+		int xArrayPos = (int)(getClosestTileCenter(x) - (currentMap.getPixelSize()/2))/currentMap.getPixelSize();
+		int yArrayPos = (int)(getClosestTileCenter(y) - (currentMap.getPixelSize()/2))/currentMap.getPixelSize();
+		//check is not a pathTile
+		if (currentMap.getTile(xArrayPos, yArrayPos) instanceof PathTile){
+			return false;
+
+		}
+		//check there are no tower here
+		for(Tower t: towerList){
+			if(getClosestTileCenter((float)t.getXLoc()) == getClosestTileCenter(x) &&
+					getClosestTileCenter((float)t.getYLoc()) == getClosestTileCenter(y)){
+				return false;
+			}
+		}
+		return true;
+	}
 	public void restartGame() {
 		currentLevel = startingLevel;
 		Player.reset();
@@ -752,5 +769,6 @@ public class PlayScreen extends BasicGameState {
 	public int getID() {
 		return Game.playScreen;
 	}
+	
 
 }
