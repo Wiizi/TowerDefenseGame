@@ -38,7 +38,7 @@ import map.*;
 import critters.Critter;
 import critters.Critter.direction;
 import critters.CritterGenerator;
-import critters.CritterObserver;
+
 
 public class PlayScreen extends BasicGameState {
 
@@ -118,7 +118,6 @@ public class PlayScreen extends BasicGameState {
 
 	private final int startingLevel = 1;
 	private final int critterSpawnDelay = 20;
-	CritterObserver gruntObserver;
 	CritterGenerator generator;
 	private static int currentLevel;
 	private static boolean waveIsInProgress;

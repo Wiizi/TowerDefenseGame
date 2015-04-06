@@ -18,17 +18,17 @@ abstract public class Critter{
 	private float		YLoc;
 	private String		name;
 	private boolean 	alive;
-	private static double	freezeMultiplier = 0.5;	//how much speed is reduced by when frozen
+	private static double	freezeMultiplier = 0.3;	//how much speed is reduced by when frozen
 	private boolean		frozen = false;
 	private long		freezeStartTime = -10000;	//when the critter was frozen
-	private static long freezeDuration = 3000;		//How long freeze lasts in ms
+	private static long freezeDuration = 4000;		//How long freeze lasts in ms
 	public boolean		canMove = true;
 	private int[][] 	locations;
 	private int 		locationIncrementer = 0;
 	private boolean 	visible = false;
 	private boolean 	atEndPoint = false;
 	protected type		critterType;
-	private List<CrObserver> critterObservers;
+
 	private double distanceTravelled;
 
 
@@ -46,7 +46,7 @@ abstract public class Critter{
 		YLoc = pLocations[0][1];
 		alive = true;
 		locations = pLocations;
-		critterObservers = new ArrayList<CrObserver>();
+
 		critterType = pCritterType;
 		distanceTravelled=0;
 
@@ -113,9 +113,6 @@ abstract public class Critter{
 			visible = false;
 		}
 		
-		//every time the critter takes damage, tell the observers
-
-		notifyObservers();
 
 	}
 	public void freezeCritter(){
@@ -128,25 +125,6 @@ abstract public class Critter{
 	}
 	
 
-	//observer classes
-	public void addObserver(CrObserver o){
-		if(o != null)
-			if(!critterObservers.contains(o))
-				critterObservers.add(o);
-
-
-	}
-
-	public void notifyObservers(){
-		for(CrObserver o :critterObservers){
-			o.update();
-		}
-	}
-
-	public void removeObserver(CrObserver o){
-		critterObservers.remove(o);
-	}
-
 
 	//Getters and Setters
 	
@@ -154,8 +132,7 @@ abstract public class Critter{
 		return name;
 	}
 	
-	
-	
+
 	
 
 	public double getDistanceTravelled() {
