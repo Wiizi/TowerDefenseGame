@@ -183,12 +183,9 @@ public class Map {
 	public String arrangePathPoint(ArrayList<Integer> pathPoints){
 		String temp = "";
 		for (int i = 0 ; i < pathPoints.size(); i+=2){
-			if (!(i == 2) && !(i == 3)){
-				temp += "(" + pathPoints.get(i) + "," + pathPoints.get(i + 1) + ") ";
-			}
+			temp += "(" + pathPoints.get(i) + "," + pathPoints.get(i + 1) + ") ";
 		}
-		
-		temp+= "(" + pathPoints.get(2) + "," + pathPoints.get(3) + ") ";
+
 		inputCorner = temp.substring(0);
 		
 		return inputCorner;

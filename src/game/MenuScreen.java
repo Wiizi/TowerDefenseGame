@@ -90,7 +90,7 @@ public class MenuScreen extends BasicGameState{
 		if(EditMapButton.contains(x, y)){
 			EditMapScreen s = (EditMapScreen) sbg.getState(Game.editMapScreen);
 			AppGameContainer gameContainer = (AppGameContainer) container;
-			gameContainer.setDisplayMode(832, 832, false);
+			gameContainer.setDisplayMode(500, 500, false);
 			s.createRectangleButtons(container);
 			sbg.enterState(Game.editMapScreen);
 

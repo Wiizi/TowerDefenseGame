@@ -126,7 +126,7 @@ public class EditMapScreen extends BasicGameState {
 
 		if(mapSizeInputAccepted){
 			drawMap(container);
-			ttf.drawString(30, 0, ""+userCreatedMap.ValidityOfMap());
+//			ttf.drawString(30, 0, ""+userCreatedMap.ValidityOfMap());
 			if(mouseOnMap(Mouse.getX(),container.getHeight()-Mouse.getY())){
 				if(!startingPointAccepted)	
 					StartingPointGraphic.drawCentered(getClosestTileCenter(Mouse.getX()), container.getHeight() - getClosestTileCenter(Mouse.getY()));
@@ -260,8 +260,6 @@ public class EditMapScreen extends BasicGameState {
 				userCreatedMap.placeExit(xLoc, yLoc);
 				
 				exitPoint = new int[] {xLoc, yLoc};
-				mapPoints.add(xLoc);
-				mapPoints.add(yLoc);
 				exitPointAccepted = true;
 				statusString = "Select any point on a blue line";
 				return;
