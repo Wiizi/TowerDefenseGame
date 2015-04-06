@@ -108,6 +108,7 @@ public class MapSelectScreen extends BasicGameState {
 	public void createRectangleMapButtons(GameContainer container){
 		int mapX = mapButtonXInitialOffset;
 		int mapY = mapButtonYInitialOffset;
+
 		for(Map s : mapList){
 			Rectangle rectangle = new Rectangle(mapX, mapY, rectangleWidth, rectangleHeight);
 			mapX +=(rectangleWidth+30) ;
