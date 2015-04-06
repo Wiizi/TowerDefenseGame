@@ -71,6 +71,7 @@ public class EditMapScreen extends BasicGameState {
 	public final int mapDrawOffsetX = 96;
 	public final int mapDrawOffsetY = 128;
 
+	private final int mapNameMaximumLength = 15;
 
 	private static int mapWidthInput=0;
 	private static int mapHeightInput=0;
@@ -81,7 +82,7 @@ public class EditMapScreen extends BasicGameState {
 	private int[] exitPoint;
 	
 
-	boolean mapSizeInputAccepted = false;
+	boolean mapInputAccepted = false;
 	boolean startingPointAccepted=false;
 	boolean exitPointAccepted = false;
 	boolean mapCreated = false;
@@ -108,7 +109,7 @@ public class EditMapScreen extends BasicGameState {
 	@Override
 	public void update(GameContainer container, StateBasedGame sbg, int delta) throws SlickException {
 
-		if(mapSizeInputAccepted){
+		if(mapInputAccepted){
 			mapWidthTextField.setAcceptingInput(false);
 			mapHeightTextField.setAcceptingInput(false);
 			mapNameTextField.setAcceptingInput(false);
@@ -140,7 +141,7 @@ public class EditMapScreen extends BasicGameState {
 
 		g.setColor(Color.white);
 
-		if(mapSizeInputAccepted){
+		if(mapInputAccepted){
 			drawMap(container);
 			ttf.drawString(30, 0, ""+userCreatedMap.ValidityOfMap());
 			if(mouseOnMap(Mouse.getX(),container.getHeight()-Mouse.getY())){
@@ -326,8 +327,6 @@ public class EditMapScreen extends BasicGameState {
 				mapWidthInput = Integer.parseInt(mapWidthTextField.getText());
 				mapHeightInput = Integer.parseInt(mapHeightTextField.getText());
 				mapNameInput = mapNameTextField.getText();
-				if(mapNameInput.equals(""));
-					throw new NumberFormatException();
 			}
 			catch(NumberFormatException e){
 				statusString = "Illegal input format";
@@ -335,24 +334,32 @@ public class EditMapScreen extends BasicGameState {
 			if(mapWidthInput <minimumMapDimension || mapHeightInput <minimumMapDimension)
 			{
 				statusString = "Map to small. Minimum dimensions are "+minimumMapDimension+"x"+minimumMapDimension;
-				mapSizeInputAccepted = false;
+				mapInputAccepted = false;
 			}
 			else if (mapWidthInput > maximumMapDimension || mapHeightInput > maximumMapDimension){
 				statusString = "Map to large. Maximum dimensions are "+maximumMapDimension+"x"+maximumMapDimension;
-				mapSizeInputAccepted = false;
+				mapInputAccepted = false;
+			}
+			else if(mapNameInput.equals("")){
+				statusString = "Map name cannot be null";
+				mapInputAccepted = false;
+			}
+			else if (mapNameInput.length()>mapNameMaximumLength){
+				statusString = "Map name is too long";
+				mapInputAccepted = false;
 			}
 			else{
 				userCreatedMap = new Map();
 				userCreatedMap.setMapSize(mapWidthInput, mapHeightInput);
 				userCreatedMap.initializeMap();
-				mapSizeInputAccepted = true;
+				mapInputAccepted = true;
 				statusString = "Select a starting location";
 			}
 
 		}
 
 		if(SaveMapButton.contains(x,y) ){
-			if(mapSizeInputAccepted && exitPointAccepted && startingPointAccepted/*&& userCreatedMap.ValidityOfMap() && !mapCreated*/){
+			if(mapInputAccepted && exitPointAccepted && startingPointAccepted/*&& userCreatedMap.ValidityOfMap() && !mapCreated*/){
 				saveMap = new MapEditor(mapWidthInput, mapHeightInput, userCreatedMap.arrangePathPoint(mapPoints));
 				saveMap.writeFile(mapNameInput);
 				mapCreated = true;
@@ -385,7 +392,7 @@ public class EditMapScreen extends BasicGameState {
 		for(int y = 0 ; y < mapHeightInput; y++){
 			for(int x = 0 ; x < mapWidthInput; x++ ){
 				BlackTileBoundaryGraphic.draw(currentX, currentY);
-				if(mapSizeInputAccepted&&startingPointAccepted&&exitPointAccepted)
+				if(mapInputAccepted&&startingPointAccepted&&exitPointAccepted)
 					if(x ==selectedTileX ||y == selectedTileY)
 						BluePathTileGraphic.draw(currentX, currentY);
 				currentX+=32;
@@ -413,7 +420,7 @@ public class EditMapScreen extends BasicGameState {
 
 //		mapPoints = new ArrayList<int[]>();
 		mapPoints = new ArrayList<Integer>();
-		mapSizeInputAccepted = false;
+		mapInputAccepted = false;
 		startingPointAccepted=false;
 		exitPointAccepted = false;
 		mapCreated = false;
