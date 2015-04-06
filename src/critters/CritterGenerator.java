@@ -50,7 +50,8 @@ public class CritterGenerator {
 		//for that level, create the critter objects as per the values in the critter stream and then randomize the queue 
 		int[][] critterStreamToAppend = addCritterList(CritterStream.length);
 		int[][] fullCritterStream = new int[CritterStream.length+critterStreamToAppend.length][5];
-		System.out.println(fullCritterStream.length);
+
+		//concatenate two 2d arrays
 		for(int i=0;i<fullCritterStream.length;i++){
 			if(i<CritterStream.length){
 				fullCritterStream[i]=CritterStream[i];
