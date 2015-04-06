@@ -13,7 +13,7 @@ public class TankCritter extends Critter {
 	private static double 		health 		= 15;
 	private static double 		speed		= 0.6;
 	private static int			reward		= 80;
-	private static double		armor		= 3;
+	private static double		armor		= 4;
 
 
 }
