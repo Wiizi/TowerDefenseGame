@@ -11,7 +11,6 @@ abstract public class Critter{
 	
 	private double 		health;
 	private double 		speed;
-	private double 		modifier	= 0;
 	private int			reward;
 	private double 		armor;
 	private float 		XLoc;
@@ -175,11 +174,6 @@ abstract public class Critter{
 
 	public float getYLoc() {
 		return YLoc;
-	}
-	
-
-	public double getModifier() {
-		return modifier;
 	}
 
 

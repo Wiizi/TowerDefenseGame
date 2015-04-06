@@ -10,7 +10,7 @@ public abstract class Tower {
 	}
 	protected int buyingCost;
 	private double modifierBase = 1.0;		//base multiplier for upgrades
-	private double modifierIncrease = 1.5;	//how much range and attack increase by when upgraded
+	private double modifierIncrease = 1.2;	//how much range and attack increase by when upgraded
 	protected int refundValue;
 	protected double range;
 	protected double power ;
